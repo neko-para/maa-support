@@ -1,0 +1,36 @@
+{
+  "name": "maa-support",
+  "displayName": "maa-support",
+  "description": "Maa framework support",
+  "repository": "https://github.com/neko-para/maa-support",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.86.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:json"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "maa-support.helloWorld",
+        "title": "Hello World"
+      }
+    ]
+  },
+  "scripts": {
+    "dev": "node scripts/build.mjs"
+  },
+  "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "@types/node": "18.x",
+    "@types/vscode": "^1.86.0",
+    "esbuild": "^0.20.0",
+    "jsonc-parser": "^3.2.1",
+    "typescript": "^5.3.3"
+  }
+}
