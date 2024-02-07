@@ -4,15 +4,15 @@ import { PipelineLanguageSupport } from './pipeline'
 
 export function activate(context: vscode.ExtensionContext) {
   const pipelineLanguage = new PipelineLanguageSupport()
+  const selector = {
+    scheme: 'file',
+    language: 'json'
+  }
 
   context.subscriptions.push(
-    vscode.languages.registerDefinitionProvider(
-      {
-        scheme: 'file',
-        language: 'json'
-      },
-      pipelineLanguage
-    )
+    vscode.languages.registerDefinitionProvider(selector, pipelineLanguage),
+    vscode.languages.registerHoverProvider(selector, pipelineLanguage),
+    vscode.languages.registerCompletionItemProvider(selector, pipelineLanguage, '"', '/')
   )
 }
 
