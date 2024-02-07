@@ -1,14 +1,16 @@
 {
   "name": "maa-support",
-  "displayName": "maa-support",
+  "displayName": "Maa Pipeline Support",
+  "publisher": "nekosu",
   "description": "Maa framework & Maa arknights support",
   "repository": "https://github.com/neko-para/maa-support",
   "version": "0.0.3",
+  "icon": "images/logo.png",
   "engines": {
     "vscode": "^1.86.0"
   },
   "categories": [
-    "Other"
+    "Programming Languages"
   ],
   "activationEvents": [
     "onLanguage:json",
