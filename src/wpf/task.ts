@@ -95,6 +95,14 @@ async function buildTaskIndex(doc: vscode.TextDocument) {
     }
   })
 
+  const baseTasksFile = path.join(path.dirname(doc.fileName), '..', '..', '..', 'tasks.json')
+  if (existsSync(baseTasksFile)) {
+    const baseTasks = await buildTaskIndex(await vscode.workspace.openTextDocument(baseTasksFile))
+    for (const task in baseTasks) {
+      index[task] = [...(index[task] ?? []), ...baseTasks[task]]
+    }
+  }
+
   return index
 }
 
@@ -186,7 +194,8 @@ export class WpfTaskLanguageSupport
               resolve(null)
               return
             }
-            for (const taskName of getInheritChain(result.task)) {
+            for (const rawTaskName of getInheritChain(result.task)) {
+              const taskName = rawTaskName.replace(/#[^#]+$/, '')
               if (taskName in index) {
                 const locs = index[taskName]
                 const prefixRemove = result.task.length - taskName.length
@@ -214,18 +223,22 @@ export class WpfTaskLanguageSupport
         if (!root) {
           return null
         }
-        const p = path.join(root, 'template', result.image)
-        if (existsSync(p)) {
-          return [
-            {
-              originSelectionRange: result.from,
-              targetUri: vscode.Uri.file(p),
-              targetRange: new vscode.Range(new vscode.Position(0, 0), new vscode.Position(0, 0))
-            }
-          ]
-        } else {
-          return null
+        const ps = [
+          path.join(root, 'template', result.image),
+          path.join(root, '..', '..', '..', 'template', result.image)
+        ]
+        for (const p of ps) {
+          if (existsSync(p)) {
+            return [
+              {
+                originSelectionRange: result.from,
+                targetUri: vscode.Uri.file(p),
+                targetRange: new vscode.Range(new vscode.Position(0, 0), new vscode.Position(0, 0))
+              }
+            ]
+          }
         }
+        return null
       } else if (result instanceof PipelineFindTaskEntryToken) {
         return new Promise<vscode.LocationLink[] | null>(resolve => {
           buildTaskIndex(document).then(index => {
@@ -234,7 +247,8 @@ export class WpfTaskLanguageSupport
               return
             }
             const chain = getInheritChain(result.task)
-            for (const taskName of chain.slice(1)) {
+            for (const rawTaskName of chain.slice(1)) {
+              const taskName = rawTaskName.replace(/#[^#]+$/, '')
               if (taskName in index) {
                 const locs = index[taskName]
                 resolve(
@@ -276,28 +290,32 @@ export class WpfTaskLanguageSupport
               resolve(null)
               return
             }
-            if (result.task in index) {
-              const locs = index[result.task]
-              if (locs.length > 0) {
-                const loc = locs[0]
-                new Promise<vscode.Hover>(async resolve => {
-                  const doc = await vscode.workspace.openTextDocument(loc.targetUri)
-                  let text = doc.getText(loc.targetRange)
-                  try {
-                    text = JSON.stringify(JSON.parse(text), null, 2)
-                  } catch (_) {}
-                  const hv = new vscode.Hover(
-                    new vscode.MarkdownString(`\`\`\`json\n${text}\n\`\`\``)
-                  )
-                  hv.range = result.from
-                  resolve(hv)
-                }).then(resolve)
-              } else {
-                resolve(null)
+            for (const rawTaskName of getInheritChain(result.task)) {
+              const taskName = rawTaskName.replace(/#[^#]+$/, '')
+              if (taskName in index) {
+                const locs = index[taskName]
+                if (locs.length > 0) {
+                  const loc = locs[0]
+                  new Promise<vscode.Hover>(async resolve => {
+                    const doc = await vscode.workspace.openTextDocument(loc.targetUri)
+                    let text = doc.getText(loc.targetRange)
+                    try {
+                      text = JSON.stringify(JSON.parse(text), null, 2)
+                    } catch (_) {}
+                    const hv = new vscode.Hover(
+                      new vscode.MarkdownString(`${taskName}\n\n\`\`\`json\n${text}\n\`\`\``)
+                    )
+                    hv.range = result.from
+                    resolve(hv)
+                  }).then(resolve)
+                } else {
+                  resolve(null)
+                }
+                return
               }
-            } else {
-              resolve(null)
             }
+            resolve(null)
+            return
           })
         })
       } else if (
@@ -312,15 +330,31 @@ export class WpfTaskLanguageSupport
         if (result instanceof PipelineFindImageToken) {
           image = result.image
         } else {
-          image = result.task + '.png'
+          image = result.task.replace(/#[^#]+$/, '') + '.png'
         }
-        const p = path.join(root, 'template', image)
+        const fullPaths = [
+          path.join(root, 'template', image),
+          path.join(root, '..', '..', '..', 'template', image)
+        ]
         return new Promise<vscode.Hover>(async resolve => {
-          let hover
-          if (existsSync(p) && (await fs.stat(p)).isFile()) {
-            hover = new vscode.Hover(new vscode.MarkdownString(`![](${p})`))
-          } else {
-            hover = new vscode.Hover(new vscode.MarkdownString(`这玩意不存在`))
+          let hover = new vscode.Hover(new vscode.MarkdownString(`这玩意不存在`))
+          let found = false
+          for (const fullPath of fullPaths) {
+            const fileChain = getInheritChain(image)
+            for (const [idx, imagePath] of getInheritChain(fullPath).entries()) {
+              if (existsSync(imagePath) && (await fs.stat(imagePath)).isFile()) {
+                hover = new vscode.Hover(
+                  new vscode.MarkdownString(
+                    `${fileChain[idx]}\n\n![](${vscode.Uri.file(imagePath)})`
+                  )
+                )
+                found = true
+                break
+              }
+            }
+            if (found) {
+              break
+            }
           }
           hover.range = result.from
           resolve(hover)
@@ -341,17 +375,16 @@ export class WpfTaskLanguageSupport
       return null
     } catch (result: unknown) {
       if (result instanceof PipelineFindTaskToken) {
-        return new Promise<vscode.CompletionItem[] | null>(resolve => {
-          buildTaskIndex(path.dirname(document.fileName)).then(index => {
-            if (!index) {
-              resolve(null)
-              return
-            }
+        if (result.task === '') {
+          return new Promise<vscode.CompletionItem[] | null>(resolve => {
+            buildTaskIndex(document).then(index => {
+              if (!index) {
+                resolve(null)
+                return
+              }
 
-            resolve(
-              Object.entries(index)
-                .filter(([name]) => name.startsWith(result.task))
-                .map(([name, locs]) => {
+              resolve(
+                Object.entries(index).map(([name, locs]) => {
                   const escaped = JSON.stringify(name)
                   const item = new vscode.CompletionItem(
                     escaped,
@@ -367,27 +400,85 @@ export class WpfTaskLanguageSupport
                   }
                   return item
                 })
-            )
+              )
+            })
           })
-        })
+        } else if (result.task.endsWith('@')) {
+          return new Promise<vscode.CompletionItem[] | null>(resolve => {
+            buildTaskIndex(document).then(index => {
+              if (!index) {
+                resolve(null)
+                return
+              }
+
+              resolve(
+                Object.entries(index)
+                  .map(
+                    ([name, locs]) => [result.task + name, locs] as [string, vscode.LocationLink[]]
+                  )
+                  .map(([name, locs]) => {
+                    const escaped = JSON.stringify(name)
+                    const item = new vscode.CompletionItem(
+                      escaped,
+                      vscode.CompletionItemKind.Reference
+                    ) as TaskCompletion
+                    item.range = result.from
+                    item.sortText = ' ' + escaped
+                    item.data = {
+                      type: 'task',
+                      info: {
+                        locations: locs
+                      }
+                    }
+                    return item
+                  })
+              )
+            })
+          })
+        } else if (result.task.endsWith('#')) {
+          return [
+            'self',
+            'back',
+            'next',
+            'sub',
+            'on_error_next',
+            'exceeded_next',
+            'reduce_other_times'
+          ].map(sub => {
+            const item = new vscode.CompletionItem(sub, vscode.CompletionItemKind.Enum)
+            item.filterText = '#' + sub
+            return item
+          })
+        } else {
+          return null
+        }
       } else if (result instanceof PipelineFindImageToken) {
-        const root = locateRoot(document.fileName)
+        const root = path.dirname(document.fileName)
         if (!root) {
           return null
         }
-        const imageRoot = path.join(root, 'image')
+        const imageRoots = [
+          path.join(root, 'template'),
+          path.join(root, '..', '..', '..', 'template')
+        ]
         return new Promise<vscode.CompletionItem[] | null>(async resolve => {
           if (result.image === '') {
             const res: vscode.CompletionItem[] = []
-            for (const sub of await fs.readdir(imageRoot, { recursive: true })) {
-              const subfile = path.join(imageRoot, sub)
-              if ((await fs.stat(subfile)).isFile()) {
-                const escaped = JSON.stringify(sub)
-                const item = new vscode.CompletionItem(escaped, vscode.CompletionItemKind.File)
-                item.range = result.from
-                item.sortText = ' ' + escaped
-                item.documentation = new vscode.MarkdownString(`![](${subfile})`)
-                res.push(item)
+            for (const [plat, imageRoot] of imageRoots.entries()) {
+              if (!existsSync(imageRoot)) {
+                continue
+              }
+              for (const rawSub of await fs.readdir(imageRoot, { recursive: true })) {
+                const sub = rawSub.replaceAll('\\', '/')
+                const subfile = path.join(imageRoot, sub)
+                if ((await fs.stat(subfile)).isFile()) {
+                  const escaped = JSON.stringify(sub)
+                  const item = new vscode.CompletionItem(escaped, vscode.CompletionItemKind.File)
+                  item.range = result.from
+                  item.sortText = ' '.repeat(3 - plat) + escaped
+                  item.documentation = new vscode.MarkdownString(`![](${vscode.Uri.file(subfile)})`)
+                  res.push(item)
+                }
               }
             }
             if (res) {
@@ -397,25 +488,35 @@ export class WpfTaskLanguageSupport
             }
           } else {
             if (result.image.endsWith('/')) {
-              const filterRoot = path.join(imageRoot, result.image)
-              if (!existsSync(filterRoot)) {
-                resolve(null)
-                return
-              }
               const res: vscode.CompletionItem[] = []
-              for (const sub of await fs.readdir(filterRoot, { recursive: true })) {
-                const subfile = path.join(filterRoot, sub)
-                const substr = path.join(result.image, sub)
-                if ((await fs.stat(subfile)).isFile()) {
-                  const escaped = JSON.stringify(substr)
-                  const item = new vscode.CompletionItem(escaped, vscode.CompletionItemKind.File)
-                  item.range = result.from
-                  item.sortText = ' ' + escaped
-                  item.documentation = new vscode.MarkdownString(`![](${subfile})`)
-                  res.push(item)
+              for (const [plat, imageRoot] of imageRoots.entries()) {
+                if (!existsSync(imageRoot)) {
+                  continue
+                }
+                const filterRoot = path.join(imageRoot, result.image)
+                if (!existsSync(filterRoot)) {
+                  continue
+                }
+                for (const sub of await fs.readdir(filterRoot, { recursive: true })) {
+                  const subfile = path.join(filterRoot, sub)
+                  const substr = path.join(result.image, sub).replaceAll('\\', '/')
+                  if ((await fs.stat(subfile)).isFile()) {
+                    const escaped = JSON.stringify(substr)
+                    const item = new vscode.CompletionItem(escaped, vscode.CompletionItemKind.File)
+                    item.range = result.from
+                    item.sortText = ' '.repeat(3 - plat) + escaped
+                    item.documentation = new vscode.MarkdownString(
+                      `![](${vscode.Uri.file(subfile)})`
+                    )
+                    res.push(item)
+                  }
                 }
               }
-              resolve(res)
+              if (res) {
+                resolve(res)
+              } else {
+                resolve(null)
+              }
             } else {
               resolve(null)
             }

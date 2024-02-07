@@ -22,7 +22,15 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.languages.registerHoverProvider(selector, pipelineLanguage),
     vscode.languages.registerCompletionItemProvider(selector, pipelineLanguage, '"', '/'),
     vscode.languages.registerDefinitionProvider(wpfTaskSelector, wpfTaskLanguage),
-    vscode.languages.registerHoverProvider(wpfTaskSelector, wpfTaskLanguage)
+    vscode.languages.registerHoverProvider(wpfTaskSelector, wpfTaskLanguage),
+    vscode.languages.registerCompletionItemProvider(
+      wpfTaskSelector,
+      wpfTaskLanguage,
+      '"',
+      '/',
+      '@',
+      '#'
+    )
   )
 }
 

@@ -279,7 +279,7 @@ export class PipelineLanguageSupport
         return new Promise<vscode.Hover>(async resolve => {
           let hover
           if (existsSync(p) && (await fs.stat(p)).isFile()) {
-            hover = new vscode.Hover(new vscode.MarkdownString(`![](${p})`))
+            hover = new vscode.Hover(new vscode.MarkdownString(`![](${vscode.Uri.file(p)})`))
           } else {
             hover = new vscode.Hover(new vscode.MarkdownString(`这玩意不存在`))
           }
@@ -347,7 +347,7 @@ export class PipelineLanguageSupport
                 const item = new vscode.CompletionItem(escaped, vscode.CompletionItemKind.File)
                 item.range = result.from
                 item.sortText = ' ' + escaped
-                item.documentation = new vscode.MarkdownString(`![](${subfile})`)
+                item.documentation = new vscode.MarkdownString(`![](${vscode.Uri.file(subfile)})`)
                 res.push(item)
               }
             }
@@ -372,7 +372,7 @@ export class PipelineLanguageSupport
                   const item = new vscode.CompletionItem(escaped, vscode.CompletionItemKind.File)
                   item.range = result.from
                   item.sortText = ' ' + escaped
-                  item.documentation = new vscode.MarkdownString(`![](${subfile})`)
+                  item.documentation = new vscode.MarkdownString(`![](${vscode.Uri.file(subfile)})`)
                   res.push(item)
                 }
               }
