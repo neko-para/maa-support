@@ -468,11 +468,10 @@ export class WpfTaskLanguageSupport
               if (!existsSync(imageRoot)) {
                 continue
               }
-              for (const rawSub of await fs.readdir(imageRoot, { recursive: true })) {
-                const sub = rawSub.replaceAll('\\', '/')
+              for (const sub of await fs.readdir(imageRoot, { recursive: true })) {
                 const subfile = path.join(imageRoot, sub)
                 if ((await fs.stat(subfile)).isFile()) {
-                  const escaped = JSON.stringify(sub)
+                  const escaped = JSON.stringify(sub.replaceAll('\\', '/'))
                   const item = new vscode.CompletionItem(escaped, vscode.CompletionItemKind.File)
                   item.range = result.from
                   item.sortText = ' '.repeat(3 - plat) + escaped
@@ -499,9 +498,9 @@ export class WpfTaskLanguageSupport
                 }
                 for (const sub of await fs.readdir(filterRoot, { recursive: true })) {
                   const subfile = path.join(filterRoot, sub)
-                  const substr = path.join(result.image, sub).replaceAll('\\', '/')
+                  const substr = path.join(result.image, sub)
                   if ((await fs.stat(subfile)).isFile()) {
-                    const escaped = JSON.stringify(substr)
+                    const escaped = JSON.stringify(substr.replaceAll('\\', '/'))
                     const item = new vscode.CompletionItem(escaped, vscode.CompletionItemKind.File)
                     item.range = result.from
                     item.sortText = ' '.repeat(3 - plat) + escaped

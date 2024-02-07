@@ -87,7 +87,7 @@ async function buildTaskIndex(dir: string) {
     if (!sub.endsWith('.json')) {
       continue
     }
-    const subpath = path.join(dir, sub)
+    const subpath = path.join(pipeline, sub)
     if (!(await fs.stat(subpath)).isFile()) {
       continue
     }
@@ -343,7 +343,7 @@ export class PipelineLanguageSupport
             for (const sub of await fs.readdir(imageRoot, { recursive: true })) {
               const subfile = path.join(imageRoot, sub)
               if ((await fs.stat(subfile)).isFile()) {
-                const escaped = JSON.stringify(sub)
+                const escaped = JSON.stringify(sub.replaceAll('\\', '/'))
                 const item = new vscode.CompletionItem(escaped, vscode.CompletionItemKind.File)
                 item.range = result.from
                 item.sortText = ' ' + escaped
@@ -368,7 +368,7 @@ export class PipelineLanguageSupport
                 const subfile = path.join(filterRoot, sub)
                 const substr = path.join(result.image, sub)
                 if ((await fs.stat(subfile)).isFile()) {
-                  const escaped = JSON.stringify(substr)
+                  const escaped = JSON.stringify(substr.replaceAll('\\', '/'))
                   const item = new vscode.CompletionItem(escaped, vscode.CompletionItemKind.File)
                   item.range = result.from
                   item.sortText = ' ' + escaped
