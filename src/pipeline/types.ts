@@ -3,6 +3,7 @@ import * as vscode from 'vscode'
 
 export interface PipelineTaskInfo {
   locations: vscode.LocationLink[]
+  references: vscode.Location[]
 }
 
 export type PipelineTaskIndex = {
@@ -21,6 +22,10 @@ export interface PipelineSpec {
 
   getRoot: (doc: vscode.TextDocument) => string | null
   fallbackRoot: (root: string) => string | null
+
+  getPipelineRoot: (root: string) => string | null
+  enumPipeline: (root: string) => Promise<string[]>
+
   getImageRoot: (root: string) => string | null
 
   getTaskImage?: (task: string) => string

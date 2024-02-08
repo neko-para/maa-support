@@ -1,10 +1,9 @@
 import { existsSync, statSync } from 'fs'
-import * as fs from 'fs/promises'
-import { visit } from 'jsonc-parser'
 import * as path from 'path'
 import * as vscode from 'vscode'
 
-import { PipelineSpec, PipelineTaskIndex } from '../types'
+import { PipelineSpec } from '../types'
+import { buildTaskIndex } from './utils'
 
 function clearHash(task: string) {
   return task.replaceAll(/#[^#]+$/g, '')
@@ -51,6 +50,19 @@ export const MaaWpfPipelineSpec = {
     }
   },
 
+  getPipelineRoot(root) {
+    return root
+  },
+
+  async enumPipeline(root) {
+    const file = path.join(root, 'tasks.json')
+    if (existsSync(file) && statSync(file).isFile()) {
+      return ['tasks.json']
+    } else {
+      return []
+    }
+  },
+
   getImageRoot(root) {
     const imageRoot = path.join(root, 'template')
     return existsSync(imageRoot) && statSync(imageRoot).isDirectory() ? imageRoot : null
@@ -60,78 +72,7 @@ export const MaaWpfPipelineSpec = {
     return clearHash(task) + '.png'
   },
 
-  async buildTaskIndex(doc) {
-    const index: PipelineTaskIndex = {}
-
-    let depth: number | null = null
-    let link: vscode.LocationLink | null = null
-    visit(doc.getText(), {
-      onObjectProperty(property, offset, length, startLine, startCharacter, pathSupplier) {
-        if (pathSupplier().length !== 0) {
-          return
-        }
-        if (property.startsWith('$')) {
-          return
-        }
-        depth = 0
-        link = {
-          targetUri: doc.uri,
-          targetRange: new vscode.Range(
-            new vscode.Position(startLine, startCharacter),
-            new vscode.Position(startLine, startCharacter)
-          ), // fake position
-          targetSelectionRange: new vscode.Range(
-            new vscode.Position(startLine, startCharacter),
-            doc.positionAt(offset + length)
-          )
-        }
-        const info = index[property] ?? {
-          locations: []
-        }
-        info.locations.push(link)
-        index[property] = info
-      },
-      onObjectBegin(offset, length, startLine, startCharacter, pathSupplier) {
-        if (depth !== null) {
-          depth += 1
-          if (depth === 1) {
-            link!.targetRange = new vscode.Range(
-              new vscode.Position(startLine, startCharacter),
-              new vscode.Position(startLine, startCharacter)
-            )
-          }
-        }
-      },
-      onObjectEnd(offset, length, startLine, startCharacter) {
-        if (depth !== null) {
-          depth -= 1
-          if (depth === 0) {
-            depth = null
-            link!.targetRange = new vscode.Range(
-              link!.targetRange.start,
-              new vscode.Position(startLine, startCharacter + 1)
-            )
-          }
-        }
-      }
-    })
-
-    const baseTasksFile = path.join(path.dirname(doc.fileName), '..', '..', '..', 'tasks.json')
-    if (existsSync(baseTasksFile)) {
-      const baseTasks = await this.buildTaskIndex(
-        await vscode.workspace.openTextDocument(baseTasksFile)
-      )
-      for (const task in baseTasks) {
-        const info = index[task] ?? {
-          locations: []
-        }
-        info.locations.push(...baseTasks[task].locations)
-        index[task] = info
-      }
-    }
-
-    return index
-  },
+  buildTaskIndex,
 
   getTaskFallback(task) {
     const clearedTask = clearHash(task)

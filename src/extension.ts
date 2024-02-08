@@ -5,33 +5,22 @@ import { MaaFrameworkPipelineSpec } from './pipeline/spec/fw'
 import { MaaWpfPipelineSpec } from './pipeline/spec/wpf'
 
 export function activate(context: vscode.ExtensionContext) {
-  const pipelineLanguage = new GeneralPipelineLanguageSupport(MaaFrameworkPipelineSpec)
-  const selector: vscode.DocumentSelector = {
+  const fwPipelineLSP = new GeneralPipelineLanguageSupport(MaaFrameworkPipelineSpec)
+  const fwPipelineSelector: vscode.DocumentSelector = {
     scheme: 'file',
     language: 'json'
   }
 
-  const wpfTaskLanguage = new GeneralPipelineLanguageSupport(MaaWpfPipelineSpec)
-  const wpfTaskSelector: vscode.DocumentSelector = {
+  const wpfPipelineLSP = new GeneralPipelineLanguageSupport(MaaWpfPipelineSpec)
+  const wpfPipelineSelector: vscode.DocumentSelector = {
     scheme: 'file',
     language: 'jsonc',
     pattern: '**/resource/tasks.json'
   }
 
   context.subscriptions.push(
-    vscode.languages.registerDefinitionProvider(selector, pipelineLanguage),
-    vscode.languages.registerHoverProvider(selector, pipelineLanguage),
-    vscode.languages.registerCompletionItemProvider(selector, pipelineLanguage, '"', '/'),
-    vscode.languages.registerDefinitionProvider(wpfTaskSelector, wpfTaskLanguage),
-    vscode.languages.registerHoverProvider(wpfTaskSelector, wpfTaskLanguage),
-    vscode.languages.registerCompletionItemProvider(
-      wpfTaskSelector,
-      wpfTaskLanguage,
-      '"',
-      '/',
-      '@',
-      '#'
-    )
+    ...fwPipelineLSP.apply(fwPipelineSelector, ['"', '/']),
+    ...wpfPipelineLSP.apply(wpfPipelineSelector, ['"', '/', '@', '#'])
   )
 }
 

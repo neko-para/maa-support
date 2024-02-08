@@ -1,27 +1,39 @@
-import { existsSync } from 'fs'
-import * as fs from 'fs/promises'
-import { type JSONPath, visit } from 'jsonc-parser'
-import * as path from 'path'
 import * as vscode from 'vscode'
 
 import { GeneralPipelineCompletionProvider } from './completion'
 import { GeneralPipelineDefinitionProvider } from './definition'
 import { GeneralPipelineHoverProvider } from './hover'
+import { GeneralPipelineReferenceProvider } from './reference'
 import { PipelineSpec } from './types'
 
 export class GeneralPipelineLanguageSupport
-  implements vscode.DefinitionProvider, vscode.HoverProvider, vscode.CompletionItemProvider
+  implements
+    vscode.DefinitionProvider,
+    vscode.HoverProvider,
+    vscode.CompletionItemProvider,
+    vscode.ReferenceProvider
 {
   spec: PipelineSpec
   definitionProvider: GeneralPipelineDefinitionProvider
   hoverProvider: GeneralPipelineHoverProvider
   completionProvider: GeneralPipelineCompletionProvider
+  referenceProvider: GeneralPipelineReferenceProvider
 
   constructor(spec: PipelineSpec) {
     this.spec = spec
     this.definitionProvider = new GeneralPipelineDefinitionProvider(spec)
     this.hoverProvider = new GeneralPipelineHoverProvider(spec)
     this.completionProvider = new GeneralPipelineCompletionProvider(spec)
+    this.referenceProvider = new GeneralPipelineReferenceProvider(spec)
+  }
+
+  apply(selector: vscode.DocumentSelector, completionTrigger: string[]) {
+    return [
+      vscode.languages.registerDefinitionProvider(selector, this),
+      vscode.languages.registerHoverProvider(selector, this),
+      vscode.languages.registerCompletionItemProvider(selector, this, ...completionTrigger),
+      vscode.languages.registerReferenceProvider(selector, this)
+    ]
   }
 
   async provideDefinition(
@@ -51,5 +63,14 @@ export class GeneralPipelineLanguageSupport
 
   async resolveCompletionItem(item: vscode.CompletionItem, token: vscode.CancellationToken) {
     return this.completionProvider.resolveCompletionItem(item, token)
+  }
+
+  async provideReferences(
+    document: vscode.TextDocument,
+    position: vscode.Position,
+    context: vscode.ReferenceContext,
+    token: vscode.CancellationToken
+  ) {
+    return this.referenceProvider.provideReferences(document, position, context, token)
   }
 }
