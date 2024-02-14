@@ -27,13 +27,20 @@ export class GeneralPipelineLanguageSupport
     this.referenceProvider = new GeneralPipelineReferenceProvider(spec)
   }
 
-  apply(selector: vscode.DocumentSelector, completionTrigger: string[]) {
-    return [
-      vscode.languages.registerDefinitionProvider(selector, this),
-      vscode.languages.registerHoverProvider(selector, this),
-      vscode.languages.registerCompletionItemProvider(selector, this, ...completionTrigger),
-      vscode.languages.registerReferenceProvider(selector, this)
-    ]
+  apply(
+    selectors: vscode.DocumentSelector | vscode.DocumentSelector[],
+    completionTrigger: string[]
+  ) {
+    return (Array.isArray(selectors) ? selectors : [selectors])
+      .map(selector => {
+        return [
+          vscode.languages.registerDefinitionProvider(selector, this),
+          vscode.languages.registerHoverProvider(selector, this),
+          vscode.languages.registerCompletionItemProvider(selector, this, ...completionTrigger),
+          vscode.languages.registerReferenceProvider(selector, this)
+        ]
+      })
+      .flat()
   }
 
   async provideDefinition(
