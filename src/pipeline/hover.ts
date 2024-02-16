@@ -34,8 +34,8 @@ export class GeneralPipelineHoverProvider implements vscode.HoverProvider {
           continue
         }
         const range = new vscode.Range(
-          document.positionAt(startPos + prefix),
-          document.positionAt(endPos - suffix)
+          document.positionAt(startPos + prefix + 1),
+          document.positionAt(endPos - suffix - 1)
         )
         const taskInfo = taskIndex[task]
         const defaultLocation = taskInfo.locations[0]
@@ -62,8 +62,8 @@ export class GeneralPipelineHoverProvider implements vscode.HoverProvider {
                   [
                     this.spec.getTaskImage!(task),
                     new vscode.Range(
-                      document.positionAt(startPos + prefix),
-                      document.positionAt(endPos - suffix)
+                      document.positionAt(startPos + prefix + 1),
+                      document.positionAt(endPos - suffix - 1)
                     )
                   ] as [string, vscode.Range]
               )

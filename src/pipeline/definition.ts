@@ -33,8 +33,8 @@ export class GeneralPipelineDefinitionProvider implements vscode.DefinitionProvi
           continue
         }
         const range = new vscode.Range(
-          document.positionAt(startPos + prefix),
-          document.positionAt(endPos - suffix)
+          document.positionAt(startPos + prefix + 1),
+          document.positionAt(endPos - suffix - 1)
         )
         const taskInfo = taskIndex[task]
         return taskInfo.locations.map(loc => ({
@@ -77,8 +77,8 @@ export class GeneralPipelineDefinitionProvider implements vscode.DefinitionProvi
           continue
         }
         const range = new vscode.Range(
-          document.positionAt(startPos + prefix),
-          document.positionAt(endPos - suffix)
+          document.positionAt(startPos + prefix + 1),
+          document.positionAt(endPos - suffix - 1)
         )
         const taskInfo = taskIndex[task]
         return taskInfo.locations.map(loc => ({
