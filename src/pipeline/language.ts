@@ -19,28 +19,29 @@ export class GeneralPipelineLanguageSupport
   completionProvider: GeneralPipelineCompletionProvider
   referenceProvider: GeneralPipelineReferenceProvider
 
+  statusItem: vscode.StatusBarItem
+
   constructor(spec: PipelineSpec) {
     this.spec = spec
     this.definitionProvider = new GeneralPipelineDefinitionProvider(spec)
     this.hoverProvider = new GeneralPipelineHoverProvider(spec)
     this.completionProvider = new GeneralPipelineCompletionProvider(spec)
     this.referenceProvider = new GeneralPipelineReferenceProvider(spec)
+
+    this.statusItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left)
   }
 
-  apply(
-    selectors: vscode.DocumentSelector | vscode.DocumentSelector[],
-    completionTrigger: string[]
-  ) {
-    return (Array.isArray(selectors) ? selectors : [selectors])
-      .map(selector => {
-        return [
-          vscode.languages.registerDefinitionProvider(selector, this),
-          vscode.languages.registerHoverProvider(selector, this),
-          vscode.languages.registerCompletionItemProvider(selector, this, ...completionTrigger),
-          vscode.languages.registerReferenceProvider(selector, this)
-        ]
+  apply(selector: vscode.DocumentSelector, completionTrigger: string[]) {
+    this.onChangeEditor(selector, vscode.window.activeTextEditor)
+    return [
+      vscode.languages.registerDefinitionProvider(selector, this),
+      vscode.languages.registerHoverProvider(selector, this),
+      vscode.languages.registerCompletionItemProvider(selector, this, ...completionTrigger),
+      vscode.languages.registerReferenceProvider(selector, this),
+      vscode.window.onDidChangeActiveTextEditor(editor => {
+        this.onChangeEditor(selector, editor)
       })
-      .flat()
+    ]
   }
 
   async provideDefinition(
@@ -79,5 +80,30 @@ export class GeneralPipelineLanguageSupport
     token: vscode.CancellationToken
   ) {
     return this.referenceProvider.provideReferences(document, position, context, token)
+  }
+
+  onChangeEditor(selector: vscode.DocumentSelector, editor?: vscode.TextEditor) {
+    if (editor && vscode.languages.match(selector, editor.document)) {
+      this.updateStatus(editor.document)
+    } else {
+      this.updateStatus()
+    }
+  }
+
+  updateStatus(doc?: vscode.TextDocument) {
+    if (doc) {
+      this.statusItem.show()
+      const root = this.spec.getRoot(doc)
+      this.statusItem.text = `Maa Support - ${this.spec.name} Mode`
+      if (!root) {
+        this.statusItem.color = new vscode.ThemeColor('statusBarItem.errorBackground')
+        this.statusItem.tooltip = '无法找到项目根目录'
+      } else {
+        this.statusItem.color = new vscode.ThemeColor('statusBarItem.background')
+        this.statusItem.tooltip = `根目录 ${root}`
+      }
+    } else {
+      this.statusItem.hide()
+    }
   }
 }

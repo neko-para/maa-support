@@ -10,6 +10,8 @@ function clearHash(task: string) {
 }
 
 export const MaaWpfPipelineSpec = {
+  name: 'Maa',
+
   isTaskPath(path) {
     if (path.length !== 3) {
       return false

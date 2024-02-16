@@ -6,14 +6,16 @@ import { MaaWpfPipelineSpec } from './pipeline/spec/wpf'
 
 export function activate(context: vscode.ExtensionContext) {
   const fwPipelineLSP = new GeneralPipelineLanguageSupport(MaaFrameworkPipelineSpec)
-  const fwPipelineSelector: vscode.DocumentSelector[] = [
+  const fwPipelineSelector: vscode.DocumentSelector = [
     {
       scheme: 'file',
-      language: 'json'
+      language: 'json',
+      pattern: '**/pipeline/**/*.json'
     },
     {
       scheme: 'file',
-      language: 'jsonc'
+      language: 'jsonc',
+      pattern: '**/pipeline/**/*.json'
     }
   ]
 

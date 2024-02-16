@@ -6,6 +6,8 @@ import { PipelineSpec } from '../types'
 import { buildTaskIndex } from './utils'
 
 export const MaaFrameworkPipelineSpec = {
+  name: 'Maa Framework',
+
   isTaskPath(path) {
     if (path.length < 2 || path.length > 3) {
       return false
@@ -55,8 +57,8 @@ export const MaaFrameworkPipelineSpec = {
       if (!existsSync(dir)) {
         return null
       }
-      if (existsSync(path.join(dir, 'properties.json'))) {
-        return dir
+      if (path.basename(dir) === 'pipeline') {
+        return path.dirname(dir)
       } else {
         dir = path.dirname(dir)
       }

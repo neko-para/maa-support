@@ -16,6 +16,8 @@ export type PipelineTaskCompletionData = {
 }
 
 export interface PipelineSpec {
+  name: string
+
   isTaskPath: (path: JSONPath) => boolean
   isImagePath: (path: JSONPath) => boolean
   isEntryPath: (path: JSONPath) => boolean
