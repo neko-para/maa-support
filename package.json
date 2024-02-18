@@ -18,7 +18,18 @@
   ],
   "main": "./out/extension.js",
   "contributes": {
-    "commands": []
+    "commands": [],
+    "notebooks": [
+      {
+        "type": "maafw-notebook",
+        "displayName": "Maa Framework Notebook",
+        "selector": [
+          {
+            "filenamePattern": "*.maafwbook"
+          }
+        ]
+      }
+    ]
   },
   "scripts": {
     "dev": "node scripts/build.mjs"
