@@ -1,0 +1,44 @@
+{
+  "name": "@maa/maa-support",
+  "displayName": "Maa Pipeline Support",
+  "publisher": "nekosu",
+  "description": "Maa framework & Maa arknights support",
+  "repository": "https://github.com/neko-para/maa-support",
+  "version": "0.0.7",
+  "icon": "images/logo.png",
+  "engines": {
+    "vscode": "^1.86.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "activationEvents": [
+    "onLanguage:json",
+    "onLanguage:jsonc"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [],
+    "notebooks": [
+      {
+        "type": "maafw-notebook",
+        "displayName": "Maa Framework Notebook",
+        "selector": [
+          {
+            "filenamePattern": "*.maafwbook"
+          }
+        ]
+      }
+    ]
+  },
+  "scripts": {
+    "dev": "node scripts/build.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "18.x",
+    "@types/vscode": "^1.86.0",
+    "esbuild": "^0.20.0",
+    "jsonc-parser": "^3.2.1",
+    "typescript": "^5.3.3"
+  }
+}
