@@ -39,6 +39,8 @@
     "@types/vscode": "^1.86.0",
     "esbuild": "^0.20.0",
     "jsonc-parser": "^3.2.1",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "@tsconfig/node18": "^18",
+    "@maa/maa": "workspace:*"
   }
 }

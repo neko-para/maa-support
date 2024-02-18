@@ -1,4 +1,5 @@
-import Module from 'node:module'
+import * as maa from '@maa/maa'
+import * as ts from 'typescript'
 import * as vscode from 'vscode'
 
 const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor
@@ -16,7 +17,7 @@ export class NotebookController {
       'Maa Framework Notebook'
     )
 
-    this._controller.supportedLanguages = ['javascript']
+    this._controller.supportedLanguages = ['javascript', 'typescript']
     this._controller.supportsExecutionOrder = true
     this._controller.executeHandler = async (cells, notebook, controller) => {
       for (const cell of cells) {
@@ -32,8 +33,19 @@ export class NotebookController {
     exec.executionOrder = ++this._order
     exec.start(Date.now())
     try {
+      const code = cell.document.getText()
+      const compiled = ts.transpile(code, {
+        lib: ['es2023'],
+        module: ts.ModuleKind.None,
+        target: ts.ScriptTarget.ES2022,
+
+        strict: true,
+        esModuleInterop: true,
+        skipLibCheck: true
+      })
+
       const result: string[] = []
-      const func = new AsyncFunction('maa', 'context', `with (maa) { ${cell.document.getText()} }`)
+      const func = new AsyncFunction('maa', 'context', `with (maa) { ${compiled} }`)
       await func(
         {
           print: (text: string) => {
@@ -44,7 +56,8 @@ export class NotebookController {
               err = new Error(err)
             }
             throw err
-          }
+          },
+          api: maa
         },
         ctx
       )

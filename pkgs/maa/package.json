@@ -1,0 +1,8 @@
+{
+  "name": "@maa/maa",
+  "main": "src/index.ts",
+  "devDependencies": {
+    "@maa/schema": "workspace:*",
+    "@tsconfig/node18": "^18"
+  }
+}
