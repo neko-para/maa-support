@@ -8,7 +8,10 @@ export class NotebookController {
   _controller
 
   _order = 0
-  _contexts = {} as Record<string, unknown>
+  _contexts: Record<string, unknown> = {}
+
+  _activeCell: string[] = []
+  _flushCellOutput: () => void = () => {}
 
   constructor() {
     this._controller = vscode.notebooks.createNotebookController(
@@ -27,7 +30,7 @@ export class NotebookController {
   }
 
   async runCell(cell: vscode.NotebookCell) {
-    const ctx = this._contexts[cell.document.uri.path] ?? {}
+    const ctx = (this._contexts[cell.document.uri.path] ?? {}) as Record<string, unknown>
     this._contexts[cell.document.uri.path] = ctx
     const exec = this._controller.createNotebookCellExecution(cell)
     exec.executionOrder = ++this._order
@@ -45,9 +48,16 @@ export class NotebookController {
       })
 
       const result: string[] = []
-      const func = new AsyncFunction('maa', 'context', `with (maa) { ${compiled} }`)
+      this._activeCell = result
+      const flush = () => {
+        const item = vscode.NotebookCellOutputItem.text(result.join('\n'), 'text/plain')
+        exec.replaceOutput(new vscode.NotebookCellOutput([item]))
+      }
+      this._flushCellOutput = flush
+      const func = new AsyncFunction('maa', 'context', `const exports = {}; ${compiled}`)
       await func(
         {
+          context: ctx,
           print: (text: string) => {
             result.push(text)
           },
@@ -57,12 +67,43 @@ export class NotebookController {
             }
             throw err
           },
-          api: maa
+          api: maa,
+          utils: {
+            getCallback: async () => {
+              if (ctx.__callback) {
+                return ctx.__callback
+              } else {
+                const id = await maa.$callback.add()
+                if (!id) {
+                  throw '获取回调失败'
+                }
+                ctx.__callback = id
+                const proc = async () => {
+                  if (!ctx.__callback) {
+                    return
+                  }
+                  const ids = await maa.$callback.pull(id)
+                  setTimeout(async () => {
+                    await Promise.all(
+                      ids.map(async cid => {
+                        return maa.$callback.process(id, cid, async (msg, detail) => {
+                          this._activeCell.push(`${msg} ${detail}`)
+                          this._flushCellOutput()
+                        })
+                      })
+                    )
+                    setTimeout(proc, 0)
+                  }, 1000)
+                }
+                setTimeout(proc, 0)
+                return ctx.__callback
+              }
+            }
+          }
         },
         ctx
       )
-      const item = vscode.NotebookCellOutputItem.text(result.join('\n'), 'text/plain')
-      exec.replaceOutput(new vscode.NotebookCellOutput([item]))
+      flush()
       exec.end(true, Date.now())
     } catch (err: unknown) {
       const item = vscode.NotebookCellOutputItem.error(err as Error)
