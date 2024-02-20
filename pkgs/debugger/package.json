@@ -1,0 +1,16 @@
+{
+  "name": "@maa/debugger",
+  "main": "src/debugger.ts",
+  "scripts": {
+    "dev": "node scripts/build.mjs"
+  },
+  "devDependencies": {
+    "@maa/maa": "workspace:*",
+    "@tsconfig/node18": "^18",
+    "@types/node": "18",
+    "@vscode/debugadapter": "^1.64.0",
+    "@vscode/debugprotocol": "^1.64.0",
+    "esbuild": "^0.20.0",
+    "jsonc-parser": "^3.2.1"
+  }
+}

@@ -14,11 +14,120 @@
   ],
   "activationEvents": [
     "onLanguage:json",
-    "onLanguage:jsonc"
+    "onLanguage:jsonc",
+    "onDebug"
   ],
   "main": "./out/extension.js",
   "contributes": {
-    "commands": [],
+    "breakpoints": [
+      {
+        "language": "json"
+      },
+      {
+        "language": "jsonc"
+      }
+    ],
+    "debuggers": [
+      {
+        "type": "maafw",
+        "label": "Maa Framework Debug",
+        "runtime": "node",
+        "program": "./out/debugger.ts",
+        "configurationAttributes": {
+          "required": [
+            "resource",
+            "agent",
+            "task"
+          ],
+          "properties": {
+            "resource": {
+              "type": "string",
+              "description": "path to resource",
+              "default": "${workspaceFolder}"
+            },
+            "agent": {
+              "type": "string",
+              "description": "path to MaaAgentBinary",
+              "default": ""
+            },
+            "task": {
+              "type": "string",
+              "description": "startup task",
+              "default": ""
+            },
+            "param": {
+              "type": "object",
+              "description": "startup task param",
+              "default": {}
+            },
+            "log": {
+              "type": "string",
+              "description": "maa logging path",
+              "default": "${workspaceFolder}"
+            },
+            "controller": {
+              "type": "object",
+              "description": "controller option",
+              "default": "{}",
+              "properties": {
+                "long": {
+                  "type": "integer"
+                },
+                "short": {
+                  "type": "integer"
+                },
+                "packageEntry": {
+                  "type": "string"
+                },
+                "package": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "initialConfigurations": [
+          {
+            "type": "maafw",
+            "request": "launch",
+            "name": "Maa Framework Debug",
+            "resource": "${workspaceFolder}",
+            "agent": "",
+            "task": "",
+            "param": {},
+            "log": "${workspaceFolder}",
+            "controller": {
+              "long": 0,
+              "short": 0,
+              "packageEntry": "",
+              "package": ""
+            }
+          }
+        ],
+        "configurationSnippets": [
+          {
+            "label": "Maa Framework Debug: Launch",
+            "description": "Configure and debug Maa Framework",
+            "body": {
+              "type": "maafw",
+              "request": "launch",
+              "name": "maa framework debug config",
+              "resource": "^\"\\${workspaceFolder}\"",
+              "agent": "",
+              "task": "",
+              "param": {},
+              "log": "^\"\\${workspaceFolder}\"",
+              "controller": {
+                "long": 0,
+                "short": 0,
+                "packageEntry": "",
+                "package": ""
+              }
+            }
+          }
+        ]
+      }
+    ],
     "notebooks": [
       {
         "type": "maafw-notebook",
@@ -35,12 +144,13 @@
     "dev": "node scripts/build.mjs"
   },
   "devDependencies": {
+    "@maa/maa": "workspace:*",
+    "@maa/debugger": "workspace:*",
     "@types/node": "18.x",
     "@types/vscode": "^1.86.0",
     "esbuild": "^0.20.0",
     "jsonc-parser": "^3.2.1",
     "typescript": "^5.3.3",
-    "@tsconfig/node18": "^18",
-    "@maa/maa": "workspace:*"
+    "@tsconfig/node18": "^18"
   }
 }

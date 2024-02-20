@@ -12,6 +12,30 @@ importers:
         specifier: ^4.3.0
         version: 4.3.0(prettier@3.2.5)
 
+  pkgs/debugger:
+    devDependencies:
+      '@maa/maa':
+        specifier: workspace:*
+        version: link:../maa
+      '@tsconfig/node18':
+        specifier: ^18
+        version: 18.2.2
+      '@types/node':
+        specifier: '18'
+        version: 18.19.14
+      '@vscode/debugadapter':
+        specifier: ^1.64.0
+        version: 1.64.0
+      '@vscode/debugprotocol':
+        specifier: ^1.64.0
+        version: 1.64.0
+      esbuild:
+        specifier: ^0.20.0
+        version: 0.20.0
+      jsonc-parser:
+        specifier: ^3.2.1
+        version: 3.2.1
+
   pkgs/maa:
     devDependencies:
       '@maa/schema':
@@ -23,6 +47,9 @@ importers:
 
   pkgs/maa-support:
     devDependencies:
+      '@maa/debugger':
+        specifier: workspace:*
+        version: link:../debugger
       '@maa/maa':
         specifier: workspace:*
         version: link:../maa
@@ -781,6 +808,17 @@ packages:
 
   /@types/vscode@1.86.0:
     resolution: {integrity: sha512-DnIXf2ftWv+9LWOB5OJeIeaLigLHF7fdXF6atfc7X5g2w/wVZBgk0amP7b+ub5xAuW1q7qP5YcFvOcit/DtyCQ==}
+    dev: true
+
+  /@vscode/debugadapter@1.64.0:
+    resolution: {integrity: sha512-XygE985qmNCzJExDnam4bErK6FG9Ck8S5TRPDNESwkt7i3OXqw5a3vYb7Dteyhz9YMEf7hwhFoT46Mjc45nJUg==}
+    engines: {node: '>=14'}
+    dependencies:
+      '@vscode/debugprotocol': 1.64.0
+    dev: true
+
+  /@vscode/debugprotocol@1.64.0:
+    resolution: {integrity: sha512-Zhf3KvB+J04M4HPE2yCvEILGVtPixXUQMLBvx4QcAtjhc5lnwlZbbt80LCsZO2B+2BH8RMgVXk3QQ5DEzEne2Q==}
     dev: true
 
   /acorn-walk@8.3.2:
