@@ -1,10 +1,10 @@
 {
-  "name": "@maa/maa-support",
+  "name": "maa-support",
   "displayName": "Maa Pipeline Support",
   "publisher": "nekosu",
   "description": "Maa framework & Maa arknights support",
   "repository": "https://github.com/neko-para/maa-support",
-  "version": "0.0.7",
+  "version": "0.1.1",
   "icon": "images/logo.png",
   "engines": {
     "vscode": "^1.86.0"

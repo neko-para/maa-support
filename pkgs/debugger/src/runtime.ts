@@ -362,6 +362,12 @@ export class MaaFrameworkDebugRuntime extends EventEmitter {
       return null
     }
     const pauseTask = this.taskIndex[this.pauseContext.task]
+    if (!pauseTask) {
+      return {
+        stack: [],
+        count: 0
+      }
+    }
     const frames = [
       {
         index: 0,
