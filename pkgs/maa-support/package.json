@@ -34,53 +34,55 @@
         "runtime": "node",
         "program": "./out/debugger.ts",
         "configurationAttributes": {
-          "required": [
-            "resource",
-            "agent",
-            "task"
-          ],
-          "properties": {
-            "resource": {
-              "type": "string",
-              "description": "path to resource",
-              "default": "${workspaceFolder}"
-            },
-            "agent": {
-              "type": "string",
-              "description": "path to MaaAgentBinary",
-              "default": ""
-            },
-            "task": {
-              "type": "string",
-              "description": "startup task",
-              "default": ""
-            },
-            "param": {
-              "type": "object",
-              "description": "startup task param",
-              "default": {}
-            },
-            "log": {
-              "type": "string",
-              "description": "maa logging path",
-              "default": "${workspaceFolder}"
-            },
-            "controller": {
-              "type": "object",
-              "description": "controller option",
-              "default": "{}",
-              "properties": {
-                "long": {
-                  "type": "integer"
-                },
-                "short": {
-                  "type": "integer"
-                },
-                "packageEntry": {
-                  "type": "string"
-                },
-                "package": {
-                  "type": "string"
+          "launch": {
+            "required": [
+              "resource",
+              "agent",
+              "task"
+            ],
+            "properties": {
+              "resource": {
+                "type": "string",
+                "description": "path to resource",
+                "default": "${workspaceFolder}"
+              },
+              "agent": {
+                "type": "string",
+                "description": "path to MaaAgentBinary",
+                "default": ""
+              },
+              "task": {
+                "type": "string",
+                "description": "startup task",
+                "default": ""
+              },
+              "param": {
+                "type": "object",
+                "description": "startup task param",
+                "default": {}
+              },
+              "log": {
+                "type": "string",
+                "description": "maa logging path",
+                "default": "${workspaceFolder}"
+              },
+              "controller": {
+                "type": "object",
+                "description": "controller option",
+                "default": "{}",
+                "properties": {
+                  "long": {
+                    "type": "integer"
+                  },
+                  "short": {
+                    "type": "integer"
+                  },
+                  "packageEntry": {
+                    "type": "string"
+                  },
+                  "package": {
+                    "type": "string"
+                  }
                 }
               }
             }

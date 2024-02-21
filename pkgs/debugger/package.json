@@ -1,9 +1,6 @@
 {
   "name": "@maa/debugger",
   "main": "src/debugger.ts",
-  "scripts": {
-    "dev": "node scripts/build.mjs"
-  },
   "devDependencies": {
     "@maa/maa": "workspace:*",
     "@tsconfig/node18": "^18",
