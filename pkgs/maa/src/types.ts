@@ -59,3 +59,10 @@ export const enum AdbType {
   Screencap_MinicapStream = 7 << 16,
   Screencap_Mask = 0xff0000
 }
+
+export type MaaRect = {
+  x: number
+  y: number
+  width: number
+  height: number
+}

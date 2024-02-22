@@ -1,8 +1,13 @@
 import { api, opaque } from '@maa/schema'
 
-import type { ControllerId, ResourceId } from '.'
-import type { APICallbackId } from './callback'
-import type { Status } from './types'
+import type {
+  APICallbackId,
+  ControllerId,
+  CustomActionRunId,
+  CustomActionStopId,
+  ResourceId,
+  Status
+} from '.'
 
 export type InstanceId = string & { __kind: 'MaaInstanceAPI' }
 export type InstanceTaskId = number & { __kind: 'InstanceTaskId' }
@@ -30,6 +35,23 @@ async function bindCtrl(inst: InstanceId, ctrl: ControllerId) {
 
 async function inited(inst: InstanceId) {
   return (await api.MaaInited({ inst })).return > 0
+}
+
+async function registerCustomAction(
+  inst: InstanceId,
+  name: string,
+  run: CustomActionRunId,
+  stop: CustomActionStopId
+) {
+  return (await api.MaaRegisterCustomActionImpl({ inst, name, run, stop })).return > 0
+}
+
+async function unregisterCustomAction(inst: InstanceId, name: string) {
+  return (await api.MaaUnregisterCustomAction({ inst, name })).return > 0
+}
+
+async function clearCustomAction(inst: InstanceId) {
+  return (await api.MaaClearCustomAction({ inst })).return > 0
 }
 
 async function postTask(inst: InstanceId, entry: string, param: string) {
@@ -72,6 +94,9 @@ export const $instance = {
   bindRes,
   bindCtrl,
   inited,
+  registerCustomAction,
+  unregisterCustomAction,
+  clearCustomAction,
   postTask,
   setParam,
   status,

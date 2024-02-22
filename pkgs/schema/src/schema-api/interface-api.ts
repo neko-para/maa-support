@@ -245,6 +245,12 @@ export interface IApi {
     >['content']['application/json']
     Response: paths['/api/MaaPostTask']['post']['responses']['200']['content']['application/json']
   }
+  '/api/MaaRegisterCustomActionImpl': {
+    Body?: NonNullable<
+      paths['/api/MaaRegisterCustomActionImpl']['post']['requestBody']
+    >['content']['application/json']
+    Response: paths['/api/MaaRegisterCustomActionImpl']['post']['responses']['200']['content']['application/json']
+  }
   '/api/MaaResourceCreate': {
     Body?: NonNullable<
       paths['/api/MaaResourceCreate']['post']['requestBody']
@@ -489,6 +495,18 @@ export interface IApi {
     >['content']['application/json']
     Response: paths['/api/MaaToolkitWaitForFindDeviceToComplete']['post']['responses']['200']['content']['application/json']
   }
+  '/api/MaaUnregisterCustomAction': {
+    Body?: NonNullable<
+      paths['/api/MaaUnregisterCustomAction']['post']['requestBody']
+    >['content']['application/json']
+    Response: paths['/api/MaaUnregisterCustomAction']['post']['responses']['200']['content']['application/json']
+  }
+  '/api/MaaUnregisterCustomRecognizer': {
+    Body?: NonNullable<
+      paths['/api/MaaUnregisterCustomRecognizer']['post']['requestBody']
+    >['content']['application/json']
+    Response: paths['/api/MaaUnregisterCustomRecognizer']['post']['responses']['200']['content']['application/json']
+  }
   '/api/MaaVersion': {
     Body?: NonNullable<
       paths['/api/MaaVersion']['post']['requestBody']
@@ -501,11 +519,77 @@ export interface IApi {
     >['content']['application/json']
     Response: paths['/api/MaaWaitTask']['post']['responses']['200']['content']['application/json']
   }
-  '/api/MaaWin32ControllerCreate': {
+  '/callback/CustomActionRun/add': {
     Body?: NonNullable<
-      paths['/api/MaaWin32ControllerCreate']['post']['requestBody']
+      paths['/callback/CustomActionRun/add']['post']['requestBody']
     >['content']['application/json']
-    Response: paths['/api/MaaWin32ControllerCreate']['post']['responses']['200']['content']['application/json']
+    Response: paths['/callback/CustomActionRun/add']['post']['responses']['200']['content']['application/json']
+  }
+  '/callback/CustomActionRun/del': {
+    Body?: NonNullable<
+      paths['/callback/CustomActionRun/del']['post']['requestBody']
+    >['content']['application/json']
+    Response: paths['/callback/CustomActionRun/del']['post']['responses']['200']['content']['application/json']
+  }
+  '/callback/CustomActionRun/dump': {
+    Body?: NonNullable<
+      paths['/callback/CustomActionRun/dump']['post']['requestBody']
+    >['content']['application/json']
+    Response: paths['/callback/CustomActionRun/dump']['post']['responses']['200']['content']['application/json']
+  }
+  '/callback/CustomActionRun/pull': {
+    Body?: NonNullable<
+      paths['/callback/CustomActionRun/pull']['post']['requestBody']
+    >['content']['application/json']
+    Response: paths['/callback/CustomActionRun/pull']['post']['responses']['200']['content']['application/json']
+  }
+  '/callback/CustomActionRun/request': {
+    Body?: NonNullable<
+      paths['/callback/CustomActionRun/request']['post']['requestBody']
+    >['content']['application/json']
+    Response: paths['/callback/CustomActionRun/request']['post']['responses']['200']['content']['application/json']
+  }
+  '/callback/CustomActionRun/response': {
+    Body?: NonNullable<
+      paths['/callback/CustomActionRun/response']['post']['requestBody']
+    >['content']['application/json']
+    Response: paths['/callback/CustomActionRun/response']['post']['responses']['200']['content']['application/json']
+  }
+  '/callback/CustomActionStop/add': {
+    Body?: NonNullable<
+      paths['/callback/CustomActionStop/add']['post']['requestBody']
+    >['content']['application/json']
+    Response: paths['/callback/CustomActionStop/add']['post']['responses']['200']['content']['application/json']
+  }
+  '/callback/CustomActionStop/del': {
+    Body?: NonNullable<
+      paths['/callback/CustomActionStop/del']['post']['requestBody']
+    >['content']['application/json']
+    Response: paths['/callback/CustomActionStop/del']['post']['responses']['200']['content']['application/json']
+  }
+  '/callback/CustomActionStop/dump': {
+    Body?: NonNullable<
+      paths['/callback/CustomActionStop/dump']['post']['requestBody']
+    >['content']['application/json']
+    Response: paths['/callback/CustomActionStop/dump']['post']['responses']['200']['content']['application/json']
+  }
+  '/callback/CustomActionStop/pull': {
+    Body?: NonNullable<
+      paths['/callback/CustomActionStop/pull']['post']['requestBody']
+    >['content']['application/json']
+    Response: paths['/callback/CustomActionStop/pull']['post']['responses']['200']['content']['application/json']
+  }
+  '/callback/CustomActionStop/request': {
+    Body?: NonNullable<
+      paths['/callback/CustomActionStop/request']['post']['requestBody']
+    >['content']['application/json']
+    Response: paths['/callback/CustomActionStop/request']['post']['responses']['200']['content']['application/json']
+  }
+  '/callback/CustomActionStop/response': {
+    Body?: NonNullable<
+      paths['/callback/CustomActionStop/response']['post']['requestBody']
+    >['content']['application/json']
+    Response: paths['/callback/CustomActionStop/response']['post']['responses']['200']['content']['application/json']
   }
   '/callback/MaaAPICallback/add': {
     Body?: NonNullable<
@@ -566,5 +650,11 @@ export interface IApi {
       paths['/opaque/MaaResourceAPI']['post']['requestBody']
     >['content']['application/json']
     Response: paths['/opaque/MaaResourceAPI']['post']['responses']['200']['content']['application/json']
+  }
+  '/opaque/MaaSyncContextAPI': {
+    Body?: NonNullable<
+      paths['/opaque/MaaSyncContextAPI']['post']['requestBody']
+    >['content']['application/json']
+    Response: paths['/opaque/MaaSyncContextAPI']['post']['responses']['200']['content']['application/json']
   }
 }

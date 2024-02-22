@@ -1265,6 +1265,41 @@ export interface paths {
       }
     }
   }
+  '/api/MaaRegisterCustomActionImpl': {
+    post: {
+      requestBody?: {
+        content: {
+          'application/json': {
+            /** MaaInstanceAPI */
+            inst: string
+            name: string
+            /** CustomActionRun */
+            run: string
+            /** CustomActionStop */
+            stop: string
+          }
+        }
+      }
+      responses: {
+        200: {
+          content: {
+            'application/json': OneOf<
+              [
+                {
+                  data: {
+                    return: number
+                  }
+                },
+                {
+                  error: string
+                }
+              ]
+            >
+          }
+        }
+      }
+    }
+  }
   '/api/MaaResourceCreate': {
     post: {
       requestBody?: {
@@ -2480,6 +2515,68 @@ export interface paths {
       }
     }
   }
+  '/api/MaaUnregisterCustomAction': {
+    post: {
+      requestBody?: {
+        content: {
+          'application/json': {
+            /** MaaInstanceAPI */
+            inst: string
+            name: string
+          }
+        }
+      }
+      responses: {
+        200: {
+          content: {
+            'application/json': OneOf<
+              [
+                {
+                  data: {
+                    return: number
+                  }
+                },
+                {
+                  error: string
+                }
+              ]
+            >
+          }
+        }
+      }
+    }
+  }
+  '/api/MaaUnregisterCustomRecognizer': {
+    post: {
+      requestBody?: {
+        content: {
+          'application/json': {
+            /** MaaInstanceAPI */
+            inst: string
+            name: string
+          }
+        }
+      }
+      responses: {
+        200: {
+          content: {
+            'application/json': OneOf<
+              [
+                {
+                  data: {
+                    return: number
+                  }
+                },
+                {
+                  error: string
+                }
+              ]
+            >
+          }
+        }
+      }
+    }
+  }
   '/api/MaaVersion': {
     post: {
       requestBody?: {
@@ -2538,15 +2635,93 @@ export interface paths {
       }
     }
   }
-  '/api/MaaWin32ControllerCreate': {
+  '/callback/CustomActionRun/add': {
+    post: {
+      requestBody?: {
+        content: {
+          'application/json': unknown
+        }
+      }
+      responses: {
+        200: {
+          content: {
+            'application/json': OneOf<
+              [
+                {
+                  data: {
+                    id: string
+                  }
+                },
+                {
+                  error: string
+                }
+              ]
+            >
+          }
+        }
+      }
+    }
+  }
+  '/callback/CustomActionRun/del': {
     post: {
       requestBody?: {
         content: {
           'application/json': {
-            /** MaaAPICallback */
-            callback: string
-            hWnd: number
-            type: number
+            id: string
+          }
+        }
+      }
+      responses: {
+        200: {
+          content: {
+            'application/json': OneOf<
+              [
+                {
+                  data: unknown
+                },
+                {
+                  error: string
+                }
+              ]
+            >
+          }
+        }
+      }
+    }
+  }
+  '/callback/CustomActionRun/dump': {
+    post: {
+      requestBody?: {
+        content: {
+          'application/json': unknown
+        }
+      }
+      responses: {
+        200: {
+          content: {
+            'application/json': OneOf<
+              [
+                {
+                  data: {
+                    ids: string[]
+                  }
+                },
+                {
+                  error: string
+                }
+              ]
+            >
+          }
+        }
+      }
+    }
+  }
+  '/callback/CustomActionRun/pull': {
+    post: {
+      requestBody?: {
+        content: {
+          'application/json': {
+            id: string
           }
         }
       }
@@ -2557,9 +2732,243 @@ export interface paths {
               [
                 {
                   data: {
-                    /** MaaControllerAPI */
-                    return: string
+                    ids: string[]
                   }
+                },
+                {
+                  error: string
+                }
+              ]
+            >
+          }
+        }
+      }
+    }
+  }
+  '/callback/CustomActionRun/request': {
+    post: {
+      requestBody?: {
+        content: {
+          'application/json': {
+            cid: string
+            id: string
+          }
+        }
+      }
+      responses: {
+        200: {
+          content: {
+            'application/json': OneOf<
+              [
+                {
+                  data: {
+                    cur_box: {
+                      height: number
+                      width: number
+                      x: number
+                      y: number
+                    }
+                    cur_rec_detail: string
+                    custom_action_param: string
+                    /** MaaSyncContextAPI */
+                    sync_context: string
+                    task_name: string
+                  }
+                },
+                {
+                  error: string
+                }
+              ]
+            >
+          }
+        }
+      }
+    }
+  }
+  '/callback/CustomActionRun/response': {
+    post: {
+      requestBody?: {
+        content: {
+          'application/json': {
+            cid: string
+            id: string
+            return?: number
+          }
+        }
+      }
+      responses: {
+        200: {
+          content: {
+            'application/json': OneOf<
+              [
+                {
+                  data: unknown
+                },
+                {
+                  error: string
+                }
+              ]
+            >
+          }
+        }
+      }
+    }
+  }
+  '/callback/CustomActionStop/add': {
+    post: {
+      requestBody?: {
+        content: {
+          'application/json': unknown
+        }
+      }
+      responses: {
+        200: {
+          content: {
+            'application/json': OneOf<
+              [
+                {
+                  data: {
+                    id: string
+                  }
+                },
+                {
+                  error: string
+                }
+              ]
+            >
+          }
+        }
+      }
+    }
+  }
+  '/callback/CustomActionStop/del': {
+    post: {
+      requestBody?: {
+        content: {
+          'application/json': {
+            id: string
+          }
+        }
+      }
+      responses: {
+        200: {
+          content: {
+            'application/json': OneOf<
+              [
+                {
+                  data: unknown
+                },
+                {
+                  error: string
+                }
+              ]
+            >
+          }
+        }
+      }
+    }
+  }
+  '/callback/CustomActionStop/dump': {
+    post: {
+      requestBody?: {
+        content: {
+          'application/json': unknown
+        }
+      }
+      responses: {
+        200: {
+          content: {
+            'application/json': OneOf<
+              [
+                {
+                  data: {
+                    ids: string[]
+                  }
+                },
+                {
+                  error: string
+                }
+              ]
+            >
+          }
+        }
+      }
+    }
+  }
+  '/callback/CustomActionStop/pull': {
+    post: {
+      requestBody?: {
+        content: {
+          'application/json': {
+            id: string
+          }
+        }
+      }
+      responses: {
+        200: {
+          content: {
+            'application/json': OneOf<
+              [
+                {
+                  data: {
+                    ids: string[]
+                  }
+                },
+                {
+                  error: string
+                }
+              ]
+            >
+          }
+        }
+      }
+    }
+  }
+  '/callback/CustomActionStop/request': {
+    post: {
+      requestBody?: {
+        content: {
+          'application/json': {
+            cid: string
+            id: string
+          }
+        }
+      }
+      responses: {
+        200: {
+          content: {
+            'application/json': OneOf<
+              [
+                {
+                  data: Record<string, never>
+                },
+                {
+                  error: string
+                }
+              ]
+            >
+          }
+        }
+      }
+    }
+  }
+  '/callback/CustomActionStop/response': {
+    post: {
+      requestBody?: {
+        content: {
+          'application/json': {
+            cid: string
+            id: string
+          }
+        }
+      }
+      responses: {
+        200: {
+          content: {
+            'application/json': OneOf<
+              [
+                {
+                  data: unknown
                 },
                 {
                   error: string
@@ -2828,6 +3237,35 @@ export interface paths {
     }
   }
   '/opaque/MaaResourceAPI': {
+    post: {
+      requestBody?: {
+        content: {
+          'application/json': unknown
+        }
+      }
+      responses: {
+        200: {
+          content: {
+            'application/json': OneOf<
+              [
+                {
+                  data: {
+                    [key: string]: {
+                      pointer: string
+                    }
+                  }
+                },
+                {
+                  error: string
+                }
+              ]
+            >
+          }
+        }
+      }
+    }
+  }
+  '/opaque/MaaSyncContextAPI': {
     post: {
       requestBody?: {
         content: {

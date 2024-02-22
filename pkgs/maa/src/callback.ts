@@ -22,10 +22,7 @@ async function pull(id: APICallbackId) {
   return (await cb.pull({ id })).ids
 }
 
-async function request(
-  id: APICallbackId,
-  cid: string
-): Promise<[msg: string, details_json: string]> {
+async function request(id: APICallbackId, cid: string): Promise<Parameters<APICallback>> {
   const arg = await cb.request({ id, cid })
   return [arg.msg, arg.details_json]
 }

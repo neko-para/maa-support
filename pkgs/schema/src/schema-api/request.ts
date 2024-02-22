@@ -7,7 +7,7 @@ import type { AxiosRequestConfig } from 'axios'
 import axios from 'axios'
 
 const request: IAPIRequest = config => {
-  return axios(config as any).then(res => res.data)
+  return axios(config).then(res => res.data)
 }
 
 export default request

@@ -811,6 +811,26 @@ export const requestApi = {
       ...otherConfig
     })
   },
+  '/api/MaaRegisterCustomActionImpl': <T extends Record<any, any> | never = never>(
+    config: IConfig<
+      Omit<
+        Equal<T, never> extends true ? AxiosRequestConfig : T & AxiosRequestConfig,
+        'method' | 'url' | 'data'
+      >,
+      { data?: IApi['/api/MaaRegisterCustomActionImpl']['Body'] }
+    >
+  ): Promise<IApi['/api/MaaRegisterCustomActionImpl']['Response']> => {
+    const { data, ...otherConfig } = config
+    const finalURL = '/api/MaaRegisterCustomActionImpl'
+
+    return request({
+      method: 'post',
+      url: finalURL,
+
+      data: data,
+      ...otherConfig
+    })
+  },
   '/api/MaaResourceCreate': <T extends Record<any, any> | never = never>(
     config: IConfig<
       Omit<
@@ -1631,6 +1651,46 @@ export const requestApi = {
       ...otherConfig
     })
   },
+  '/api/MaaUnregisterCustomAction': <T extends Record<any, any> | never = never>(
+    config: IConfig<
+      Omit<
+        Equal<T, never> extends true ? AxiosRequestConfig : T & AxiosRequestConfig,
+        'method' | 'url' | 'data'
+      >,
+      { data?: IApi['/api/MaaUnregisterCustomAction']['Body'] }
+    >
+  ): Promise<IApi['/api/MaaUnregisterCustomAction']['Response']> => {
+    const { data, ...otherConfig } = config
+    const finalURL = '/api/MaaUnregisterCustomAction'
+
+    return request({
+      method: 'post',
+      url: finalURL,
+
+      data: data,
+      ...otherConfig
+    })
+  },
+  '/api/MaaUnregisterCustomRecognizer': <T extends Record<any, any> | never = never>(
+    config: IConfig<
+      Omit<
+        Equal<T, never> extends true ? AxiosRequestConfig : T & AxiosRequestConfig,
+        'method' | 'url' | 'data'
+      >,
+      { data?: IApi['/api/MaaUnregisterCustomRecognizer']['Body'] }
+    >
+  ): Promise<IApi['/api/MaaUnregisterCustomRecognizer']['Response']> => {
+    const { data, ...otherConfig } = config
+    const finalURL = '/api/MaaUnregisterCustomRecognizer'
+
+    return request({
+      method: 'post',
+      url: finalURL,
+
+      data: data,
+      ...otherConfig
+    })
+  },
   '/api/MaaVersion': <T extends Record<any, any> | never = never>(
     config: IConfig<
       Omit<
@@ -1671,17 +1731,237 @@ export const requestApi = {
       ...otherConfig
     })
   },
-  '/api/MaaWin32ControllerCreate': <T extends Record<any, any> | never = never>(
+  '/callback/CustomActionRun/add': <T extends Record<any, any> | never = never>(
     config: IConfig<
       Omit<
         Equal<T, never> extends true ? AxiosRequestConfig : T & AxiosRequestConfig,
         'method' | 'url' | 'data'
       >,
-      { data?: IApi['/api/MaaWin32ControllerCreate']['Body'] }
+      { data?: IApi['/callback/CustomActionRun/add']['Body'] }
     >
-  ): Promise<IApi['/api/MaaWin32ControllerCreate']['Response']> => {
+  ): Promise<IApi['/callback/CustomActionRun/add']['Response']> => {
     const { data, ...otherConfig } = config
-    const finalURL = '/api/MaaWin32ControllerCreate'
+    const finalURL = '/callback/CustomActionRun/add'
+
+    return request({
+      method: 'post',
+      url: finalURL,
+
+      data: data,
+      ...otherConfig
+    })
+  },
+  '/callback/CustomActionRun/del': <T extends Record<any, any> | never = never>(
+    config: IConfig<
+      Omit<
+        Equal<T, never> extends true ? AxiosRequestConfig : T & AxiosRequestConfig,
+        'method' | 'url' | 'data'
+      >,
+      { data?: IApi['/callback/CustomActionRun/del']['Body'] }
+    >
+  ): Promise<IApi['/callback/CustomActionRun/del']['Response']> => {
+    const { data, ...otherConfig } = config
+    const finalURL = '/callback/CustomActionRun/del'
+
+    return request({
+      method: 'post',
+      url: finalURL,
+
+      data: data,
+      ...otherConfig
+    })
+  },
+  '/callback/CustomActionRun/dump': <T extends Record<any, any> | never = never>(
+    config: IConfig<
+      Omit<
+        Equal<T, never> extends true ? AxiosRequestConfig : T & AxiosRequestConfig,
+        'method' | 'url' | 'data'
+      >,
+      { data?: IApi['/callback/CustomActionRun/dump']['Body'] }
+    >
+  ): Promise<IApi['/callback/CustomActionRun/dump']['Response']> => {
+    const { data, ...otherConfig } = config
+    const finalURL = '/callback/CustomActionRun/dump'
+
+    return request({
+      method: 'post',
+      url: finalURL,
+
+      data: data,
+      ...otherConfig
+    })
+  },
+  '/callback/CustomActionRun/pull': <T extends Record<any, any> | never = never>(
+    config: IConfig<
+      Omit<
+        Equal<T, never> extends true ? AxiosRequestConfig : T & AxiosRequestConfig,
+        'method' | 'url' | 'data'
+      >,
+      { data?: IApi['/callback/CustomActionRun/pull']['Body'] }
+    >
+  ): Promise<IApi['/callback/CustomActionRun/pull']['Response']> => {
+    const { data, ...otherConfig } = config
+    const finalURL = '/callback/CustomActionRun/pull'
+
+    return request({
+      method: 'post',
+      url: finalURL,
+
+      data: data,
+      ...otherConfig
+    })
+  },
+  '/callback/CustomActionRun/request': <T extends Record<any, any> | never = never>(
+    config: IConfig<
+      Omit<
+        Equal<T, never> extends true ? AxiosRequestConfig : T & AxiosRequestConfig,
+        'method' | 'url' | 'data'
+      >,
+      { data?: IApi['/callback/CustomActionRun/request']['Body'] }
+    >
+  ): Promise<IApi['/callback/CustomActionRun/request']['Response']> => {
+    const { data, ...otherConfig } = config
+    const finalURL = '/callback/CustomActionRun/request'
+
+    return request({
+      method: 'post',
+      url: finalURL,
+
+      data: data,
+      ...otherConfig
+    })
+  },
+  '/callback/CustomActionRun/response': <T extends Record<any, any> | never = never>(
+    config: IConfig<
+      Omit<
+        Equal<T, never> extends true ? AxiosRequestConfig : T & AxiosRequestConfig,
+        'method' | 'url' | 'data'
+      >,
+      { data?: IApi['/callback/CustomActionRun/response']['Body'] }
+    >
+  ): Promise<IApi['/callback/CustomActionRun/response']['Response']> => {
+    const { data, ...otherConfig } = config
+    const finalURL = '/callback/CustomActionRun/response'
+
+    return request({
+      method: 'post',
+      url: finalURL,
+
+      data: data,
+      ...otherConfig
+    })
+  },
+  '/callback/CustomActionStop/add': <T extends Record<any, any> | never = never>(
+    config: IConfig<
+      Omit<
+        Equal<T, never> extends true ? AxiosRequestConfig : T & AxiosRequestConfig,
+        'method' | 'url' | 'data'
+      >,
+      { data?: IApi['/callback/CustomActionStop/add']['Body'] }
+    >
+  ): Promise<IApi['/callback/CustomActionStop/add']['Response']> => {
+    const { data, ...otherConfig } = config
+    const finalURL = '/callback/CustomActionStop/add'
+
+    return request({
+      method: 'post',
+      url: finalURL,
+
+      data: data,
+      ...otherConfig
+    })
+  },
+  '/callback/CustomActionStop/del': <T extends Record<any, any> | never = never>(
+    config: IConfig<
+      Omit<
+        Equal<T, never> extends true ? AxiosRequestConfig : T & AxiosRequestConfig,
+        'method' | 'url' | 'data'
+      >,
+      { data?: IApi['/callback/CustomActionStop/del']['Body'] }
+    >
+  ): Promise<IApi['/callback/CustomActionStop/del']['Response']> => {
+    const { data, ...otherConfig } = config
+    const finalURL = '/callback/CustomActionStop/del'
+
+    return request({
+      method: 'post',
+      url: finalURL,
+
+      data: data,
+      ...otherConfig
+    })
+  },
+  '/callback/CustomActionStop/dump': <T extends Record<any, any> | never = never>(
+    config: IConfig<
+      Omit<
+        Equal<T, never> extends true ? AxiosRequestConfig : T & AxiosRequestConfig,
+        'method' | 'url' | 'data'
+      >,
+      { data?: IApi['/callback/CustomActionStop/dump']['Body'] }
+    >
+  ): Promise<IApi['/callback/CustomActionStop/dump']['Response']> => {
+    const { data, ...otherConfig } = config
+    const finalURL = '/callback/CustomActionStop/dump'
+
+    return request({
+      method: 'post',
+      url: finalURL,
+
+      data: data,
+      ...otherConfig
+    })
+  },
+  '/callback/CustomActionStop/pull': <T extends Record<any, any> | never = never>(
+    config: IConfig<
+      Omit<
+        Equal<T, never> extends true ? AxiosRequestConfig : T & AxiosRequestConfig,
+        'method' | 'url' | 'data'
+      >,
+      { data?: IApi['/callback/CustomActionStop/pull']['Body'] }
+    >
+  ): Promise<IApi['/callback/CustomActionStop/pull']['Response']> => {
+    const { data, ...otherConfig } = config
+    const finalURL = '/callback/CustomActionStop/pull'
+
+    return request({
+      method: 'post',
+      url: finalURL,
+
+      data: data,
+      ...otherConfig
+    })
+  },
+  '/callback/CustomActionStop/request': <T extends Record<any, any> | never = never>(
+    config: IConfig<
+      Omit<
+        Equal<T, never> extends true ? AxiosRequestConfig : T & AxiosRequestConfig,
+        'method' | 'url' | 'data'
+      >,
+      { data?: IApi['/callback/CustomActionStop/request']['Body'] }
+    >
+  ): Promise<IApi['/callback/CustomActionStop/request']['Response']> => {
+    const { data, ...otherConfig } = config
+    const finalURL = '/callback/CustomActionStop/request'
+
+    return request({
+      method: 'post',
+      url: finalURL,
+
+      data: data,
+      ...otherConfig
+    })
+  },
+  '/callback/CustomActionStop/response': <T extends Record<any, any> | never = never>(
+    config: IConfig<
+      Omit<
+        Equal<T, never> extends true ? AxiosRequestConfig : T & AxiosRequestConfig,
+        'method' | 'url' | 'data'
+      >,
+      { data?: IApi['/callback/CustomActionStop/response']['Body'] }
+    >
+  ): Promise<IApi['/callback/CustomActionStop/response']['Response']> => {
+    const { data, ...otherConfig } = config
+    const finalURL = '/callback/CustomActionStop/response'
 
     return request({
       method: 'post',
@@ -1882,6 +2162,26 @@ export const requestApi = {
   ): Promise<IApi['/opaque/MaaResourceAPI']['Response']> => {
     const { data, ...otherConfig } = config
     const finalURL = '/opaque/MaaResourceAPI'
+
+    return request({
+      method: 'post',
+      url: finalURL,
+
+      data: data,
+      ...otherConfig
+    })
+  },
+  '/opaque/MaaSyncContextAPI': <T extends Record<any, any> | never = never>(
+    config: IConfig<
+      Omit<
+        Equal<T, never> extends true ? AxiosRequestConfig : T & AxiosRequestConfig,
+        'method' | 'url' | 'data'
+      >,
+      { data?: IApi['/opaque/MaaSyncContextAPI']['Body'] }
+    >
+  ): Promise<IApi['/opaque/MaaSyncContextAPI']['Response']> => {
+    const { data, ...otherConfig } = config
+    const finalURL = '/opaque/MaaSyncContextAPI'
 
     return request({
       method: 'post',
