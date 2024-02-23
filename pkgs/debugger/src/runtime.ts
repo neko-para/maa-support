@@ -2,6 +2,8 @@ import '@maa/maa'
 import {
   $callback,
   $controller,
+  $customActionRun,
+  $customActionStop,
   $device,
   $global,
   $instance,
@@ -10,6 +12,8 @@ import {
   AdbType,
   ControllerId,
   ControllerOption,
+  CustomActionRunId,
+  CustomActionStopId,
   GlobalOption,
   InstanceId,
   ResourceId
@@ -232,11 +236,55 @@ export class MaaFrameworkDebugRuntime extends EventEmitter {
     }
     setTimeout(proc, 0)
 
+    const actionRunId: CustomActionRunId = (await $customActionRun.add())!
+    const runProc = async () => {
+      try {
+        const ids = await $customActionRun.pull(actionRunId)
+        setTimeout(async () => {
+          try {
+            for (const cid of ids) {
+              await $customActionRun.process(
+                actionRunId,
+                cid,
+                async (sync_ctx, task, param, box, detail) => {
+                  this.sendEvent('output', `${sync_ctx} ${task} ${param} ${box} ${detail}`)
+                  console.log(sync_ctx, task, param, box, detail)
+                }
+              )
+            }
+            setTimeout(runProc, 0)
+          } catch (_) {}
+        }, 1000)
+      } catch (_) {}
+    }
+    setTimeout(runProc, 0)
+
+    const actionStopId: CustomActionStopId = (await $customActionStop.add())!
+    const stopProc = async () => {
+      try {
+        const ids = await $customActionStop.pull(actionStopId)
+        setTimeout(async () => {
+          try {
+            for (const cid of ids) {
+              await $customActionStop.process(actionStopId, cid, async () => {
+                this.sendEvent('output', `action stop`)
+                console.log('action stop')
+              })
+            }
+            setTimeout(stopProc, 0)
+          } catch (_) {}
+        }, 1000)
+      } catch (_) {}
+    }
+    setTimeout(stopProc, 0)
+
     const controllerId: ControllerId = (await $controller.createAdb(info, arg.agent, callbackId))!
     const resourceId: ResourceId = (await $resource.create(callbackId))!
     const instanceId: InstanceId = (await $instance.create(callbackId))!
     await $instance.bindCtrl(instanceId, controllerId)
     await $instance.bindRes(instanceId, resourceId)
+
+    await $instance.registerCustomAction(instanceId, 'TestAct', actionRunId, actionStopId)
 
     if (arg.controller) {
       if (arg.controller.long) {

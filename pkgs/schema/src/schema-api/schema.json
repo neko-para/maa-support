@@ -4009,6 +4009,107 @@
       },
       "required": ["post"]
     },
+    "/api/MaaRegisterCustomRecognizerImpl": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {
+                      "type": "object",
+                      "properties": {
+                        "analyze": {
+                          "description": "CustomRecognizerAnalyze",
+                          "type": "string"
+                        },
+                        "inst": {
+                          "description": "MaaInstanceAPI",
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["analyze", "inst", "name"]
+                    }
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "anyOf": [
+                            {
+                              "allOf": [
+                                {
+                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_29"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "error": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": ["error"]
+                                }
+                              ]
+                            },
+                            {
+                              "allOf": [
+                                {
+                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_29"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "data": {
+                                      "type": "object",
+                                      "properties": {
+                                        "return": {
+                                          "type": "number"
+                                        }
+                                      },
+                                      "required": ["return"]
+                                    }
+                                  },
+                                  "required": ["data"]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
     "/api/MaaResourceCreate": {
       "type": "object",
       "properties": {
@@ -4434,7 +4535,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_29"
+                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_30"
                                 },
                                 {
                                   "type": "object",
@@ -4450,7 +4551,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_29"
+                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_30"
                                 },
                                 {
                                   "type": "object",
@@ -4531,103 +4632,6 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_30"
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "error": {
-                                      "type": "string"
-                                    }
-                                  },
-                                  "required": ["error"]
-                                }
-                              ]
-                            },
-                            {
-                              "allOf": [
-                                {
-                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_30"
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "data": {
-                                      "type": "object",
-                                      "properties": {
-                                        "return": {
-                                          "type": "number"
-                                        }
-                                      },
-                                      "required": ["return"]
-                                    }
-                                  },
-                                  "required": ["data"]
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      },
-                      "required": ["application/json"]
-                    }
-                  },
-                  "required": ["content"]
-                }
-              },
-              "required": ["200"]
-            }
-          },
-          "required": ["responses"]
-        }
-      },
-      "required": ["post"]
-    },
-    "/api/MaaResourceStatus": {
-      "type": "object",
-      "properties": {
-        "post": {
-          "type": "object",
-          "properties": {
-            "requestBody": {
-              "type": "object",
-              "properties": {
-                "content": {
-                  "type": "object",
-                  "properties": {
-                    "application/json": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "number"
-                        },
-                        "res": {
-                          "description": "MaaResourceAPI",
-                          "type": "string"
-                        }
-                      },
-                      "required": ["id", "res"]
-                    }
-                  },
-                  "required": ["application/json"]
-                }
-              },
-              "required": ["content"]
-            },
-            "responses": {
-              "type": "object",
-              "properties": {
-                "200": {
-                  "type": "object",
-                  "properties": {
-                    "content": {
-                      "type": "object",
-                      "properties": {
-                        "application/json": {
-                          "anyOf": [
-                            {
-                              "allOf": [
-                                {
                                   "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_31"
                                 },
                                 {
@@ -4680,7 +4684,7 @@
       },
       "required": ["post"]
     },
-    "/api/MaaResourceWait": {
+    "/api/MaaResourceStatus": {
       "type": "object",
       "properties": {
         "post": {
@@ -4777,6 +4781,103 @@
       },
       "required": ["post"]
     },
+    "/api/MaaResourceWait": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "number"
+                        },
+                        "res": {
+                          "description": "MaaResourceAPI",
+                          "type": "string"
+                        }
+                      },
+                      "required": ["id", "res"]
+                    }
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "anyOf": [
+                            {
+                              "allOf": [
+                                {
+                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_33"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "error": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": ["error"]
+                                }
+                              ]
+                            },
+                            {
+                              "allOf": [
+                                {
+                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_33"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "data": {
+                                      "type": "object",
+                                      "properties": {
+                                        "return": {
+                                          "type": "number"
+                                        }
+                                      },
+                                      "required": ["return"]
+                                    }
+                                  },
+                                  "required": ["data"]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
     "/api/MaaSetGlobalOptionBoolean": {
       "type": "object",
       "properties": {
@@ -4821,7 +4922,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_33"
+                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_34"
                                 },
                                 {
                                   "type": "object",
@@ -4837,7 +4938,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_33"
+                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_34"
                                 },
                                 {
                                   "type": "object",
@@ -4917,7 +5018,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_34"
+                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_35"
                                 },
                                 {
                                   "type": "object",
@@ -4933,7 +5034,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_34"
+                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_35"
                                 },
                                 {
                                   "type": "object",
@@ -5013,7 +5114,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_35"
+                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_36"
                                 },
                                 {
                                   "type": "object",
@@ -5029,7 +5130,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_35"
+                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_36"
                                 },
                                 {
                                   "type": "object",
@@ -5110,7 +5211,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_36"
+                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_37"
                                 },
                                 {
                                   "type": "object",
@@ -5126,7 +5227,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_36"
+                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_37"
                                 },
                                 {
                                   "type": "object",
@@ -5210,100 +5311,6 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_37"
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "error": {
-                                      "type": "string"
-                                    }
-                                  },
-                                  "required": ["error"]
-                                }
-                              ]
-                            },
-                            {
-                              "allOf": [
-                                {
-                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_37"
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "data": {
-                                      "type": "object",
-                                      "properties": {
-                                        "return": {
-                                          "type": "number"
-                                        }
-                                      },
-                                      "required": ["return"]
-                                    }
-                                  },
-                                  "required": ["data"]
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      },
-                      "required": ["application/json"]
-                    }
-                  },
-                  "required": ["content"]
-                }
-              },
-              "required": ["200"]
-            }
-          },
-          "required": ["responses"]
-        }
-      },
-      "required": ["post"]
-    },
-    "/api/MaaStop": {
-      "type": "object",
-      "properties": {
-        "post": {
-          "type": "object",
-          "properties": {
-            "requestBody": {
-              "type": "object",
-              "properties": {
-                "content": {
-                  "type": "object",
-                  "properties": {
-                    "application/json": {
-                      "type": "object",
-                      "properties": {
-                        "inst": {
-                          "description": "MaaInstanceAPI",
-                          "type": "string"
-                        }
-                      },
-                      "required": ["inst"]
-                    }
-                  },
-                  "required": ["application/json"]
-                }
-              },
-              "required": ["content"]
-            },
-            "responses": {
-              "type": "object",
-              "properties": {
-                "200": {
-                  "type": "object",
-                  "properties": {
-                    "content": {
-                      "type": "object",
-                      "properties": {
-                        "application/json": {
-                          "anyOf": [
-                            {
-                              "allOf": [
-                                {
                                   "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_38"
                                 },
                                 {
@@ -5356,7 +5363,7 @@
       },
       "required": ["post"]
     },
-    "/api/MaaTaskAllFinished": {
+    "/api/MaaStop": {
       "type": "object",
       "properties": {
         "post": {
@@ -5450,6 +5457,100 @@
       },
       "required": ["post"]
     },
+    "/api/MaaTaskAllFinished": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {
+                      "type": "object",
+                      "properties": {
+                        "inst": {
+                          "description": "MaaInstanceAPI",
+                          "type": "string"
+                        }
+                      },
+                      "required": ["inst"]
+                    }
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "anyOf": [
+                            {
+                              "allOf": [
+                                {
+                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_40"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "error": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": ["error"]
+                                }
+                              ]
+                            },
+                            {
+                              "allOf": [
+                                {
+                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_40"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "data": {
+                                      "type": "object",
+                                      "properties": {
+                                        "return": {
+                                          "type": "number"
+                                        }
+                                      },
+                                      "required": ["return"]
+                                    }
+                                  },
+                                  "required": ["data"]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
     "/api/MaaTaskStatus": {
       "type": "object",
       "properties": {
@@ -5495,7 +5596,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_40"
+                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_41"
                                 },
                                 {
                                   "type": "object",
@@ -5511,7 +5612,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_40"
+                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_41"
                                 },
                                 {
                                   "type": "object",
@@ -5687,7 +5788,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_41"
+                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_42"
                                 },
                                 {
                                   "type": "object",
@@ -5703,7 +5804,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_41"
+                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_42"
                                 },
                                 {
                                   "type": "object",
@@ -5780,7 +5881,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_42"
+                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_43"
                                 },
                                 {
                                   "type": "object",
@@ -5796,7 +5897,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_42"
+                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_43"
                                 },
                                 {
                                   "type": "object",
@@ -5876,7 +5977,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_43"
+                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_44"
                                 },
                                 {
                                   "type": "object",
@@ -5892,7 +5993,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_43"
+                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_44"
                                 },
                                 {
                                   "type": "object",
@@ -5961,7 +6062,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_44"
+                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_45"
                                 },
                                 {
                                   "type": "object",
@@ -5977,7 +6078,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_44"
+                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_45"
                                 },
                                 {
                                   "type": "object",
@@ -6046,7 +6147,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_45"
+                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_46"
                                 },
                                 {
                                   "type": "object",
@@ -6062,7 +6163,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_45"
+                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_46"
                                 },
                                 {
                                   "type": "object",
@@ -6232,7 +6333,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_46"
+                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_47"
                                 },
                                 {
                                   "type": "object",
@@ -6248,7 +6349,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_46"
+                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_47"
                                 },
                                 {
                                   "type": "object",
@@ -6503,7 +6604,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_47"
+                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_48"
                                 },
                                 {
                                   "type": "object",
@@ -6519,7 +6620,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_47"
+                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_48"
                                 },
                                 {
                                   "type": "object",
@@ -6681,7 +6782,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_48"
+                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_49"
                                 },
                                 {
                                   "type": "object",
@@ -6697,7 +6798,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_48"
+                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_49"
                                 },
                                 {
                                   "type": "object",
@@ -6774,91 +6875,6 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_49"
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "error": {
-                                      "type": "string"
-                                    }
-                                  },
-                                  "required": ["error"]
-                                }
-                              ]
-                            },
-                            {
-                              "allOf": [
-                                {
-                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_49"
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "data": {
-                                      "type": "object",
-                                      "properties": {
-                                        "return": {
-                                          "type": "number"
-                                        }
-                                      },
-                                      "required": ["return"]
-                                    }
-                                  },
-                                  "required": ["data"]
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      },
-                      "required": ["application/json"]
-                    }
-                  },
-                  "required": ["content"]
-                }
-              },
-              "required": ["200"]
-            }
-          },
-          "required": ["responses"]
-        }
-      },
-      "required": ["post"]
-    },
-    "/api/MaaToolkitInit": {
-      "type": "object",
-      "properties": {
-        "post": {
-          "type": "object",
-          "properties": {
-            "requestBody": {
-              "type": "object",
-              "properties": {
-                "content": {
-                  "type": "object",
-                  "properties": {
-                    "application/json": {}
-                  },
-                  "required": ["application/json"]
-                }
-              },
-              "required": ["content"]
-            },
-            "responses": {
-              "type": "object",
-              "properties": {
-                "200": {
-                  "type": "object",
-                  "properties": {
-                    "content": {
-                      "type": "object",
-                      "properties": {
-                        "application/json": {
-                          "anyOf": [
-                            {
-                              "allOf": [
-                                {
                                   "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_50"
                                 },
                                 {
@@ -6911,7 +6927,7 @@
       },
       "required": ["post"]
     },
-    "/api/MaaToolkitIsFindDeviceCompleted": {
+    "/api/MaaToolkitInit": {
       "type": "object",
       "properties": {
         "post": {
@@ -6996,7 +7012,7 @@
       },
       "required": ["post"]
     },
-    "/api/MaaToolkitPostFindDevice": {
+    "/api/MaaToolkitIsFindDeviceCompleted": {
       "type": "object",
       "properties": {
         "post": {
@@ -7081,6 +7097,91 @@
       },
       "required": ["post"]
     },
+    "/api/MaaToolkitPostFindDevice": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {}
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "anyOf": [
+                            {
+                              "allOf": [
+                                {
+                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_53"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "error": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": ["error"]
+                                }
+                              ]
+                            },
+                            {
+                              "allOf": [
+                                {
+                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_53"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "data": {
+                                      "type": "object",
+                                      "properties": {
+                                        "return": {
+                                          "type": "number"
+                                        }
+                                      },
+                                      "required": ["return"]
+                                    }
+                                  },
+                                  "required": ["data"]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
     "/api/MaaToolkitPostFindDeviceWithAdb": {
       "type": "object",
       "properties": {
@@ -7122,7 +7223,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_53"
+                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_54"
                                 },
                                 {
                                   "type": "object",
@@ -7138,7 +7239,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_53"
+                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_54"
                                 },
                                 {
                                   "type": "object",
@@ -7230,7 +7331,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_54"
+                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_55"
                                 },
                                 {
                                   "type": "object",
@@ -7246,7 +7347,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_54"
+                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_55"
                                 },
                                 {
                                   "type": "object",
@@ -7338,7 +7439,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_55"
+                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_56"
                                 },
                                 {
                                   "type": "object",
@@ -7354,7 +7455,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_55"
+                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_56"
                                 },
                                 {
                                   "type": "object",
@@ -7434,7 +7535,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_56"
+                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_57"
                                 },
                                 {
                                   "type": "object",
@@ -7450,7 +7551,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_56"
+                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_57"
                                 },
                                 {
                                   "type": "object",
@@ -7519,7 +7620,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_57"
+                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_58"
                                 },
                                 {
                                   "type": "object",
@@ -7535,7 +7636,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_57"
+                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_58"
                                 },
                                 {
                                   "type": "object",
@@ -7616,7 +7717,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_58"
+                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_59"
                                 },
                                 {
                                   "type": "object",
@@ -7632,7 +7733,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_58"
+                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_59"
                                 },
                                 {
                                   "type": "object",
@@ -7713,7 +7814,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_59"
+                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_60"
                                 },
                                 {
                                   "type": "object",
@@ -7729,7 +7830,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_59"
+                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_60"
                                 },
                                 {
                                   "type": "object",
@@ -7798,7 +7899,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_60"
+                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_61"
                                 },
                                 {
                                   "type": "object",
@@ -7814,7 +7915,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_60"
+                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_61"
                                 },
                                 {
                                   "type": "object",
@@ -7895,7 +7996,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_61"
+                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_62"
                                 },
                                 {
                                   "type": "object",
@@ -7911,7 +8012,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_61"
+                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_62"
                                 },
                                 {
                                   "type": "object",
@@ -7992,7 +8093,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_62"
+                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_63"
                                 },
                                 {
                                   "type": "object",
@@ -8008,7 +8109,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_62"
+                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_63"
                                 },
                                 {
                                   "type": "object",
@@ -8174,7 +8275,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_63"
+                                  "$ref": "#/definitions/Without<{data:{return:number;};},{error:string;}>_64"
                                 },
                                 {
                                   "type": "object",
@@ -8190,7 +8291,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_63"
+                                  "$ref": "#/definitions/Without<{error:string;},{data:{return:number;};}>_64"
                                 },
                                 {
                                   "type": "object",
@@ -8735,7 +8836,7 @@
                           "type": "number"
                         }
                       },
-                      "required": ["cid", "id"]
+                      "required": ["cid", "id", "return"]
                     }
                   },
                   "required": ["application/json"]
@@ -9333,7 +9434,7 @@
       },
       "required": ["post"]
     },
-    "/callback/MaaAPICallback/add": {
+    "/callback/CustomRecognizerAnalyze/add": {
       "type": "object",
       "properties": {
         "post": {
@@ -9418,7 +9519,7 @@
       },
       "required": ["post"]
     },
-    "/callback/MaaAPICallback/del": {
+    "/callback/CustomRecognizerAnalyze/del": {
       "type": "object",
       "properties": {
         "post": {
@@ -9503,7 +9604,7 @@
       },
       "required": ["post"]
     },
-    "/callback/MaaAPICallback/dump": {
+    "/callback/CustomRecognizerAnalyze/dump": {
       "type": "object",
       "properties": {
         "post": {
@@ -9591,7 +9692,7 @@
       },
       "required": ["post"]
     },
-    "/callback/MaaAPICallback/pull": {
+    "/callback/CustomRecognizerAnalyze/pull": {
       "type": "object",
       "properties": {
         "post": {
@@ -9649,6 +9750,584 @@
                               "allOf": [
                                 {
                                   "$ref": "#/definitions/Without<{error:string;},{data:{ids:string[];};}>_5"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "data": {
+                                      "type": "object",
+                                      "properties": {
+                                        "ids": {
+                                          "type": "array",
+                                          "items": {
+                                            "type": "string"
+                                          }
+                                        }
+                                      },
+                                      "required": ["ids"]
+                                    }
+                                  },
+                                  "required": ["data"]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
+    "/callback/CustomRecognizerAnalyze/request": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {
+                      "type": "object",
+                      "properties": {
+                        "cid": {
+                          "type": "string"
+                        },
+                        "id": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["cid", "id"]
+                    }
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "anyOf": [
+                            {
+                              "allOf": [
+                                {
+                                  "$ref": "#/definitions/Without<{data:{custom_recognition_param:string;image:string;sync_context:string;task_name:string;};},{error:string;}>"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "error": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": ["error"]
+                                }
+                              ]
+                            },
+                            {
+                              "allOf": [
+                                {
+                                  "$ref": "#/definitions/Without<{error:string;},{data:{custom_recognition_param:string;image:string;sync_context:string;task_name:string;};}>"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "data": {
+                                      "type": "object",
+                                      "properties": {
+                                        "custom_recognition_param": {
+                                          "type": "string"
+                                        },
+                                        "image": {
+                                          "description": "MaaImageBuffer",
+                                          "type": "string"
+                                        },
+                                        "sync_context": {
+                                          "description": "MaaSyncContextAPI",
+                                          "type": "string"
+                                        },
+                                        "task_name": {
+                                          "type": "string"
+                                        }
+                                      },
+                                      "required": [
+                                        "custom_recognition_param",
+                                        "image",
+                                        "sync_context",
+                                        "task_name"
+                                      ]
+                                    }
+                                  },
+                                  "required": ["data"]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
+    "/callback/CustomRecognizerAnalyze/response": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {
+                      "type": "object",
+                      "properties": {
+                        "cid": {
+                          "type": "string"
+                        },
+                        "id": {
+                          "type": "string"
+                        },
+                        "out_box": {
+                          "type": "object",
+                          "properties": {
+                            "height": {
+                              "type": "number"
+                            },
+                            "width": {
+                              "type": "number"
+                            },
+                            "x": {
+                              "type": "number"
+                            },
+                            "y": {
+                              "type": "number"
+                            }
+                          },
+                          "required": ["height", "width", "x", "y"]
+                        },
+                        "out_detail": {
+                          "type": "string"
+                        },
+                        "return": {
+                          "type": "number"
+                        }
+                      },
+                      "required": ["cid", "id", "out_box", "out_detail", "return"]
+                    }
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "anyOf": [
+                            {
+                              "allOf": [
+                                {
+                                  "$ref": "#/definitions/Without<{data:unknown;},{error:string;}>_5"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "error": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": ["error"]
+                                }
+                              ]
+                            },
+                            {
+                              "allOf": [
+                                {
+                                  "$ref": "#/definitions/Without<{error:string;},{data:unknown;}>_5"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "data": {}
+                                  },
+                                  "required": ["data"]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
+    "/callback/MaaAPICallback/add": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {}
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "anyOf": [
+                            {
+                              "allOf": [
+                                {
+                                  "$ref": "#/definitions/Without<{data:{id:string;};},{error:string;}>_3"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "error": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": ["error"]
+                                }
+                              ]
+                            },
+                            {
+                              "allOf": [
+                                {
+                                  "$ref": "#/definitions/Without<{error:string;},{data:{id:string;};}>_3"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "data": {
+                                      "type": "object",
+                                      "properties": {
+                                        "id": {
+                                          "type": "string"
+                                        }
+                                      },
+                                      "required": ["id"]
+                                    }
+                                  },
+                                  "required": ["data"]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
+    "/callback/MaaAPICallback/del": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["id"]
+                    }
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "anyOf": [
+                            {
+                              "allOf": [
+                                {
+                                  "$ref": "#/definitions/Without<{data:unknown;},{error:string;}>_6"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "error": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": ["error"]
+                                }
+                              ]
+                            },
+                            {
+                              "allOf": [
+                                {
+                                  "$ref": "#/definitions/Without<{error:string;},{data:unknown;}>_6"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "data": {}
+                                  },
+                                  "required": ["data"]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
+    "/callback/MaaAPICallback/dump": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {}
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "anyOf": [
+                            {
+                              "allOf": [
+                                {
+                                  "$ref": "#/definitions/Without<{data:{ids:string[];};},{error:string;}>_6"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "error": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": ["error"]
+                                }
+                              ]
+                            },
+                            {
+                              "allOf": [
+                                {
+                                  "$ref": "#/definitions/Without<{error:string;},{data:{ids:string[];};}>_6"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "data": {
+                                      "type": "object",
+                                      "properties": {
+                                        "ids": {
+                                          "type": "array",
+                                          "items": {
+                                            "type": "string"
+                                          }
+                                        }
+                                      },
+                                      "required": ["ids"]
+                                    }
+                                  },
+                                  "required": ["data"]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
+    "/callback/MaaAPICallback/pull": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["id"]
+                    }
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "anyOf": [
+                            {
+                              "allOf": [
+                                {
+                                  "$ref": "#/definitions/Without<{data:{ids:string[];};},{error:string;}>_7"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "error": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": ["error"]
+                                }
+                              ]
+                            },
+                            {
+                              "allOf": [
+                                {
+                                  "$ref": "#/definitions/Without<{error:string;},{data:{ids:string[];};}>_7"
                                 },
                                 {
                                   "type": "object",
@@ -9830,7 +10509,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{data:unknown;},{error:string;}>_5"
+                                  "$ref": "#/definitions/Without<{data:unknown;},{error:string;}>_7"
                                 },
                                 {
                                   "type": "object",
@@ -9846,7 +10525,7 @@
                             {
                               "allOf": [
                                 {
-                                  "$ref": "#/definitions/Without<{error:string;},{data:unknown;}>_5"
+                                  "$ref": "#/definitions/Without<{error:string;},{data:unknown;}>_7"
                                 },
                                 {
                                   "type": "object",
@@ -10357,6 +11036,7 @@
     "/api/MaaPostStop",
     "/api/MaaPostTask",
     "/api/MaaRegisterCustomActionImpl",
+    "/api/MaaRegisterCustomRecognizerImpl",
     "/api/MaaResourceCreate",
     "/api/MaaResourceDestroy",
     "/api/MaaResourceGetHash",
@@ -10414,6 +11094,12 @@
     "/callback/CustomActionStop/pull",
     "/callback/CustomActionStop/request",
     "/callback/CustomActionStop/response",
+    "/callback/CustomRecognizerAnalyze/add",
+    "/callback/CustomRecognizerAnalyze/del",
+    "/callback/CustomRecognizerAnalyze/dump",
+    "/callback/CustomRecognizerAnalyze/pull",
+    "/callback/CustomRecognizerAnalyze/request",
+    "/callback/CustomRecognizerAnalyze/response",
     "/callback/MaaAPICallback/add",
     "/callback/MaaAPICallback/del",
     "/callback/MaaAPICallback/dump",
@@ -10755,6 +11441,14 @@
       "description": "OneOf type helpers",
       "type": "object"
     },
+    "Without<{data:{return:number;};},{error:string;}>_29": {
+      "description": "OneOf type helpers",
+      "type": "object"
+    },
+    "Without<{error:string;},{data:{return:number;};}>_29": {
+      "description": "OneOf type helpers",
+      "type": "object"
+    },
     "Without<{data:{return:string;};},{error:string;}>_8": {
       "description": "OneOf type helpers",
       "type": "object"
@@ -10784,14 +11478,6 @@
       "type": "object"
     },
     "Without<{error:string;},{data:{buffer:string;return:number;};}>_2": {
-      "description": "OneOf type helpers",
-      "type": "object"
-    },
-    "Without<{data:{return:number;};},{error:string;}>_29": {
-      "description": "OneOf type helpers",
-      "type": "object"
-    },
-    "Without<{error:string;},{data:{return:number;};}>_29": {
       "description": "OneOf type helpers",
       "type": "object"
     },
@@ -10883,19 +11569,19 @@
       "description": "OneOf type helpers",
       "type": "object"
     },
-    "Without<{data:{return:string;};},{error:string;}>_9": {
-      "description": "OneOf type helpers",
-      "type": "object"
-    },
-    "Without<{error:string;},{data:{return:string;};}>_9": {
-      "description": "OneOf type helpers",
-      "type": "object"
-    },
     "Without<{data:{return:number;};},{error:string;}>_41": {
       "description": "OneOf type helpers",
       "type": "object"
     },
     "Without<{error:string;},{data:{return:number;};}>_41": {
+      "description": "OneOf type helpers",
+      "type": "object"
+    },
+    "Without<{data:{return:string;};},{error:string;}>_9": {
+      "description": "OneOf type helpers",
+      "type": "object"
+    },
+    "Without<{error:string;},{data:{return:string;};}>_9": {
       "description": "OneOf type helpers",
       "type": "object"
     },
@@ -10931,6 +11617,14 @@
       "description": "OneOf type helpers",
       "type": "object"
     },
+    "Without<{data:{return:number;};},{error:string;}>_46": {
+      "description": "OneOf type helpers",
+      "type": "object"
+    },
+    "Without<{error:string;},{data:{return:number;};}>_46": {
+      "description": "OneOf type helpers",
+      "type": "object"
+    },
     "Without<{data:{return:string;};},{error:string;}>_10": {
       "description": "OneOf type helpers",
       "type": "object"
@@ -10939,11 +11633,11 @@
       "description": "OneOf type helpers",
       "type": "object"
     },
-    "Without<{data:{return:number;};},{error:string;}>_46": {
+    "Without<{data:{return:number;};},{error:string;}>_47": {
       "description": "OneOf type helpers",
       "type": "object"
     },
-    "Without<{error:string;},{data:{return:number;};}>_46": {
+    "Without<{error:string;},{data:{return:number;};}>_47": {
       "description": "OneOf type helpers",
       "type": "object"
     },
@@ -10963,11 +11657,11 @@
       "description": "OneOf type helpers",
       "type": "object"
     },
-    "Without<{data:{return:number;};},{error:string;}>_47": {
+    "Without<{data:{return:number;};},{error:string;}>_48": {
       "description": "OneOf type helpers",
       "type": "object"
     },
-    "Without<{error:string;},{data:{return:number;};}>_47": {
+    "Without<{error:string;},{data:{return:number;};}>_48": {
       "description": "OneOf type helpers",
       "type": "object"
     },
@@ -10976,14 +11670,6 @@
       "type": "object"
     },
     "Without<{error:string;},{data:{return:string;};}>_13": {
-      "description": "OneOf type helpers",
-      "type": "object"
-    },
-    "Without<{data:{return:number;};},{error:string;}>_48": {
-      "description": "OneOf type helpers",
-      "type": "object"
-    },
-    "Without<{error:string;},{data:{return:number;};}>_48": {
       "description": "OneOf type helpers",
       "type": "object"
     },
@@ -11099,6 +11785,14 @@
       "description": "OneOf type helpers",
       "type": "object"
     },
+    "Without<{data:{return:number;};},{error:string;}>_63": {
+      "description": "OneOf type helpers",
+      "type": "object"
+    },
+    "Without<{error:string;},{data:{return:number;};}>_63": {
+      "description": "OneOf type helpers",
+      "type": "object"
+    },
     "Without<{data:{return:string;};},{error:string;}>_14": {
       "description": "OneOf type helpers",
       "type": "object"
@@ -11107,11 +11801,11 @@
       "description": "OneOf type helpers",
       "type": "object"
     },
-    "Without<{data:{return:number;};},{error:string;}>_63": {
+    "Without<{data:{return:number;};},{error:string;}>_64": {
       "description": "OneOf type helpers",
       "type": "object"
     },
-    "Without<{error:string;},{data:{return:number;};}>_63": {
+    "Without<{error:string;},{data:{return:number;};}>_64": {
       "description": "OneOf type helpers",
       "type": "object"
     },
@@ -11246,11 +11940,11 @@
       "description": "OneOf type helpers",
       "type": "object"
     },
-    "Without<{data:{details_json:string;msg:string;};},{error:string;}>": {
+    "Without<{data:{custom_recognition_param:string;image:string;sync_context:string;task_name:string;};},{error:string;}>": {
       "description": "OneOf type helpers",
       "type": "object"
     },
-    "Without<{error:string;},{data:{details_json:string;msg:string;};}>": {
+    "Without<{error:string;},{data:{custom_recognition_param:string;image:string;sync_context:string;task_name:string;};}>": {
       "description": "OneOf type helpers",
       "type": "object"
     },
@@ -11259,6 +11953,54 @@
       "type": "object"
     },
     "Without<{error:string;},{data:unknown;}>_5": {
+      "description": "OneOf type helpers",
+      "type": "object"
+    },
+    "Without<{data:{id:string;};},{error:string;}>_3": {
+      "description": "OneOf type helpers",
+      "type": "object"
+    },
+    "Without<{error:string;},{data:{id:string;};}>_3": {
+      "description": "OneOf type helpers",
+      "type": "object"
+    },
+    "Without<{data:unknown;},{error:string;}>_6": {
+      "description": "OneOf type helpers",
+      "type": "object"
+    },
+    "Without<{error:string;},{data:unknown;}>_6": {
+      "description": "OneOf type helpers",
+      "type": "object"
+    },
+    "Without<{data:{ids:string[];};},{error:string;}>_6": {
+      "description": "OneOf type helpers",
+      "type": "object"
+    },
+    "Without<{error:string;},{data:{ids:string[];};}>_6": {
+      "description": "OneOf type helpers",
+      "type": "object"
+    },
+    "Without<{data:{ids:string[];};},{error:string;}>_7": {
+      "description": "OneOf type helpers",
+      "type": "object"
+    },
+    "Without<{error:string;},{data:{ids:string[];};}>_7": {
+      "description": "OneOf type helpers",
+      "type": "object"
+    },
+    "Without<{data:{details_json:string;msg:string;};},{error:string;}>": {
+      "description": "OneOf type helpers",
+      "type": "object"
+    },
+    "Without<{error:string;},{data:{details_json:string;msg:string;};}>": {
+      "description": "OneOf type helpers",
+      "type": "object"
+    },
+    "Without<{data:unknown;},{error:string;}>_7": {
+      "description": "OneOf type helpers",
+      "type": "object"
+    },
+    "Without<{error:string;},{data:unknown;}>_7": {
       "description": "OneOf type helpers",
       "type": "object"
     },

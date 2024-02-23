@@ -1300,6 +1300,39 @@ export interface paths {
       }
     }
   }
+  '/api/MaaRegisterCustomRecognizerImpl': {
+    post: {
+      requestBody?: {
+        content: {
+          'application/json': {
+            /** CustomRecognizerAnalyze */
+            analyze: string
+            /** MaaInstanceAPI */
+            inst: string
+            name: string
+          }
+        }
+      }
+      responses: {
+        200: {
+          content: {
+            'application/json': OneOf<
+              [
+                {
+                  data: {
+                    return: number
+                  }
+                },
+                {
+                  error: string
+                }
+              ]
+            >
+          }
+        }
+      }
+    }
+  }
   '/api/MaaResourceCreate': {
     post: {
       requestBody?: {
@@ -2792,7 +2825,7 @@ export interface paths {
           'application/json': {
             cid: string
             id: string
-            return?: number
+            return: number
           }
         }
       }
@@ -2959,6 +2992,187 @@ export interface paths {
           'application/json': {
             cid: string
             id: string
+          }
+        }
+      }
+      responses: {
+        200: {
+          content: {
+            'application/json': OneOf<
+              [
+                {
+                  data: unknown
+                },
+                {
+                  error: string
+                }
+              ]
+            >
+          }
+        }
+      }
+    }
+  }
+  '/callback/CustomRecognizerAnalyze/add': {
+    post: {
+      requestBody?: {
+        content: {
+          'application/json': unknown
+        }
+      }
+      responses: {
+        200: {
+          content: {
+            'application/json': OneOf<
+              [
+                {
+                  data: {
+                    id: string
+                  }
+                },
+                {
+                  error: string
+                }
+              ]
+            >
+          }
+        }
+      }
+    }
+  }
+  '/callback/CustomRecognizerAnalyze/del': {
+    post: {
+      requestBody?: {
+        content: {
+          'application/json': {
+            id: string
+          }
+        }
+      }
+      responses: {
+        200: {
+          content: {
+            'application/json': OneOf<
+              [
+                {
+                  data: unknown
+                },
+                {
+                  error: string
+                }
+              ]
+            >
+          }
+        }
+      }
+    }
+  }
+  '/callback/CustomRecognizerAnalyze/dump': {
+    post: {
+      requestBody?: {
+        content: {
+          'application/json': unknown
+        }
+      }
+      responses: {
+        200: {
+          content: {
+            'application/json': OneOf<
+              [
+                {
+                  data: {
+                    ids: string[]
+                  }
+                },
+                {
+                  error: string
+                }
+              ]
+            >
+          }
+        }
+      }
+    }
+  }
+  '/callback/CustomRecognizerAnalyze/pull': {
+    post: {
+      requestBody?: {
+        content: {
+          'application/json': {
+            id: string
+          }
+        }
+      }
+      responses: {
+        200: {
+          content: {
+            'application/json': OneOf<
+              [
+                {
+                  data: {
+                    ids: string[]
+                  }
+                },
+                {
+                  error: string
+                }
+              ]
+            >
+          }
+        }
+      }
+    }
+  }
+  '/callback/CustomRecognizerAnalyze/request': {
+    post: {
+      requestBody?: {
+        content: {
+          'application/json': {
+            cid: string
+            id: string
+          }
+        }
+      }
+      responses: {
+        200: {
+          content: {
+            'application/json': OneOf<
+              [
+                {
+                  data: {
+                    custom_recognition_param: string
+                    /** MaaImageBuffer */
+                    image: string
+                    /** MaaSyncContextAPI */
+                    sync_context: string
+                    task_name: string
+                  }
+                },
+                {
+                  error: string
+                }
+              ]
+            >
+          }
+        }
+      }
+    }
+  }
+  '/callback/CustomRecognizerAnalyze/response': {
+    post: {
+      requestBody?: {
+        content: {
+          'application/json': {
+            cid: string
+            id: string
+            out_box: {
+              height: number
+              width: number
+              x: number
+              y: number
+            }
+            out_detail: string
+            return: number
           }
         }
       }

@@ -6,7 +6,7 @@ const cb = _callback.CustomActionRun
 
 export type CustomActionRunId = string & { __kind: 'CustomActionRun' }
 export type CustomActionRun = (
-  msgsync_context: string,
+  sync_context: string,
   task_name: string,
   custom_action_param: string,
   cur_box: MaaRect,

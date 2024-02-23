@@ -251,6 +251,12 @@ export interface IApi {
     >['content']['application/json']
     Response: paths['/api/MaaRegisterCustomActionImpl']['post']['responses']['200']['content']['application/json']
   }
+  '/api/MaaRegisterCustomRecognizerImpl': {
+    Body?: NonNullable<
+      paths['/api/MaaRegisterCustomRecognizerImpl']['post']['requestBody']
+    >['content']['application/json']
+    Response: paths['/api/MaaRegisterCustomRecognizerImpl']['post']['responses']['200']['content']['application/json']
+  }
   '/api/MaaResourceCreate': {
     Body?: NonNullable<
       paths['/api/MaaResourceCreate']['post']['requestBody']
@@ -590,6 +596,42 @@ export interface IApi {
       paths['/callback/CustomActionStop/response']['post']['requestBody']
     >['content']['application/json']
     Response: paths['/callback/CustomActionStop/response']['post']['responses']['200']['content']['application/json']
+  }
+  '/callback/CustomRecognizerAnalyze/add': {
+    Body?: NonNullable<
+      paths['/callback/CustomRecognizerAnalyze/add']['post']['requestBody']
+    >['content']['application/json']
+    Response: paths['/callback/CustomRecognizerAnalyze/add']['post']['responses']['200']['content']['application/json']
+  }
+  '/callback/CustomRecognizerAnalyze/del': {
+    Body?: NonNullable<
+      paths['/callback/CustomRecognizerAnalyze/del']['post']['requestBody']
+    >['content']['application/json']
+    Response: paths['/callback/CustomRecognizerAnalyze/del']['post']['responses']['200']['content']['application/json']
+  }
+  '/callback/CustomRecognizerAnalyze/dump': {
+    Body?: NonNullable<
+      paths['/callback/CustomRecognizerAnalyze/dump']['post']['requestBody']
+    >['content']['application/json']
+    Response: paths['/callback/CustomRecognizerAnalyze/dump']['post']['responses']['200']['content']['application/json']
+  }
+  '/callback/CustomRecognizerAnalyze/pull': {
+    Body?: NonNullable<
+      paths['/callback/CustomRecognizerAnalyze/pull']['post']['requestBody']
+    >['content']['application/json']
+    Response: paths['/callback/CustomRecognizerAnalyze/pull']['post']['responses']['200']['content']['application/json']
+  }
+  '/callback/CustomRecognizerAnalyze/request': {
+    Body?: NonNullable<
+      paths['/callback/CustomRecognizerAnalyze/request']['post']['requestBody']
+    >['content']['application/json']
+    Response: paths['/callback/CustomRecognizerAnalyze/request']['post']['responses']['200']['content']['application/json']
+  }
+  '/callback/CustomRecognizerAnalyze/response': {
+    Body?: NonNullable<
+      paths['/callback/CustomRecognizerAnalyze/response']['post']['requestBody']
+    >['content']['application/json']
+    Response: paths['/callback/CustomRecognizerAnalyze/response']['post']['responses']['200']['content']['application/json']
   }
   '/callback/MaaAPICallback/add': {
     Body?: NonNullable<

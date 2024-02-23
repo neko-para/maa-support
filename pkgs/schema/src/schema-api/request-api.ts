@@ -831,6 +831,26 @@ export const requestApi = {
       ...otherConfig
     })
   },
+  '/api/MaaRegisterCustomRecognizerImpl': <T extends Record<any, any> | never = never>(
+    config: IConfig<
+      Omit<
+        Equal<T, never> extends true ? AxiosRequestConfig : T & AxiosRequestConfig,
+        'method' | 'url' | 'data'
+      >,
+      { data?: IApi['/api/MaaRegisterCustomRecognizerImpl']['Body'] }
+    >
+  ): Promise<IApi['/api/MaaRegisterCustomRecognizerImpl']['Response']> => {
+    const { data, ...otherConfig } = config
+    const finalURL = '/api/MaaRegisterCustomRecognizerImpl'
+
+    return request({
+      method: 'post',
+      url: finalURL,
+
+      data: data,
+      ...otherConfig
+    })
+  },
   '/api/MaaResourceCreate': <T extends Record<any, any> | never = never>(
     config: IConfig<
       Omit<
@@ -1962,6 +1982,126 @@ export const requestApi = {
   ): Promise<IApi['/callback/CustomActionStop/response']['Response']> => {
     const { data, ...otherConfig } = config
     const finalURL = '/callback/CustomActionStop/response'
+
+    return request({
+      method: 'post',
+      url: finalURL,
+
+      data: data,
+      ...otherConfig
+    })
+  },
+  '/callback/CustomRecognizerAnalyze/add': <T extends Record<any, any> | never = never>(
+    config: IConfig<
+      Omit<
+        Equal<T, never> extends true ? AxiosRequestConfig : T & AxiosRequestConfig,
+        'method' | 'url' | 'data'
+      >,
+      { data?: IApi['/callback/CustomRecognizerAnalyze/add']['Body'] }
+    >
+  ): Promise<IApi['/callback/CustomRecognizerAnalyze/add']['Response']> => {
+    const { data, ...otherConfig } = config
+    const finalURL = '/callback/CustomRecognizerAnalyze/add'
+
+    return request({
+      method: 'post',
+      url: finalURL,
+
+      data: data,
+      ...otherConfig
+    })
+  },
+  '/callback/CustomRecognizerAnalyze/del': <T extends Record<any, any> | never = never>(
+    config: IConfig<
+      Omit<
+        Equal<T, never> extends true ? AxiosRequestConfig : T & AxiosRequestConfig,
+        'method' | 'url' | 'data'
+      >,
+      { data?: IApi['/callback/CustomRecognizerAnalyze/del']['Body'] }
+    >
+  ): Promise<IApi['/callback/CustomRecognizerAnalyze/del']['Response']> => {
+    const { data, ...otherConfig } = config
+    const finalURL = '/callback/CustomRecognizerAnalyze/del'
+
+    return request({
+      method: 'post',
+      url: finalURL,
+
+      data: data,
+      ...otherConfig
+    })
+  },
+  '/callback/CustomRecognizerAnalyze/dump': <T extends Record<any, any> | never = never>(
+    config: IConfig<
+      Omit<
+        Equal<T, never> extends true ? AxiosRequestConfig : T & AxiosRequestConfig,
+        'method' | 'url' | 'data'
+      >,
+      { data?: IApi['/callback/CustomRecognizerAnalyze/dump']['Body'] }
+    >
+  ): Promise<IApi['/callback/CustomRecognizerAnalyze/dump']['Response']> => {
+    const { data, ...otherConfig } = config
+    const finalURL = '/callback/CustomRecognizerAnalyze/dump'
+
+    return request({
+      method: 'post',
+      url: finalURL,
+
+      data: data,
+      ...otherConfig
+    })
+  },
+  '/callback/CustomRecognizerAnalyze/pull': <T extends Record<any, any> | never = never>(
+    config: IConfig<
+      Omit<
+        Equal<T, never> extends true ? AxiosRequestConfig : T & AxiosRequestConfig,
+        'method' | 'url' | 'data'
+      >,
+      { data?: IApi['/callback/CustomRecognizerAnalyze/pull']['Body'] }
+    >
+  ): Promise<IApi['/callback/CustomRecognizerAnalyze/pull']['Response']> => {
+    const { data, ...otherConfig } = config
+    const finalURL = '/callback/CustomRecognizerAnalyze/pull'
+
+    return request({
+      method: 'post',
+      url: finalURL,
+
+      data: data,
+      ...otherConfig
+    })
+  },
+  '/callback/CustomRecognizerAnalyze/request': <T extends Record<any, any> | never = never>(
+    config: IConfig<
+      Omit<
+        Equal<T, never> extends true ? AxiosRequestConfig : T & AxiosRequestConfig,
+        'method' | 'url' | 'data'
+      >,
+      { data?: IApi['/callback/CustomRecognizerAnalyze/request']['Body'] }
+    >
+  ): Promise<IApi['/callback/CustomRecognizerAnalyze/request']['Response']> => {
+    const { data, ...otherConfig } = config
+    const finalURL = '/callback/CustomRecognizerAnalyze/request'
+
+    return request({
+      method: 'post',
+      url: finalURL,
+
+      data: data,
+      ...otherConfig
+    })
+  },
+  '/callback/CustomRecognizerAnalyze/response': <T extends Record<any, any> | never = never>(
+    config: IConfig<
+      Omit<
+        Equal<T, never> extends true ? AxiosRequestConfig : T & AxiosRequestConfig,
+        'method' | 'url' | 'data'
+      >,
+      { data?: IApi['/callback/CustomRecognizerAnalyze/response']['Body'] }
+    >
+  ): Promise<IApi['/callback/CustomRecognizerAnalyze/response']['Response']> => {
+    const { data, ...otherConfig } = config
+    const finalURL = '/callback/CustomRecognizerAnalyze/response'
 
     return request({
       method: 'post',
