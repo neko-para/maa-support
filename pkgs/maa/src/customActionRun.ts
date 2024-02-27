@@ -11,7 +11,7 @@ export type CustomActionRun = (
   custom_action_param: string,
   cur_box: MaaRect,
   cur_rec_detail: string
-) => Promise<void>
+) => Promise<boolean>
 
 async function dump() {
   return (await cb.dump()).ids
@@ -35,14 +35,13 @@ async function request(id: CustomActionRunId, cid: string): Promise<Parameters<C
   return [arg.sync_context, arg.task_name, arg.custom_action_param, arg.cur_box, arg.cur_rec_detail]
 }
 
-async function response(id: CustomActionRunId, cid: string) {
-  await cb.response({ id, cid })
+async function response(id: CustomActionRunId, cid: string, ret: boolean) {
+  await cb.response({ id, cid, return: ret ? 1 : 0 })
 }
 
 async function process(id: CustomActionRunId, cid: string, func: CustomActionRun) {
   const arg = await request(id, cid)
-  await func(...arg)
-  await response(id, cid)
+  await response(id, cid, await func(...arg))
 }
 
 export const $customActionRun = {
