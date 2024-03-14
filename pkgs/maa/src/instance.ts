@@ -1,4 +1,4 @@
-import { api, opaque } from '@maa/schema'
+import { api, handle } from '@maa/schema'
 
 import type {
   APICallbackId,
@@ -13,7 +13,7 @@ export type InstanceId = string & { __kind: 'MaaInstanceAPI' }
 export type InstanceTaskId = number & { __kind: 'InstanceTaskId' }
 
 async function dump() {
-  return await opaque.MaaInstanceAPI()
+  return await handle.MaaInstanceAPI.dump()
 }
 
 async function create(callback: APICallbackId) {
@@ -43,7 +43,18 @@ async function registerCustomAction(
   run: CustomActionRunId,
   stop: CustomActionStopId
 ) {
-  return (await api.MaaRegisterCustomActionImpl({ inst, name, run, stop })).return > 0
+  return (
+    (
+      await api.MaaRegisterCustomAction({
+        inst,
+        name,
+        action: {
+          run,
+          stop
+        }
+      })
+    ).return > 0
+  )
 }
 
 async function unregisterCustomAction(inst: InstanceId, name: string) {
@@ -71,7 +82,11 @@ async function wait(inst: InstanceId, id: InstanceTaskId) {
 }
 
 async function finished(inst: InstanceId) {
-  return (await api.MaaTaskAllFinished({ inst })).return > 0
+  return !(await running(inst))
+}
+
+async function running(inst: InstanceId) {
+  return (await api.MaaRunning({ inst })).return > 0
 }
 
 async function postStop(inst: InstanceId) {

@@ -18,25 +18,31 @@ async function dump() {
 }
 
 async function add() {
-  const id = (await cb.add()).id as CustomActionRunId
+  const id = (await cb.new()).id as CustomActionRunId
   return id === '' ? null : id
 }
 
 async function del(id: CustomActionRunId) {
-  await cb.del({ id })
+  await cb.free({ id })
 }
 
 async function pull(id: CustomActionRunId) {
-  return (await cb.pull({ id })).ids
+  return (await cb.query({ id })).ids
 }
 
 async function request(id: CustomActionRunId, cid: string): Promise<Parameters<CustomActionRun>> {
-  const arg = await cb.request({ id, cid })
+  const arg = await cb.req({ id, cid })
   return [arg.sync_context, arg.task_name, arg.custom_action_param, arg.cur_box, arg.cur_rec_detail]
 }
 
 async function response(id: CustomActionRunId, cid: string, ret: boolean) {
-  await cb.response({ id, cid, return: ret ? 1 : 0 })
+  await cb.res({
+    id,
+    cid,
+    ret: {
+      return: ret ? 1 : 0
+    }
+  })
 }
 
 async function process(id: CustomActionRunId, cid: string, func: CustomActionRun) {

@@ -132,15 +132,16 @@ export class MaaFrameworkDebugRuntime extends EventEmitter {
       this.expectStop = true
     }
 
+    let ver: string
+
     try {
-      await $global.init()
+      ver = await $global.version()
     } catch (_) {
       this.sendEvent('output', `连接MaaHttp失败`)
       afterStop()
       return false
     }
 
-    const ver = await $global.version()
     this.sendEvent('output', `Maa版本: ${ver}`)
 
     if (arg.log) {
@@ -148,6 +149,8 @@ export class MaaFrameworkDebugRuntime extends EventEmitter {
         this.sendEvent('output', `日志目录: ${arg.log}`)
       }
     }
+
+    await $global.setOptionB(GlobalOption.DebugMessage, true)
 
     if (this.expectStop) {
       afterStop()
@@ -183,20 +186,20 @@ export class MaaFrameworkDebugRuntime extends EventEmitter {
 
                 console.log(msg, detail)
 
-                const focusDetail = JSON.parse(detail) as {
+                const debugDetail = JSON.parse(detail) as {
                   id: number
                   entry: string
-                  name: string
                   uuid: string
                   hash: string
+                  name: string
+                  latest_hit: string
                   recognition: object
                   run_times: number
-                  last_time: string
                   status: string
                 }
                 switch (msg) {
-                  case 'Task.Focus.Hit':
-                    if (this.taskIndex[focusDetail.name].bp) {
+                  case 'Task.Debug.ReadyToRun':
+                    if (this.taskIndex[debugDetail.name].bp) {
                       // 目前不存在next和stepIn的区别，因此不会在next的时候提前触发breakpoint
                       this.pauseNext = false
 
@@ -205,10 +208,10 @@ export class MaaFrameworkDebugRuntime extends EventEmitter {
                         resolve = res
                       })
                       this.pauseContext = {
-                        task: focusDetail.name,
+                        task: debugDetail.name,
                         conti: resolve
                       }
-                      this.sendEvent('stopOnBreakpoint', this.taskIndex[focusDetail.name].bp!.id)
+                      this.sendEvent('stopOnBreakpoint', this.taskIndex[debugDetail.name].bp!.id)
                       await pro
                     } else if (this.pauseNext) {
                       this.pauseNext = false
@@ -218,14 +221,14 @@ export class MaaFrameworkDebugRuntime extends EventEmitter {
                         resolve = res
                       })
                       this.pauseContext = {
-                        task: focusDetail.name,
+                        task: debugDetail.name,
                         conti: resolve
                       }
                       this.sendEvent('stopOnStep')
                       await pro
                     }
-                  // case 'Task.Focus.Runout':
-                  // case 'Task.Focus.Completed':
+                  // case 'Task.Debug.Runout':
+                  // case 'Task.Debug.Completed':
                 }
               })
             }
@@ -249,6 +252,7 @@ export class MaaFrameworkDebugRuntime extends EventEmitter {
                 async (sync_ctx, task, param, box, detail) => {
                   this.sendEvent('output', `${sync_ctx} ${task} ${param} ${box} ${detail}`)
                   console.log(sync_ctx, task, param, box, detail)
+                  return true
                 }
               )
             }
@@ -339,19 +343,6 @@ export class MaaFrameworkDebugRuntime extends EventEmitter {
       return false
     }
 
-    const allFocusParam = Object.fromEntries(
-      Object.keys(this.taskIndex).map(task => [
-        task,
-        {
-          focus: true
-        }
-      ])
-    )
-    for (const key in arg.param) {
-      const diff = arg.param[key]
-      Object.assign(allFocusParam[key], diff)
-    }
-
     this.stopRunning = done => {
       $instance.postStop(instanceId).then(() => {
         this.expectStop = true
@@ -361,10 +352,7 @@ export class MaaFrameworkDebugRuntime extends EventEmitter {
     }
 
     $instance
-      .wait(
-        instanceId,
-        await $instance.postTask(instanceId, arg.task, JSON.stringify(allFocusParam))
-      )
+      .wait(instanceId, await $instance.postTask(instanceId, arg.task, JSON.stringify(arg.param)))
       .then(() => {
         $instance.destroy(instanceId)
         $resource.destroy(resourceId)

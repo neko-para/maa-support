@@ -1,41 +1,37 @@
 import type { IApi } from './schema-api/interface-api'
 import { requestApi } from './schema-api/request-api'
 
-export class ApiServerError {
-  error: string
-
-  constructor(err: string) {
-    this.error = err
-  }
-}
+export class ApiServerError {}
 
 type NotUndefined<T> = T extends undefined ? never : T
 type FilterPrefix<K extends string, P extends string> = K extends `${P}${infer name}` ? name : never
 type GetPrefix<K extends string> = K extends `${infer name}/${infer _}` ? name : never
 
-type CallbackSub = 'add' | 'del' | 'dump' | 'pull' | 'request' | 'response'
+type CallbackSub = 'new' | 'free' | 'query' | 'req' | 'res' | 'dump'
+type HandleSub = 'dump'
 
 type ApiRoutes = FilterPrefix<keyof IApi, '/api/'>
 type CallbackRoutes = GetPrefix<FilterPrefix<keyof IApi, '/callback/'>>
-type OpaqueRoutes = FilterPrefix<keyof IApi, '/opaque/'>
+type HandleRoutes = GetPrefix<FilterPrefix<keyof IApi, '/handle/'>>
 
 type GetApi<K extends ApiRoutes> = `/api/${K}` extends keyof IApi ? IApi[`/api/${K}`] : never
 type GetCallback<
   K extends CallbackRoutes,
   S extends CallbackSub
 > = `/callback/${K}/${S}` extends keyof IApi ? IApi[`/callback/${K}/${S}`] : never
-type GetOpaque<K extends OpaqueRoutes> = `/opaque/${K}` extends keyof IApi
-  ? IApi[`/opaque/${K}`]
+type GetHandle<K extends HandleRoutes, S extends HandleSub> = `/handle/${K}/${S}` extends keyof IApi
+  ? IApi[`/handle/${K}/${S}`]
   : never
 
 let baseURL = 'http://127.0.0.1:13126'
 
+type MakeFunc<Req, Res> =
+  Record<string, never> extends Req
+    ? () => Promise<NotUndefined<Res>>
+    : (data: NotUndefined<Req>) => Promise<NotUndefined<Res>>
+
 function makeApiHelper(): {
-  [route in ApiRoutes]: unknown extends GetApi<route>['Body']
-    ? () => Promise<NotUndefined<GetApi<route>['Response']['data']>>
-    : (
-        data: NotUndefined<GetApi<route>['Body']>
-      ) => Promise<NotUndefined<GetApi<route>['Response']['data']>>
+  [route in ApiRoutes]: MakeFunc<GetApi<route>['Body'], GetApi<route>['Response']['data']>
 } {
   return new Proxy(
     {},
@@ -44,10 +40,10 @@ function makeApiHelper(): {
         return async (data: any) => {
           const res = await (requestApi as any)[`/api/${key}`]({
             baseURL,
-            data
+            data: data ?? {}
           })
-          if ('error' in res) {
-            throw new ApiServerError(res.error)
+          if (!res.success) {
+            throw new ApiServerError()
           } else {
             return res.data
           }
@@ -59,11 +55,10 @@ function makeApiHelper(): {
 
 function makeCallbackHelper(): {
   [route in CallbackRoutes]: {
-    [sub in CallbackSub]: unknown extends GetCallback<route, sub>['Body']
-      ? () => Promise<NotUndefined<GetCallback<route, sub>['Response']['data']>>
-      : (
-          data: NotUndefined<GetCallback<route, sub>['Body']>
-        ) => Promise<NotUndefined<GetCallback<route, sub>['Response']['data']>>
+    [sub in CallbackSub]: MakeFunc<
+      GetCallback<route, sub>['Body'],
+      GetCallback<route, sub>['Response']['data']
+    >
   }
 } {
   return new Proxy(
@@ -77,10 +72,10 @@ function makeCallbackHelper(): {
               return async (data: any) => {
                 const res = await (requestApi as any)[`/callback/${key}/${key2}`]({
                   baseURL,
-                  data
+                  data: data ?? {}
                 })
-                if ('error' in res) {
-                  throw new ApiServerError(res.error)
+                if (!res.success) {
+                  throw new ApiServerError()
                 } else {
                   return res.data
                 }
@@ -93,28 +88,36 @@ function makeCallbackHelper(): {
   ) as any
 }
 
-function makeOpaqueHelper(): {
-  [route in OpaqueRoutes]: unknown extends GetOpaque<route>['Body']
-    ? () => Promise<NotUndefined<GetOpaque<route>['Response']['data']>>
-    : (
-        data: NotUndefined<GetOpaque<route>['Body']>
-      ) => Promise<NotUndefined<GetOpaque<route>['Response']['data']>>
+function makeHandleHelper(): {
+  [route in HandleRoutes]: {
+    [sub in HandleSub]: MakeFunc<
+      GetHandle<route, sub>['Body'],
+      GetHandle<route, sub>['Response']['data']
+    >
+  }
 } {
   return new Proxy(
     {},
     {
       get(_, key: string) {
-        return async (data: any) => {
-          const res = await (requestApi as any)[`/opaque/${key}`]({
-            baseURL,
-            data
-          })
-          if ('error' in res) {
-            throw new ApiServerError(res.error)
-          } else {
-            return res.data
+        return new Proxy(
+          {},
+          {
+            get(__, key2: string) {
+              return async (data: any) => {
+                const res = await (requestApi as any)[`/handle/${key}/${key2}`]({
+                  baseURL,
+                  data: data ?? {}
+                })
+                if (!res.success) {
+                  throw new ApiServerError()
+                } else {
+                  return res.data
+                }
+              }
+            }
           }
-        }
+        )
       }
     }
   ) as any
@@ -130,4 +133,4 @@ export function getBaseURL() {
 
 export const api = makeApiHelper()
 export const callback = makeCallbackHelper()
-export const opaque = makeOpaqueHelper()
+export const handle = makeHandleHelper()

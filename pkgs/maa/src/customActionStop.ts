@@ -10,25 +10,25 @@ async function dump() {
 }
 
 async function add() {
-  const id = (await cb.add()).id as CustomActionStopId
+  const id = (await cb.new()).id as CustomActionStopId
   return id === '' ? null : id
 }
 
 async function del(id: CustomActionStopId) {
-  await cb.del({ id })
+  await cb.free({ id })
 }
 
 async function pull(id: CustomActionStopId) {
-  return (await cb.pull({ id })).ids
+  return (await cb.query({ id })).ids
 }
 
 async function request(id: CustomActionStopId, cid: string): Promise<Parameters<CustomActionStop>> {
-  const arg = await cb.request({ id, cid })
+  const arg = await cb.req({ id, cid })
   return []
 }
 
 async function response(id: CustomActionStopId, cid: string) {
-  await cb.response({ id, cid })
+  await cb.res({ id, cid, ret: {} })
 }
 
 async function process(id: CustomActionStopId, cid: string, func: CustomActionStop) {

@@ -5,12 +5,6 @@
 import type { paths } from './ts-schema'
 
 export interface IApi {
-  '/api/MaaAdbControllerCreate': {
-    Body?: NonNullable<
-      paths['/api/MaaAdbControllerCreate']['post']['requestBody']
-    >['content']['application/json']
-    Response: paths['/api/MaaAdbControllerCreate']['post']['responses']['200']['content']['application/json']
-  }
   '/api/MaaAdbControllerCreateV2': {
     Body?: NonNullable<
       paths['/api/MaaAdbControllerCreateV2']['post']['requestBody']
@@ -245,17 +239,23 @@ export interface IApi {
     >['content']['application/json']
     Response: paths['/api/MaaPostTask']['post']['responses']['200']['content']['application/json']
   }
-  '/api/MaaRegisterCustomActionImpl': {
+  '/api/MaaRegisterCustomAction': {
     Body?: NonNullable<
-      paths['/api/MaaRegisterCustomActionImpl']['post']['requestBody']
+      paths['/api/MaaRegisterCustomAction']['post']['requestBody']
     >['content']['application/json']
-    Response: paths['/api/MaaRegisterCustomActionImpl']['post']['responses']['200']['content']['application/json']
+    Response: paths['/api/MaaRegisterCustomAction']['post']['responses']['200']['content']['application/json']
   }
-  '/api/MaaRegisterCustomRecognizerImpl': {
+  '/api/MaaRegisterCustomRecognizer': {
     Body?: NonNullable<
-      paths['/api/MaaRegisterCustomRecognizerImpl']['post']['requestBody']
+      paths['/api/MaaRegisterCustomRecognizer']['post']['requestBody']
     >['content']['application/json']
-    Response: paths['/api/MaaRegisterCustomRecognizerImpl']['post']['responses']['200']['content']['application/json']
+    Response: paths['/api/MaaRegisterCustomRecognizer']['post']['responses']['200']['content']['application/json']
+  }
+  '/api/MaaResourceClear': {
+    Body?: NonNullable<
+      paths['/api/MaaResourceClear']['post']['requestBody']
+    >['content']['application/json']
+    Response: paths['/api/MaaResourceClear']['post']['responses']['200']['content']['application/json']
   }
   '/api/MaaResourceCreate': {
     Body?: NonNullable<
@@ -305,6 +305,12 @@ export interface IApi {
     >['content']['application/json']
     Response: paths['/api/MaaResourceWait']['post']['responses']['200']['content']['application/json']
   }
+  '/api/MaaRunning': {
+    Body?: NonNullable<
+      paths['/api/MaaRunning']['post']['requestBody']
+    >['content']['application/json']
+    Response: paths['/api/MaaRunning']['post']['responses']['200']['content']['application/json']
+  }
   '/api/MaaSetGlobalOptionBoolean': {
     Body?: NonNullable<
       paths['/api/MaaSetGlobalOptionBoolean']['post']['requestBody']
@@ -335,16 +341,6 @@ export interface IApi {
     >['content']['application/json']
     Response: paths['/api/MaaSetTaskParam']['post']['responses']['200']['content']['application/json']
   }
-  '/api/MaaStop': {
-    Body?: NonNullable<paths['/api/MaaStop']['post']['requestBody']>['content']['application/json']
-    Response: paths['/api/MaaStop']['post']['responses']['200']['content']['application/json']
-  }
-  '/api/MaaTaskAllFinished': {
-    Body?: NonNullable<
-      paths['/api/MaaTaskAllFinished']['post']['requestBody']
-    >['content']['application/json']
-    Response: paths['/api/MaaTaskAllFinished']['post']['responses']['200']['content']['application/json']
-  }
   '/api/MaaTaskStatus': {
     Body?: NonNullable<
       paths['/api/MaaTaskStatus']['post']['requestBody']
@@ -356,18 +352,6 @@ export interface IApi {
       paths['/api/MaaThriftControllerCreate']['post']['requestBody']
     >['content']['application/json']
     Response: paths['/api/MaaThriftControllerCreate']['post']['responses']['200']['content']['application/json']
-  }
-  '/api/MaaToolkitFindDevice': {
-    Body?: NonNullable<
-      paths['/api/MaaToolkitFindDevice']['post']['requestBody']
-    >['content']['application/json']
-    Response: paths['/api/MaaToolkitFindDevice']['post']['responses']['200']['content']['application/json']
-  }
-  '/api/MaaToolkitFindDeviceWithAdb': {
-    Body?: NonNullable<
-      paths['/api/MaaToolkitFindDeviceWithAdb']['post']['requestBody']
-    >['content']['application/json']
-    Response: paths['/api/MaaToolkitFindDeviceWithAdb']['post']['responses']['200']['content']['application/json']
   }
   '/api/MaaToolkitFindWindow': {
     Body?: NonNullable<
@@ -435,11 +419,11 @@ export interface IApi {
     >['content']['application/json']
     Response: paths['/api/MaaToolkitGetWindow']['post']['responses']['200']['content']['application/json']
   }
-  '/api/MaaToolkitInit': {
+  '/api/MaaToolkitInitOptionConfig': {
     Body?: NonNullable<
-      paths['/api/MaaToolkitInit']['post']['requestBody']
+      paths['/api/MaaToolkitInitOptionConfig']['post']['requestBody']
     >['content']['application/json']
-    Response: paths['/api/MaaToolkitInit']['post']['responses']['200']['content']['application/json']
+    Response: paths['/api/MaaToolkitInitOptionConfig']['post']['responses']['200']['content']['application/json']
   }
   '/api/MaaToolkitIsFindDeviceCompleted': {
     Body?: NonNullable<
@@ -476,12 +460,6 @@ export interface IApi {
       paths['/api/MaaToolkitSearchWindow']['post']['requestBody']
     >['content']['application/json']
     Response: paths['/api/MaaToolkitSearchWindow']['post']['responses']['200']['content']['application/json']
-  }
-  '/api/MaaToolkitUninit': {
-    Body?: NonNullable<
-      paths['/api/MaaToolkitUninit']['post']['requestBody']
-    >['content']['application/json']
-    Response: paths['/api/MaaToolkitUninit']['post']['responses']['200']['content']['application/json']
   }
   '/api/MaaToolkitUnregisterCustomActionExecutor': {
     Body?: NonNullable<
@@ -525,17 +503,11 @@ export interface IApi {
     >['content']['application/json']
     Response: paths['/api/MaaWaitTask']['post']['responses']['200']['content']['application/json']
   }
-  '/callback/CustomActionRun/add': {
+  '/api/MaaWin32ControllerCreate': {
     Body?: NonNullable<
-      paths['/callback/CustomActionRun/add']['post']['requestBody']
+      paths['/api/MaaWin32ControllerCreate']['post']['requestBody']
     >['content']['application/json']
-    Response: paths['/callback/CustomActionRun/add']['post']['responses']['200']['content']['application/json']
-  }
-  '/callback/CustomActionRun/del': {
-    Body?: NonNullable<
-      paths['/callback/CustomActionRun/del']['post']['requestBody']
-    >['content']['application/json']
-    Response: paths['/callback/CustomActionRun/del']['post']['responses']['200']['content']['application/json']
+    Response: paths['/api/MaaWin32ControllerCreate']['post']['responses']['200']['content']['application/json']
   }
   '/callback/CustomActionRun/dump': {
     Body?: NonNullable<
@@ -543,35 +515,35 @@ export interface IApi {
     >['content']['application/json']
     Response: paths['/callback/CustomActionRun/dump']['post']['responses']['200']['content']['application/json']
   }
-  '/callback/CustomActionRun/pull': {
+  '/callback/CustomActionRun/free': {
     Body?: NonNullable<
-      paths['/callback/CustomActionRun/pull']['post']['requestBody']
+      paths['/callback/CustomActionRun/free']['post']['requestBody']
     >['content']['application/json']
-    Response: paths['/callback/CustomActionRun/pull']['post']['responses']['200']['content']['application/json']
+    Response: paths['/callback/CustomActionRun/free']['post']['responses']['200']['content']['application/json']
   }
-  '/callback/CustomActionRun/request': {
+  '/callback/CustomActionRun/new': {
     Body?: NonNullable<
-      paths['/callback/CustomActionRun/request']['post']['requestBody']
+      paths['/callback/CustomActionRun/new']['post']['requestBody']
     >['content']['application/json']
-    Response: paths['/callback/CustomActionRun/request']['post']['responses']['200']['content']['application/json']
+    Response: paths['/callback/CustomActionRun/new']['post']['responses']['200']['content']['application/json']
   }
-  '/callback/CustomActionRun/response': {
+  '/callback/CustomActionRun/query': {
     Body?: NonNullable<
-      paths['/callback/CustomActionRun/response']['post']['requestBody']
+      paths['/callback/CustomActionRun/query']['post']['requestBody']
     >['content']['application/json']
-    Response: paths['/callback/CustomActionRun/response']['post']['responses']['200']['content']['application/json']
+    Response: paths['/callback/CustomActionRun/query']['post']['responses']['200']['content']['application/json']
   }
-  '/callback/CustomActionStop/add': {
+  '/callback/CustomActionRun/req': {
     Body?: NonNullable<
-      paths['/callback/CustomActionStop/add']['post']['requestBody']
+      paths['/callback/CustomActionRun/req']['post']['requestBody']
     >['content']['application/json']
-    Response: paths['/callback/CustomActionStop/add']['post']['responses']['200']['content']['application/json']
+    Response: paths['/callback/CustomActionRun/req']['post']['responses']['200']['content']['application/json']
   }
-  '/callback/CustomActionStop/del': {
+  '/callback/CustomActionRun/res': {
     Body?: NonNullable<
-      paths['/callback/CustomActionStop/del']['post']['requestBody']
+      paths['/callback/CustomActionRun/res']['post']['requestBody']
     >['content']['application/json']
-    Response: paths['/callback/CustomActionStop/del']['post']['responses']['200']['content']['application/json']
+    Response: paths['/callback/CustomActionRun/res']['post']['responses']['200']['content']['application/json']
   }
   '/callback/CustomActionStop/dump': {
     Body?: NonNullable<
@@ -579,35 +551,35 @@ export interface IApi {
     >['content']['application/json']
     Response: paths['/callback/CustomActionStop/dump']['post']['responses']['200']['content']['application/json']
   }
-  '/callback/CustomActionStop/pull': {
+  '/callback/CustomActionStop/free': {
     Body?: NonNullable<
-      paths['/callback/CustomActionStop/pull']['post']['requestBody']
+      paths['/callback/CustomActionStop/free']['post']['requestBody']
     >['content']['application/json']
-    Response: paths['/callback/CustomActionStop/pull']['post']['responses']['200']['content']['application/json']
+    Response: paths['/callback/CustomActionStop/free']['post']['responses']['200']['content']['application/json']
   }
-  '/callback/CustomActionStop/request': {
+  '/callback/CustomActionStop/new': {
     Body?: NonNullable<
-      paths['/callback/CustomActionStop/request']['post']['requestBody']
+      paths['/callback/CustomActionStop/new']['post']['requestBody']
     >['content']['application/json']
-    Response: paths['/callback/CustomActionStop/request']['post']['responses']['200']['content']['application/json']
+    Response: paths['/callback/CustomActionStop/new']['post']['responses']['200']['content']['application/json']
   }
-  '/callback/CustomActionStop/response': {
+  '/callback/CustomActionStop/query': {
     Body?: NonNullable<
-      paths['/callback/CustomActionStop/response']['post']['requestBody']
+      paths['/callback/CustomActionStop/query']['post']['requestBody']
     >['content']['application/json']
-    Response: paths['/callback/CustomActionStop/response']['post']['responses']['200']['content']['application/json']
+    Response: paths['/callback/CustomActionStop/query']['post']['responses']['200']['content']['application/json']
   }
-  '/callback/CustomRecognizerAnalyze/add': {
+  '/callback/CustomActionStop/req': {
     Body?: NonNullable<
-      paths['/callback/CustomRecognizerAnalyze/add']['post']['requestBody']
+      paths['/callback/CustomActionStop/req']['post']['requestBody']
     >['content']['application/json']
-    Response: paths['/callback/CustomRecognizerAnalyze/add']['post']['responses']['200']['content']['application/json']
+    Response: paths['/callback/CustomActionStop/req']['post']['responses']['200']['content']['application/json']
   }
-  '/callback/CustomRecognizerAnalyze/del': {
+  '/callback/CustomActionStop/res': {
     Body?: NonNullable<
-      paths['/callback/CustomRecognizerAnalyze/del']['post']['requestBody']
+      paths['/callback/CustomActionStop/res']['post']['requestBody']
     >['content']['application/json']
-    Response: paths['/callback/CustomRecognizerAnalyze/del']['post']['responses']['200']['content']['application/json']
+    Response: paths['/callback/CustomActionStop/res']['post']['responses']['200']['content']['application/json']
   }
   '/callback/CustomRecognizerAnalyze/dump': {
     Body?: NonNullable<
@@ -615,35 +587,35 @@ export interface IApi {
     >['content']['application/json']
     Response: paths['/callback/CustomRecognizerAnalyze/dump']['post']['responses']['200']['content']['application/json']
   }
-  '/callback/CustomRecognizerAnalyze/pull': {
+  '/callback/CustomRecognizerAnalyze/free': {
     Body?: NonNullable<
-      paths['/callback/CustomRecognizerAnalyze/pull']['post']['requestBody']
+      paths['/callback/CustomRecognizerAnalyze/free']['post']['requestBody']
     >['content']['application/json']
-    Response: paths['/callback/CustomRecognizerAnalyze/pull']['post']['responses']['200']['content']['application/json']
+    Response: paths['/callback/CustomRecognizerAnalyze/free']['post']['responses']['200']['content']['application/json']
   }
-  '/callback/CustomRecognizerAnalyze/request': {
+  '/callback/CustomRecognizerAnalyze/new': {
     Body?: NonNullable<
-      paths['/callback/CustomRecognizerAnalyze/request']['post']['requestBody']
+      paths['/callback/CustomRecognizerAnalyze/new']['post']['requestBody']
     >['content']['application/json']
-    Response: paths['/callback/CustomRecognizerAnalyze/request']['post']['responses']['200']['content']['application/json']
+    Response: paths['/callback/CustomRecognizerAnalyze/new']['post']['responses']['200']['content']['application/json']
   }
-  '/callback/CustomRecognizerAnalyze/response': {
+  '/callback/CustomRecognizerAnalyze/query': {
     Body?: NonNullable<
-      paths['/callback/CustomRecognizerAnalyze/response']['post']['requestBody']
+      paths['/callback/CustomRecognizerAnalyze/query']['post']['requestBody']
     >['content']['application/json']
-    Response: paths['/callback/CustomRecognizerAnalyze/response']['post']['responses']['200']['content']['application/json']
+    Response: paths['/callback/CustomRecognizerAnalyze/query']['post']['responses']['200']['content']['application/json']
   }
-  '/callback/MaaAPICallback/add': {
+  '/callback/CustomRecognizerAnalyze/req': {
     Body?: NonNullable<
-      paths['/callback/MaaAPICallback/add']['post']['requestBody']
+      paths['/callback/CustomRecognizerAnalyze/req']['post']['requestBody']
     >['content']['application/json']
-    Response: paths['/callback/MaaAPICallback/add']['post']['responses']['200']['content']['application/json']
+    Response: paths['/callback/CustomRecognizerAnalyze/req']['post']['responses']['200']['content']['application/json']
   }
-  '/callback/MaaAPICallback/del': {
+  '/callback/CustomRecognizerAnalyze/res': {
     Body?: NonNullable<
-      paths['/callback/MaaAPICallback/del']['post']['requestBody']
+      paths['/callback/CustomRecognizerAnalyze/res']['post']['requestBody']
     >['content']['application/json']
-    Response: paths['/callback/MaaAPICallback/del']['post']['responses']['200']['content']['application/json']
+    Response: paths['/callback/CustomRecognizerAnalyze/res']['post']['responses']['200']['content']['application/json']
   }
   '/callback/MaaAPICallback/dump': {
     Body?: NonNullable<
@@ -651,52 +623,68 @@ export interface IApi {
     >['content']['application/json']
     Response: paths['/callback/MaaAPICallback/dump']['post']['responses']['200']['content']['application/json']
   }
-  '/callback/MaaAPICallback/pull': {
+  '/callback/MaaAPICallback/free': {
     Body?: NonNullable<
-      paths['/callback/MaaAPICallback/pull']['post']['requestBody']
+      paths['/callback/MaaAPICallback/free']['post']['requestBody']
     >['content']['application/json']
-    Response: paths['/callback/MaaAPICallback/pull']['post']['responses']['200']['content']['application/json']
+    Response: paths['/callback/MaaAPICallback/free']['post']['responses']['200']['content']['application/json']
   }
-  '/callback/MaaAPICallback/request': {
+  '/callback/MaaAPICallback/new': {
     Body?: NonNullable<
-      paths['/callback/MaaAPICallback/request']['post']['requestBody']
+      paths['/callback/MaaAPICallback/new']['post']['requestBody']
     >['content']['application/json']
-    Response: paths['/callback/MaaAPICallback/request']['post']['responses']['200']['content']['application/json']
+    Response: paths['/callback/MaaAPICallback/new']['post']['responses']['200']['content']['application/json']
   }
-  '/callback/MaaAPICallback/response': {
+  '/callback/MaaAPICallback/query': {
     Body?: NonNullable<
-      paths['/callback/MaaAPICallback/response']['post']['requestBody']
+      paths['/callback/MaaAPICallback/query']['post']['requestBody']
     >['content']['application/json']
-    Response: paths['/callback/MaaAPICallback/response']['post']['responses']['200']['content']['application/json']
+    Response: paths['/callback/MaaAPICallback/query']['post']['responses']['200']['content']['application/json']
   }
-  '/opaque/MaaControllerAPI': {
+  '/callback/MaaAPICallback/req': {
     Body?: NonNullable<
-      paths['/opaque/MaaControllerAPI']['post']['requestBody']
+      paths['/callback/MaaAPICallback/req']['post']['requestBody']
     >['content']['application/json']
-    Response: paths['/opaque/MaaControllerAPI']['post']['responses']['200']['content']['application/json']
+    Response: paths['/callback/MaaAPICallback/req']['post']['responses']['200']['content']['application/json']
   }
-  '/opaque/MaaImageBuffer': {
+  '/callback/MaaAPICallback/res': {
     Body?: NonNullable<
-      paths['/opaque/MaaImageBuffer']['post']['requestBody']
+      paths['/callback/MaaAPICallback/res']['post']['requestBody']
     >['content']['application/json']
-    Response: paths['/opaque/MaaImageBuffer']['post']['responses']['200']['content']['application/json']
+    Response: paths['/callback/MaaAPICallback/res']['post']['responses']['200']['content']['application/json']
   }
-  '/opaque/MaaInstanceAPI': {
+  '/handle/MaaControllerAPI/dump': {
     Body?: NonNullable<
-      paths['/opaque/MaaInstanceAPI']['post']['requestBody']
+      paths['/handle/MaaControllerAPI/dump']['post']['requestBody']
     >['content']['application/json']
-    Response: paths['/opaque/MaaInstanceAPI']['post']['responses']['200']['content']['application/json']
+    Response: paths['/handle/MaaControllerAPI/dump']['post']['responses']['200']['content']['application/json']
   }
-  '/opaque/MaaResourceAPI': {
+  '/handle/MaaImageBuffer/dump': {
     Body?: NonNullable<
-      paths['/opaque/MaaResourceAPI']['post']['requestBody']
+      paths['/handle/MaaImageBuffer/dump']['post']['requestBody']
     >['content']['application/json']
-    Response: paths['/opaque/MaaResourceAPI']['post']['responses']['200']['content']['application/json']
+    Response: paths['/handle/MaaImageBuffer/dump']['post']['responses']['200']['content']['application/json']
   }
-  '/opaque/MaaSyncContextAPI': {
+  '/handle/MaaInstanceAPI/dump': {
     Body?: NonNullable<
-      paths['/opaque/MaaSyncContextAPI']['post']['requestBody']
+      paths['/handle/MaaInstanceAPI/dump']['post']['requestBody']
     >['content']['application/json']
-    Response: paths['/opaque/MaaSyncContextAPI']['post']['responses']['200']['content']['application/json']
+    Response: paths['/handle/MaaInstanceAPI/dump']['post']['responses']['200']['content']['application/json']
+  }
+  '/handle/MaaResourceAPI/dump': {
+    Body?: NonNullable<
+      paths['/handle/MaaResourceAPI/dump']['post']['requestBody']
+    >['content']['application/json']
+    Response: paths['/handle/MaaResourceAPI/dump']['post']['responses']['200']['content']['application/json']
+  }
+  '/handle/MaaSyncContextAPI/dump': {
+    Body?: NonNullable<
+      paths['/handle/MaaSyncContextAPI/dump']['post']['requestBody']
+    >['content']['application/json']
+    Response: paths['/handle/MaaSyncContextAPI/dump']['post']['responses']['200']['content']['application/json']
+  }
+  '/help': {
+    Body?: NonNullable<paths['/help']['post']['requestBody']>['content']['application/json']
+    Response: paths['/help']['post']['responses']['200']['content']['application/json']
   }
 }

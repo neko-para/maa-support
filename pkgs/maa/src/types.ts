@@ -9,20 +9,11 @@ export const enum Status {
 export const enum GlobalOption {
   Invalid = 0,
   LogDir = 1,
-
-  // value: bool, eg: true; val_size: sizeof(bool)
   SaveDraw = 2,
-
-  // Dump all screenshots and actions
-  // this option will || with MaaCtrlOption_Recording
-  // value: bool, eg: true; val_size: sizeof(bool)
   Recording = 3,
-
-  // value: MaaLoggingLevel, val_size: sizeof(MaaLoggingLevel), default by MaaLoggingLevel_Error
   StdoutLevel = 4,
-
-  // value: bool, eg: true; val_size: sizeof(bool)
-  ShowHitDraw = 5
+  ShowHitDraw = 5,
+  DebugMessage = 6
 }
 
 export const enum ControllerOption {

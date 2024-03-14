@@ -3,3510 +3,348 @@
  * Do not make direct changes to the file.
  */
 
-/** OneOf type helpers */
-type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never }
-type XOR<T, U> = T | U extends object ? (Without<T, U> & U) | (Without<U, T> & T) : T | U
-type OneOf<T extends any[]> = T extends [infer Only]
-  ? Only
-  : T extends [infer A, infer B, ...infer Rest]
-    ? OneOf<[XOR<A, B>, ...Rest]>
-    : never
-
 export interface paths {
-  '/api/MaaAdbControllerCreate': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            adb_path: string
-            address: string
-            /** MaaAPICallback */
-            callback: string
-            config: string
-            type: number
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    /** MaaControllerAPI */
-                    return: string
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
-  }
   '/api/MaaAdbControllerCreateV2': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            adb_path: string
-            address: string
-            agent_path: string
-            /** MaaAPICallback */
-            callback: string
-            config: string
-            type: number
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    /** MaaControllerAPI */
-                    return: string
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaAdbControllerCreateV2']
   }
   '/api/MaaBindController': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaControllerAPI */
-            ctrl: string
-            /** MaaInstanceAPI */
-            inst: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaBindController']
   }
   '/api/MaaBindResource': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaInstanceAPI */
-            inst: string
-            /** MaaResourceAPI */
-            res: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaBindResource']
   }
   '/api/MaaClearCustomAction': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaInstanceAPI */
-            inst: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaClearCustomAction']
   }
   '/api/MaaClearCustomRecognizer': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaInstanceAPI */
-            inst: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaClearCustomRecognizer']
   }
   '/api/MaaClearImage': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaImageBuffer */
-            handle: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaClearImage']
   }
   '/api/MaaControllerConnected': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaControllerAPI */
-            ctrl: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaControllerConnected']
   }
   '/api/MaaControllerDestroy': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaControllerAPI */
-            ctrl: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: null
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaControllerDestroy']
   }
   '/api/MaaControllerGetImage': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaImageBuffer */
-            buffer: string
-            /** MaaControllerAPI */
-            ctrl: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaControllerGetImage']
   }
   '/api/MaaControllerGetUUID': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaControllerAPI */
-            ctrl: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    buffer: string
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaControllerGetUUID']
   }
   '/api/MaaControllerPostClick': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaControllerAPI */
-            ctrl: string
-            x: number
-            y: number
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaControllerPostClick']
   }
   '/api/MaaControllerPostConnection': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaControllerAPI */
-            ctrl: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaControllerPostConnection']
   }
   '/api/MaaControllerPostInputText': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaControllerAPI */
-            ctrl: string
-            text: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaControllerPostInputText']
   }
   '/api/MaaControllerPostPressKey': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaControllerAPI */
-            ctrl: string
-            keycode: number
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaControllerPostPressKey']
   }
   '/api/MaaControllerPostScreencap': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaControllerAPI */
-            ctrl: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaControllerPostScreencap']
   }
   '/api/MaaControllerPostSwipe': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaControllerAPI */
-            ctrl: string
-            duration: number
-            x1: number
-            x2: number
-            y1: number
-            y2: number
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaControllerPostSwipe']
   }
   '/api/MaaControllerPostTouchDown': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            contact: number
-            /** MaaControllerAPI */
-            ctrl: string
-            pressure: number
-            x: number
-            y: number
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaControllerPostTouchDown']
   }
   '/api/MaaControllerPostTouchMove': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            contact: number
-            /** MaaControllerAPI */
-            ctrl: string
-            pressure: number
-            x: number
-            y: number
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaControllerPostTouchMove']
   }
   '/api/MaaControllerPostTouchUp': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            contact: number
-            /** MaaControllerAPI */
-            ctrl: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaControllerPostTouchUp']
   }
   '/api/MaaControllerSetOptionBoolean': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaControllerAPI */
-            ctrl: string
-            key: number
-            value: boolean
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaControllerSetOptionBoolean']
   }
   '/api/MaaControllerSetOptionInteger': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaControllerAPI */
-            ctrl: string
-            key: number
-            value: number
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaControllerSetOptionInteger']
   }
   '/api/MaaControllerSetOptionString': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaControllerAPI */
-            ctrl: string
-            key: number
-            value: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaControllerSetOptionString']
   }
   '/api/MaaControllerStatus': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaControllerAPI */
-            ctrl: string
-            id: number
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaControllerStatus']
   }
   '/api/MaaControllerWait': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaControllerAPI */
-            ctrl: string
-            id: number
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaControllerWait']
   }
   '/api/MaaCreate': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaAPICallback */
-            callback: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    /** MaaInstanceAPI */
-                    return: string
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaCreate']
   }
   '/api/MaaCreateImageBuffer': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': unknown
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    /** MaaImageBuffer */
-                    return: string
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaCreateImageBuffer']
   }
   '/api/MaaDbgControllerCreate': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaAPICallback */
-            callback: string
-            config: string
-            read_path: string
-            type: number
-            write_path: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    /** MaaControllerAPI */
-                    return: string
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaDbgControllerCreate']
   }
   '/api/MaaDestroy': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaInstanceAPI */
-            inst: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: null
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaDestroy']
   }
   '/api/MaaDestroyImageBuffer': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaImageBuffer */
-            handle: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: null
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaDestroyImageBuffer']
   }
   '/api/MaaGetController': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaInstanceAPI */
-            inst: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    /** MaaControllerAPI */
-                    return: string
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaGetController']
   }
   '/api/MaaGetImageEncoded': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaImageBuffer */
-            handle: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: string
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaGetImageEncoded']
   }
   '/api/MaaGetImageHeight': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaImageBuffer */
-            handle: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaGetImageHeight']
   }
   '/api/MaaGetImageType': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaImageBuffer */
-            handle: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaGetImageType']
   }
   '/api/MaaGetImageWidth': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaImageBuffer */
-            handle: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaGetImageWidth']
   }
   '/api/MaaGetResource': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaInstanceAPI */
-            inst: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    /** MaaResourceAPI */
-                    return: string
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaGetResource']
   }
   '/api/MaaInited': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaInstanceAPI */
-            inst: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaInited']
   }
   '/api/MaaIsImageEmpty': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaImageBuffer */
-            handle: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaIsImageEmpty']
   }
   '/api/MaaPostStop': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaInstanceAPI */
-            inst: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaPostStop']
   }
   '/api/MaaPostTask': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            entry: string
-            /** MaaInstanceAPI */
-            inst: string
-            param: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaPostTask']
   }
-  '/api/MaaRegisterCustomActionImpl': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaInstanceAPI */
-            inst: string
-            name: string
-            /** CustomActionRun */
-            run: string
-            /** CustomActionStop */
-            stop: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+  '/api/MaaRegisterCustomAction': {
+    post: operations['_api_MaaRegisterCustomAction']
   }
-  '/api/MaaRegisterCustomRecognizerImpl': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** CustomRecognizerAnalyze */
-            analyze: string
-            /** MaaInstanceAPI */
-            inst: string
-            name: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+  '/api/MaaRegisterCustomRecognizer': {
+    post: operations['_api_MaaRegisterCustomRecognizer']
+  }
+  '/api/MaaResourceClear': {
+    post: operations['_api_MaaResourceClear']
   }
   '/api/MaaResourceCreate': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaAPICallback */
-            callback: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    /** MaaResourceAPI */
-                    return: string
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaResourceCreate']
   }
   '/api/MaaResourceDestroy': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaResourceAPI */
-            res: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: null
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaResourceDestroy']
   }
   '/api/MaaResourceGetHash': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaResourceAPI */
-            res: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    buffer: string
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaResourceGetHash']
   }
   '/api/MaaResourceGetTaskList': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaResourceAPI */
-            res: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    buffer: string
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaResourceGetTaskList']
   }
   '/api/MaaResourceLoaded': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaResourceAPI */
-            res: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaResourceLoaded']
   }
   '/api/MaaResourcePostPath': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            path: string
-            /** MaaResourceAPI */
-            res: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaResourcePostPath']
   }
   '/api/MaaResourceStatus': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            id: number
-            /** MaaResourceAPI */
-            res: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaResourceStatus']
   }
   '/api/MaaResourceWait': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            id: number
-            /** MaaResourceAPI */
-            res: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaResourceWait']
+  }
+  '/api/MaaRunning': {
+    post: operations['_api_MaaRunning']
   }
   '/api/MaaSetGlobalOptionBoolean': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            key: number
-            value: boolean
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaSetGlobalOptionBoolean']
   }
   '/api/MaaSetGlobalOptionInteger': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            key: number
-            value: number
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaSetGlobalOptionInteger']
   }
   '/api/MaaSetGlobalOptionString': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            key: number
-            value: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaSetGlobalOptionString']
   }
   '/api/MaaSetImageEncoded': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            data: string
-            /** MaaImageBuffer */
-            handle: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaSetImageEncoded']
   }
   '/api/MaaSetTaskParam': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            id: number
-            /** MaaInstanceAPI */
-            inst: string
-            param: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
-  }
-  '/api/MaaStop': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaInstanceAPI */
-            inst: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
-  }
-  '/api/MaaTaskAllFinished': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaInstanceAPI */
-            inst: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaSetTaskParam']
   }
   '/api/MaaTaskStatus': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            id: number
-            /** MaaInstanceAPI */
-            inst: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaTaskStatus']
   }
   '/api/MaaThriftControllerCreate': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaAPICallback */
-            callback: string
-            config: string
-            host: string
-            port: number
-            type: number
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    /** MaaControllerAPI */
-                    return: string
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
-  }
-  '/api/MaaToolkitFindDevice': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': unknown
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
-  }
-  '/api/MaaToolkitFindDeviceWithAdb': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            adb_path: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaThriftControllerCreate']
   }
   '/api/MaaToolkitFindWindow': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            class_name: string
-            window_name: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaToolkitFindWindow']
   }
   '/api/MaaToolkitGetCursorWindow': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': unknown
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaToolkitGetCursorWindow']
   }
   '/api/MaaToolkitGetDesktopWindow': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': unknown
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaToolkitGetDesktopWindow']
   }
   '/api/MaaToolkitGetDeviceAdbConfig': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            index: number
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: string
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaToolkitGetDeviceAdbConfig']
   }
   '/api/MaaToolkitGetDeviceAdbControllerType': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            index: number
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaToolkitGetDeviceAdbControllerType']
   }
   '/api/MaaToolkitGetDeviceAdbPath': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            index: number
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: string
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaToolkitGetDeviceAdbPath']
   }
   '/api/MaaToolkitGetDeviceAdbSerial': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            index: number
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: string
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaToolkitGetDeviceAdbSerial']
   }
   '/api/MaaToolkitGetDeviceCount': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': unknown
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaToolkitGetDeviceCount']
   }
   '/api/MaaToolkitGetDeviceName': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            index: number
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: string
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaToolkitGetDeviceName']
   }
   '/api/MaaToolkitGetForegroundWindow': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': unknown
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaToolkitGetForegroundWindow']
   }
   '/api/MaaToolkitGetWindow': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            index: number
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaToolkitGetWindow']
   }
-  '/api/MaaToolkitInit': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': unknown
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+  '/api/MaaToolkitInitOptionConfig': {
+    post: operations['_api_MaaToolkitInitOptionConfig']
   }
   '/api/MaaToolkitIsFindDeviceCompleted': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': unknown
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaToolkitIsFindDeviceCompleted']
   }
   '/api/MaaToolkitPostFindDevice': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': unknown
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaToolkitPostFindDevice']
   }
   '/api/MaaToolkitPostFindDeviceWithAdb': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            adb_path: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaToolkitPostFindDeviceWithAdb']
   }
   '/api/MaaToolkitRegisterCustomActionExecutor': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            action_exec_param_json: string
-            action_exec_path: string
-            action_name: string
-            /** MaaInstanceAPI */
-            handle: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaToolkitRegisterCustomActionExecutor']
   }
   '/api/MaaToolkitRegisterCustomRecognizerExecutor': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaInstanceAPI */
-            handle: string
-            recognizer_exec_param_json: string
-            recognizer_exec_path: string
-            recognizer_name: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaToolkitRegisterCustomRecognizerExecutor']
   }
   '/api/MaaToolkitSearchWindow': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            class_name: string
-            window_name: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
-  }
-  '/api/MaaToolkitUninit': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': unknown
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaToolkitSearchWindow']
   }
   '/api/MaaToolkitUnregisterCustomActionExecutor': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            action_name: string
-            /** MaaInstanceAPI */
-            handle: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaToolkitUnregisterCustomActionExecutor']
   }
   '/api/MaaToolkitUnregisterCustomRecognizerExecutor': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaInstanceAPI */
-            handle: string
-            recognizer_name: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaToolkitUnregisterCustomRecognizerExecutor']
   }
   '/api/MaaToolkitWaitForFindDeviceToComplete': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': unknown
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaToolkitWaitForFindDeviceToComplete']
   }
   '/api/MaaUnregisterCustomAction': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaInstanceAPI */
-            inst: string
-            name: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaUnregisterCustomAction']
   }
   '/api/MaaUnregisterCustomRecognizer': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            /** MaaInstanceAPI */
-            inst: string
-            name: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaUnregisterCustomRecognizer']
   }
   '/api/MaaVersion': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': unknown
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: string
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaVersion']
   }
   '/api/MaaWaitTask': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            id: number
-            /** MaaInstanceAPI */
-            inst: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    return: number
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_api_MaaWaitTask']
   }
-  '/callback/CustomActionRun/add': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': unknown
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    id: string
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
-  }
-  '/callback/CustomActionRun/del': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            id: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: unknown
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+  '/api/MaaWin32ControllerCreate': {
+    post: operations['_api_MaaWin32ControllerCreate']
   }
   '/callback/CustomActionRun/dump': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': unknown
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    ids: string[]
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_callback_CustomActionRun_dump']
   }
-  '/callback/CustomActionRun/pull': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            id: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    ids: string[]
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+  '/callback/CustomActionRun/free': {
+    post: operations['_callback_CustomActionRun_free']
   }
-  '/callback/CustomActionRun/request': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            cid: string
-            id: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    cur_box: {
-                      height: number
-                      width: number
-                      x: number
-                      y: number
-                    }
-                    cur_rec_detail: string
-                    custom_action_param: string
-                    /** MaaSyncContextAPI */
-                    sync_context: string
-                    task_name: string
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+  '/callback/CustomActionRun/new': {
+    post: operations['_callback_CustomActionRun_new']
   }
-  '/callback/CustomActionRun/response': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            cid: string
-            id: string
-            return: number
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: unknown
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+  '/callback/CustomActionRun/query': {
+    post: operations['_callback_CustomActionRun_query']
   }
-  '/callback/CustomActionStop/add': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': unknown
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    id: string
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+  '/callback/CustomActionRun/req': {
+    post: operations['_callback_CustomActionRun_req']
   }
-  '/callback/CustomActionStop/del': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            id: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: unknown
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+  '/callback/CustomActionRun/res': {
+    post: operations['_callback_CustomActionRun_res']
   }
   '/callback/CustomActionStop/dump': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': unknown
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    ids: string[]
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_callback_CustomActionStop_dump']
   }
-  '/callback/CustomActionStop/pull': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            id: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    ids: string[]
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+  '/callback/CustomActionStop/free': {
+    post: operations['_callback_CustomActionStop_free']
   }
-  '/callback/CustomActionStop/request': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            cid: string
-            id: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: Record<string, never>
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+  '/callback/CustomActionStop/new': {
+    post: operations['_callback_CustomActionStop_new']
   }
-  '/callback/CustomActionStop/response': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            cid: string
-            id: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: unknown
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+  '/callback/CustomActionStop/query': {
+    post: operations['_callback_CustomActionStop_query']
   }
-  '/callback/CustomRecognizerAnalyze/add': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': unknown
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    id: string
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+  '/callback/CustomActionStop/req': {
+    post: operations['_callback_CustomActionStop_req']
   }
-  '/callback/CustomRecognizerAnalyze/del': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            id: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: unknown
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+  '/callback/CustomActionStop/res': {
+    post: operations['_callback_CustomActionStop_res']
   }
   '/callback/CustomRecognizerAnalyze/dump': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': unknown
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    ids: string[]
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_callback_CustomRecognizerAnalyze_dump']
   }
-  '/callback/CustomRecognizerAnalyze/pull': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            id: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    ids: string[]
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+  '/callback/CustomRecognizerAnalyze/free': {
+    post: operations['_callback_CustomRecognizerAnalyze_free']
   }
-  '/callback/CustomRecognizerAnalyze/request': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            cid: string
-            id: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    custom_recognition_param: string
-                    /** MaaImageBuffer */
-                    image: string
-                    /** MaaSyncContextAPI */
-                    sync_context: string
-                    task_name: string
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+  '/callback/CustomRecognizerAnalyze/new': {
+    post: operations['_callback_CustomRecognizerAnalyze_new']
   }
-  '/callback/CustomRecognizerAnalyze/response': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            cid: string
-            id: string
-            out_box: {
-              height: number
-              width: number
-              x: number
-              y: number
-            }
-            out_detail: string
-            return: number
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: unknown
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+  '/callback/CustomRecognizerAnalyze/query': {
+    post: operations['_callback_CustomRecognizerAnalyze_query']
   }
-  '/callback/MaaAPICallback/add': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': unknown
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    id: string
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+  '/callback/CustomRecognizerAnalyze/req': {
+    post: operations['_callback_CustomRecognizerAnalyze_req']
   }
-  '/callback/MaaAPICallback/del': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            id: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: unknown
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+  '/callback/CustomRecognizerAnalyze/res': {
+    post: operations['_callback_CustomRecognizerAnalyze_res']
   }
   '/callback/MaaAPICallback/dump': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': unknown
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    ids: string[]
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+    post: operations['_callback_MaaAPICallback_dump']
   }
-  '/callback/MaaAPICallback/pull': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            id: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    ids: string[]
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+  '/callback/MaaAPICallback/free': {
+    post: operations['_callback_MaaAPICallback_free']
   }
-  '/callback/MaaAPICallback/request': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            cid: string
-            id: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    details_json: string
-                    msg: string
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+  '/callback/MaaAPICallback/new': {
+    post: operations['_callback_MaaAPICallback_new']
   }
-  '/callback/MaaAPICallback/response': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': {
-            cid: string
-            id: string
-          }
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: unknown
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+  '/callback/MaaAPICallback/query': {
+    post: operations['_callback_MaaAPICallback_query']
   }
-  '/opaque/MaaControllerAPI': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': unknown
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    [key: string]: {
-                      pointer: string
-                    }
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+  '/callback/MaaAPICallback/req': {
+    post: operations['_callback_MaaAPICallback_req']
   }
-  '/opaque/MaaImageBuffer': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': unknown
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    [key: string]: {
-                      pointer: string
-                    }
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+  '/callback/MaaAPICallback/res': {
+    post: operations['_callback_MaaAPICallback_res']
   }
-  '/opaque/MaaInstanceAPI': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': unknown
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    [key: string]: {
-                      pointer: string
-                    }
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+  '/handle/MaaControllerAPI/dump': {
+    post: operations['_handle_MaaControllerAPI_dump']
   }
-  '/opaque/MaaResourceAPI': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': unknown
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    [key: string]: {
-                      pointer: string
-                    }
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+  '/handle/MaaImageBuffer/dump': {
+    post: operations['_handle_MaaImageBuffer_dump']
   }
-  '/opaque/MaaSyncContextAPI': {
-    post: {
-      requestBody?: {
-        content: {
-          'application/json': unknown
-        }
-      }
-      responses: {
-        200: {
-          content: {
-            'application/json': OneOf<
-              [
-                {
-                  data: {
-                    [key: string]: {
-                      pointer: string
-                    }
-                  }
-                },
-                {
-                  error: string
-                }
-              ]
-            >
-          }
-        }
-      }
-    }
+  '/handle/MaaInstanceAPI/dump': {
+    post: operations['_handle_MaaInstanceAPI_dump']
+  }
+  '/handle/MaaResourceAPI/dump': {
+    post: operations['_handle_MaaResourceAPI_dump']
+  }
+  '/handle/MaaSyncContextAPI/dump': {
+    post: operations['_handle_MaaSyncContextAPI_dump']
+  }
+  '/help': {
+    post: operations['_help']
   }
 }
 
@@ -3518,4 +356,2510 @@ export type $defs = Record<string, never>
 
 export type external = Record<string, never>
 
-export type operations = Record<string, never>
+export interface operations {
+  _api_MaaAdbControllerCreateV2: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          adb_path: string
+          address: string
+          agent_path: string
+          callback: string
+          config: string
+          type: number
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              /** MaaControllerAPI */
+              return: string
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaBindController: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaControllerAPI */
+          ctrl: string
+          /** MaaInstanceAPI */
+          inst: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaBindResource: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaInstanceAPI */
+          inst: string
+          /** MaaResourceAPI */
+          res: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaClearCustomAction: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaInstanceAPI */
+          inst: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaClearCustomRecognizer: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaInstanceAPI */
+          inst: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaClearImage: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaImageBuffer */
+          handle: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaControllerConnected: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaControllerAPI */
+          ctrl: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaControllerDestroy: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaControllerAPI */
+          ctrl: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: Record<string, never>
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaControllerGetImage: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaImageBuffer */
+          buffer: string
+          /** MaaControllerAPI */
+          ctrl: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaControllerGetUUID: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaControllerAPI */
+          ctrl: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              buffer: string
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaControllerPostClick: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaControllerAPI */
+          ctrl: string
+          x: number
+          y: number
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaControllerPostConnection: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaControllerAPI */
+          ctrl: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaControllerPostInputText: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaControllerAPI */
+          ctrl: string
+          text: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaControllerPostPressKey: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaControllerAPI */
+          ctrl: string
+          keycode: number
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaControllerPostScreencap: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaControllerAPI */
+          ctrl: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaControllerPostSwipe: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaControllerAPI */
+          ctrl: string
+          duration: number
+          x1: number
+          x2: number
+          y1: number
+          y2: number
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaControllerPostTouchDown: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          contact: number
+          /** MaaControllerAPI */
+          ctrl: string
+          pressure: number
+          x: number
+          y: number
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaControllerPostTouchMove: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          contact: number
+          /** MaaControllerAPI */
+          ctrl: string
+          pressure: number
+          x: number
+          y: number
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaControllerPostTouchUp: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          contact: number
+          /** MaaControllerAPI */
+          ctrl: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaControllerSetOptionBoolean: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaControllerAPI */
+          ctrl: string
+          key: number
+          value: boolean
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaControllerSetOptionInteger: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaControllerAPI */
+          ctrl: string
+          key: number
+          value: number
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaControllerSetOptionString: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaControllerAPI */
+          ctrl: string
+          key: number
+          value: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaControllerStatus: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaControllerAPI */
+          ctrl: string
+          id: number
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaControllerWait: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaControllerAPI */
+          ctrl: string
+          id: number
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaCreate: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          callback: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              /** MaaInstanceAPI */
+              return: string
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaCreateImageBuffer: {
+    requestBody?: {
+      content: {
+        'application/json': Record<string, never>
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              /** MaaImageBuffer */
+              return: string
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaDbgControllerCreate: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          callback: string
+          config: string
+          read_path: string
+          type: number
+          write_path: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              /** MaaControllerAPI */
+              return: string
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaDestroy: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaInstanceAPI */
+          inst: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: Record<string, never>
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaDestroyImageBuffer: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaImageBuffer */
+          handle: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: Record<string, never>
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaGetController: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaInstanceAPI */
+          inst: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              /** MaaControllerAPI */
+              return: string
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaGetImageEncoded: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaImageBuffer */
+          handle: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: string
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaGetImageHeight: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaImageBuffer */
+          handle: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaGetImageType: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaImageBuffer */
+          handle: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaGetImageWidth: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaImageBuffer */
+          handle: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaGetResource: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaInstanceAPI */
+          inst: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              /** MaaResourceAPI */
+              return: string
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaInited: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaInstanceAPI */
+          inst: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaIsImageEmpty: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaImageBuffer */
+          handle: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaPostStop: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaInstanceAPI */
+          inst: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaPostTask: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          entry: string
+          /** MaaInstanceAPI */
+          inst: string
+          param: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaRegisterCustomAction: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          action: {
+            run: string
+            stop: string
+          }
+          /** MaaInstanceAPI */
+          inst: string
+          name: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaRegisterCustomRecognizer: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaInstanceAPI */
+          inst: string
+          name: string
+          recognizer: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaResourceClear: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaResourceAPI */
+          res: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaResourceCreate: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          callback: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              /** MaaResourceAPI */
+              return: string
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaResourceDestroy: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaResourceAPI */
+          res: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: Record<string, never>
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaResourceGetHash: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaResourceAPI */
+          res: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              buffer: string
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaResourceGetTaskList: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaResourceAPI */
+          res: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              buffer: string
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaResourceLoaded: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaResourceAPI */
+          res: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaResourcePostPath: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          path: string
+          /** MaaResourceAPI */
+          res: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaResourceStatus: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          id: number
+          /** MaaResourceAPI */
+          res: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaResourceWait: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          id: number
+          /** MaaResourceAPI */
+          res: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaRunning: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaInstanceAPI */
+          inst: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaSetGlobalOptionBoolean: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          key: number
+          value: boolean
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaSetGlobalOptionInteger: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          key: number
+          value: number
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaSetGlobalOptionString: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          key: number
+          value: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaSetImageEncoded: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          data: string
+          /** MaaImageBuffer */
+          handle: string
+          size: number
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaSetTaskParam: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          id: number
+          /** MaaInstanceAPI */
+          inst: string
+          param: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaTaskStatus: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          id: number
+          /** MaaInstanceAPI */
+          inst: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaThriftControllerCreate: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          callback: string
+          config: string
+          host: string
+          port: number
+          type: number
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              /** MaaControllerAPI */
+              return: string
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaToolkitFindWindow: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          class_name: string
+          window_name: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaToolkitGetCursorWindow: {
+    requestBody?: {
+      content: {
+        'application/json': Record<string, never>
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: string
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaToolkitGetDesktopWindow: {
+    requestBody?: {
+      content: {
+        'application/json': Record<string, never>
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: string
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaToolkitGetDeviceAdbConfig: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          index: number
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: string
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaToolkitGetDeviceAdbControllerType: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          index: number
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaToolkitGetDeviceAdbPath: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          index: number
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: string
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaToolkitGetDeviceAdbSerial: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          index: number
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: string
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaToolkitGetDeviceCount: {
+    requestBody?: {
+      content: {
+        'application/json': Record<string, never>
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaToolkitGetDeviceName: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          index: number
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: string
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaToolkitGetForegroundWindow: {
+    requestBody?: {
+      content: {
+        'application/json': Record<string, never>
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: string
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaToolkitGetWindow: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          index: number
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: string
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaToolkitInitOptionConfig: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          default_json: string
+          user_path: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaToolkitIsFindDeviceCompleted: {
+    requestBody?: {
+      content: {
+        'application/json': Record<string, never>
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaToolkitPostFindDevice: {
+    requestBody?: {
+      content: {
+        'application/json': Record<string, never>
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaToolkitPostFindDeviceWithAdb: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          adb_path: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaToolkitRegisterCustomActionExecutor: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          action_exec_param_json: string
+          action_exec_path: string
+          action_name: string
+          /** MaaInstanceAPI */
+          handle: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaToolkitRegisterCustomRecognizerExecutor: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaInstanceAPI */
+          handle: string
+          recognizer_exec_param_json: string
+          recognizer_exec_path: string
+          recognizer_name: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaToolkitSearchWindow: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          class_name: string
+          window_name: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaToolkitUnregisterCustomActionExecutor: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          action_name: string
+          /** MaaInstanceAPI */
+          handle: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaToolkitUnregisterCustomRecognizerExecutor: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaInstanceAPI */
+          handle: string
+          recognizer_name: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaToolkitWaitForFindDeviceToComplete: {
+    requestBody?: {
+      content: {
+        'application/json': Record<string, never>
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaUnregisterCustomAction: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaInstanceAPI */
+          inst: string
+          name: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaUnregisterCustomRecognizer: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaInstanceAPI */
+          inst: string
+          name: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaVersion: {
+    requestBody?: {
+      content: {
+        'application/json': Record<string, never>
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: string
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaWaitTask: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          id: number
+          /** MaaInstanceAPI */
+          inst: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaWin32ControllerCreate: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          callback: string
+          hWnd: string
+          type: number
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              /** MaaControllerAPI */
+              return: string
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _callback_CustomActionRun_dump: {
+    requestBody?: {
+      content: {
+        'application/json': unknown
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              ids: string[]
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _callback_CustomActionRun_free: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          id: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: unknown
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _callback_CustomActionRun_new: {
+    requestBody?: {
+      content: {
+        'application/json': unknown
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              id: string
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _callback_CustomActionRun_query: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          id: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              ids: string[]
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _callback_CustomActionRun_req: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          cid: string
+          id: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              cur_box: {
+                height: number
+                width: number
+                x: number
+                y: number
+              }
+              cur_rec_detail: string
+              custom_action_param: string
+              /** MaaSyncContextAPI */
+              sync_context: string
+              task_name: string
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _callback_CustomActionRun_res: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          cid: string
+          id: string
+          ret: {
+            return: number
+          }
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: unknown
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _callback_CustomActionStop_dump: {
+    requestBody?: {
+      content: {
+        'application/json': unknown
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              ids: string[]
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _callback_CustomActionStop_free: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          id: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: unknown
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _callback_CustomActionStop_new: {
+    requestBody?: {
+      content: {
+        'application/json': unknown
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              id: string
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _callback_CustomActionStop_query: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          id: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              ids: string[]
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _callback_CustomActionStop_req: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          cid: string
+          id: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: Record<string, never>
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _callback_CustomActionStop_res: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          cid: string
+          id: string
+          ret: Record<string, never>
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: unknown
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _callback_CustomRecognizerAnalyze_dump: {
+    requestBody?: {
+      content: {
+        'application/json': unknown
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              ids: string[]
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _callback_CustomRecognizerAnalyze_free: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          id: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: unknown
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _callback_CustomRecognizerAnalyze_new: {
+    requestBody?: {
+      content: {
+        'application/json': unknown
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              id: string
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _callback_CustomRecognizerAnalyze_query: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          id: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              ids: string[]
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _callback_CustomRecognizerAnalyze_req: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          cid: string
+          id: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              custom_recognition_param: string
+              /** MaaImageBuffer */
+              image: string
+              /** MaaSyncContextAPI */
+              sync_context: string
+              task_name: string
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _callback_CustomRecognizerAnalyze_res: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          cid: string
+          id: string
+          ret: {
+            out_box: {
+              height: number
+              width: number
+              x: number
+              y: number
+            }
+            out_detail: string
+            return: number
+          }
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: unknown
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _callback_MaaAPICallback_dump: {
+    requestBody?: {
+      content: {
+        'application/json': unknown
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              ids: string[]
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _callback_MaaAPICallback_free: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          id: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: unknown
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _callback_MaaAPICallback_new: {
+    requestBody?: {
+      content: {
+        'application/json': unknown
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              id: string
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _callback_MaaAPICallback_query: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          id: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              ids: string[]
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _callback_MaaAPICallback_req: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          cid: string
+          id: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              details_json: string
+              msg: string
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _callback_MaaAPICallback_res: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          cid: string
+          id: string
+          ret: Record<string, never>
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: unknown
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _handle_MaaControllerAPI_dump: {
+    requestBody?: {
+      content: {
+        'application/json': unknown
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              ids: string[]
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _handle_MaaImageBuffer_dump: {
+    requestBody?: {
+      content: {
+        'application/json': unknown
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              ids: string[]
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _handle_MaaInstanceAPI_dump: {
+    requestBody?: {
+      content: {
+        'application/json': unknown
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              ids: string[]
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _handle_MaaResourceAPI_dump: {
+    requestBody?: {
+      content: {
+        'application/json': unknown
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              ids: string[]
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _handle_MaaSyncContextAPI_dump: {
+    requestBody?: {
+      content: {
+        'application/json': unknown
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              ids: string[]
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _help: {
+    requestBody?: {
+      content: {
+        'application/json': unknown
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': Record<string, never>
+        }
+      }
+    }
+  }
+}

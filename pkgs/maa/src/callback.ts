@@ -10,25 +10,25 @@ async function dump() {
 }
 
 async function add() {
-  const id = (await cb.add()).id as APICallbackId
+  const id = (await cb.new()).id as APICallbackId
   return id === '' ? null : id
 }
 
 async function del(id: APICallbackId) {
-  await cb.del({ id })
+  await cb.free({ id })
 }
 
 async function pull(id: APICallbackId) {
-  return (await cb.pull({ id })).ids
+  return (await cb.query({ id })).ids
 }
 
 async function request(id: APICallbackId, cid: string): Promise<Parameters<APICallback>> {
-  const arg = await cb.request({ id, cid })
+  const arg = await cb.req({ id, cid })
   return [arg.msg, arg.details_json]
 }
 
 async function response(id: APICallbackId, cid: string) {
-  await cb.response({ id, cid })
+  await cb.res({ id, cid, ret: {} })
 }
 
 async function process(id: APICallbackId, cid: string, func: APICallback) {

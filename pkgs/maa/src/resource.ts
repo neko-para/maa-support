@@ -1,4 +1,4 @@
-import { api, opaque } from '@maa/schema'
+import { api, handle } from '@maa/schema'
 
 import type { APICallbackId } from './callback'
 import type { Status } from './types'
@@ -7,7 +7,7 @@ export type ResourceId = string & { __kind: 'MaaResourceAPI' }
 export type ResourceActionId = number & { __kind: 'MaaResourceActionId' }
 
 async function dump() {
-  return await opaque.MaaResourceAPI()
+  return await handle.MaaResourceAPI.dump()
 }
 
 async function create(callback: APICallbackId) {

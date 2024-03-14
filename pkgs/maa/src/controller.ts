@@ -1,4 +1,4 @@
-import { api, opaque } from '@maa/schema'
+import { api, handle } from '@maa/schema'
 
 import type { APICallbackId, AdbType, ControllerOption, Status } from '.'
 
@@ -13,7 +13,7 @@ export interface AdbConfig {
 }
 
 async function dump() {
-  return await opaque.MaaControllerAPI()
+  return await handle.MaaControllerAPI.dump()
 }
 
 async function createAdb(cfg: AdbConfig, agent_path: string, callback: APICallbackId) {
