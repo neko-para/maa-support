@@ -354,10 +354,11 @@ export class MaaFrameworkDebugRuntime extends EventEmitter {
     $instance
       .wait(instanceId, await $instance.postTask(instanceId, arg.task, JSON.stringify(arg.param)))
       .then(() => {
-        $instance.destroy(instanceId)
-        $resource.destroy(resourceId)
-        $controller.destroy(controllerId)
-        $callback.del(callbackId)
+        this.stopRunning = done => {
+          this.expectStop = true
+          done()
+        }
+        clear()
 
         this.sendEvent('end')
       })
