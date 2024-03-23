@@ -1131,6 +1131,246 @@ export const requestApi = {
       ...otherConfig
     })
   },
+  '/api/MaaSyncContextClick': <T extends Record<any, any> | never = never>(
+    config: IConfig<
+      Omit<
+        Equal<T, never> extends true ? AxiosRequestConfig : T & AxiosRequestConfig,
+        'method' | 'url' | 'data'
+      >,
+      { data?: IApi['/api/MaaSyncContextClick']['Body'] }
+    >
+  ): Promise<IApi['/api/MaaSyncContextClick']['Response']> => {
+    const { data, ...otherConfig } = config
+    const finalURL = '/api/MaaSyncContextClick'
+
+    return request({
+      method: 'post',
+      url: finalURL,
+
+      data: data,
+      ...otherConfig
+    })
+  },
+  '/api/MaaSyncContextGetTaskResult': <T extends Record<any, any> | never = never>(
+    config: IConfig<
+      Omit<
+        Equal<T, never> extends true ? AxiosRequestConfig : T & AxiosRequestConfig,
+        'method' | 'url' | 'data'
+      >,
+      { data?: IApi['/api/MaaSyncContextGetTaskResult']['Body'] }
+    >
+  ): Promise<IApi['/api/MaaSyncContextGetTaskResult']['Response']> => {
+    const { data, ...otherConfig } = config
+    const finalURL = '/api/MaaSyncContextGetTaskResult'
+
+    return request({
+      method: 'post',
+      url: finalURL,
+
+      data: data,
+      ...otherConfig
+    })
+  },
+  '/api/MaaSyncContextInputText': <T extends Record<any, any> | never = never>(
+    config: IConfig<
+      Omit<
+        Equal<T, never> extends true ? AxiosRequestConfig : T & AxiosRequestConfig,
+        'method' | 'url' | 'data'
+      >,
+      { data?: IApi['/api/MaaSyncContextInputText']['Body'] }
+    >
+  ): Promise<IApi['/api/MaaSyncContextInputText']['Response']> => {
+    const { data, ...otherConfig } = config
+    const finalURL = '/api/MaaSyncContextInputText'
+
+    return request({
+      method: 'post',
+      url: finalURL,
+
+      data: data,
+      ...otherConfig
+    })
+  },
+  '/api/MaaSyncContextPressKey': <T extends Record<any, any> | never = never>(
+    config: IConfig<
+      Omit<
+        Equal<T, never> extends true ? AxiosRequestConfig : T & AxiosRequestConfig,
+        'method' | 'url' | 'data'
+      >,
+      { data?: IApi['/api/MaaSyncContextPressKey']['Body'] }
+    >
+  ): Promise<IApi['/api/MaaSyncContextPressKey']['Response']> => {
+    const { data, ...otherConfig } = config
+    const finalURL = '/api/MaaSyncContextPressKey'
+
+    return request({
+      method: 'post',
+      url: finalURL,
+
+      data: data,
+      ...otherConfig
+    })
+  },
+  '/api/MaaSyncContextRunAction': <T extends Record<any, any> | never = never>(
+    config: IConfig<
+      Omit<
+        Equal<T, never> extends true ? AxiosRequestConfig : T & AxiosRequestConfig,
+        'method' | 'url' | 'data'
+      >,
+      { data?: IApi['/api/MaaSyncContextRunAction']['Body'] }
+    >
+  ): Promise<IApi['/api/MaaSyncContextRunAction']['Response']> => {
+    const { data, ...otherConfig } = config
+    const finalURL = '/api/MaaSyncContextRunAction'
+
+    return request({
+      method: 'post',
+      url: finalURL,
+
+      data: data,
+      ...otherConfig
+    })
+  },
+  '/api/MaaSyncContextRunRecognizer': <T extends Record<any, any> | never = never>(
+    config: IConfig<
+      Omit<
+        Equal<T, never> extends true ? AxiosRequestConfig : T & AxiosRequestConfig,
+        'method' | 'url' | 'data'
+      >,
+      { data?: IApi['/api/MaaSyncContextRunRecognizer']['Body'] }
+    >
+  ): Promise<IApi['/api/MaaSyncContextRunRecognizer']['Response']> => {
+    const { data, ...otherConfig } = config
+    const finalURL = '/api/MaaSyncContextRunRecognizer'
+
+    return request({
+      method: 'post',
+      url: finalURL,
+
+      data: data,
+      ...otherConfig
+    })
+  },
+  '/api/MaaSyncContextRunTask': <T extends Record<any, any> | never = never>(
+    config: IConfig<
+      Omit<
+        Equal<T, never> extends true ? AxiosRequestConfig : T & AxiosRequestConfig,
+        'method' | 'url' | 'data'
+      >,
+      { data?: IApi['/api/MaaSyncContextRunTask']['Body'] }
+    >
+  ): Promise<IApi['/api/MaaSyncContextRunTask']['Response']> => {
+    const { data, ...otherConfig } = config
+    const finalURL = '/api/MaaSyncContextRunTask'
+
+    return request({
+      method: 'post',
+      url: finalURL,
+
+      data: data,
+      ...otherConfig
+    })
+  },
+  '/api/MaaSyncContextScreencap': <T extends Record<any, any> | never = never>(
+    config: IConfig<
+      Omit<
+        Equal<T, never> extends true ? AxiosRequestConfig : T & AxiosRequestConfig,
+        'method' | 'url' | 'data'
+      >,
+      { data?: IApi['/api/MaaSyncContextScreencap']['Body'] }
+    >
+  ): Promise<IApi['/api/MaaSyncContextScreencap']['Response']> => {
+    const { data, ...otherConfig } = config
+    const finalURL = '/api/MaaSyncContextScreencap'
+
+    return request({
+      method: 'post',
+      url: finalURL,
+
+      data: data,
+      ...otherConfig
+    })
+  },
+  '/api/MaaSyncContextSwipe': <T extends Record<any, any> | never = never>(
+    config: IConfig<
+      Omit<
+        Equal<T, never> extends true ? AxiosRequestConfig : T & AxiosRequestConfig,
+        'method' | 'url' | 'data'
+      >,
+      { data?: IApi['/api/MaaSyncContextSwipe']['Body'] }
+    >
+  ): Promise<IApi['/api/MaaSyncContextSwipe']['Response']> => {
+    const { data, ...otherConfig } = config
+    const finalURL = '/api/MaaSyncContextSwipe'
+
+    return request({
+      method: 'post',
+      url: finalURL,
+
+      data: data,
+      ...otherConfig
+    })
+  },
+  '/api/MaaSyncContextTouchDown': <T extends Record<any, any> | never = never>(
+    config: IConfig<
+      Omit<
+        Equal<T, never> extends true ? AxiosRequestConfig : T & AxiosRequestConfig,
+        'method' | 'url' | 'data'
+      >,
+      { data?: IApi['/api/MaaSyncContextTouchDown']['Body'] }
+    >
+  ): Promise<IApi['/api/MaaSyncContextTouchDown']['Response']> => {
+    const { data, ...otherConfig } = config
+    const finalURL = '/api/MaaSyncContextTouchDown'
+
+    return request({
+      method: 'post',
+      url: finalURL,
+
+      data: data,
+      ...otherConfig
+    })
+  },
+  '/api/MaaSyncContextTouchMove': <T extends Record<any, any> | never = never>(
+    config: IConfig<
+      Omit<
+        Equal<T, never> extends true ? AxiosRequestConfig : T & AxiosRequestConfig,
+        'method' | 'url' | 'data'
+      >,
+      { data?: IApi['/api/MaaSyncContextTouchMove']['Body'] }
+    >
+  ): Promise<IApi['/api/MaaSyncContextTouchMove']['Response']> => {
+    const { data, ...otherConfig } = config
+    const finalURL = '/api/MaaSyncContextTouchMove'
+
+    return request({
+      method: 'post',
+      url: finalURL,
+
+      data: data,
+      ...otherConfig
+    })
+  },
+  '/api/MaaSyncContextTouchUp': <T extends Record<any, any> | never = never>(
+    config: IConfig<
+      Omit<
+        Equal<T, never> extends true ? AxiosRequestConfig : T & AxiosRequestConfig,
+        'method' | 'url' | 'data'
+      >,
+      { data?: IApi['/api/MaaSyncContextTouchUp']['Body'] }
+    >
+  ): Promise<IApi['/api/MaaSyncContextTouchUp']['Response']> => {
+    const { data, ...otherConfig } = config
+    const finalURL = '/api/MaaSyncContextTouchUp'
+
+    return request({
+      method: 'post',
+      url: finalURL,
+
+      data: data,
+      ...otherConfig
+    })
+  },
   '/api/MaaTaskStatus': <T extends Record<any, any> | never = never>(
     config: IConfig<
       Omit<

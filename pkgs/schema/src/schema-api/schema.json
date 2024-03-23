@@ -3950,12 +3950,9 @@
                         "handle": {
                           "description": "MaaImageBuffer",
                           "type": "string"
-                        },
-                        "size": {
-                          "type": "number"
                         }
                       },
-                      "required": ["data", "handle", "size"]
+                      "required": ["data", "handle"]
                     }
                   },
                   "required": ["application/json"]
@@ -4032,6 +4029,980 @@
                         }
                       },
                       "required": ["id", "inst", "param"]
+                    }
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "object",
+                              "properties": {
+                                "return": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": ["return"]
+                            },
+                            "success": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": ["success"]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
+    "/api/MaaSyncContextClick": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {
+                      "type": "object",
+                      "properties": {
+                        "sync_context": {
+                          "description": "MaaSyncContextAPI",
+                          "type": "string"
+                        },
+                        "x": {
+                          "type": "number"
+                        },
+                        "y": {
+                          "type": "number"
+                        }
+                      },
+                      "required": ["sync_context", "x", "y"]
+                    }
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "object",
+                              "properties": {
+                                "return": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": ["return"]
+                            },
+                            "success": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": ["success"]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
+    "/api/MaaSyncContextGetTaskResult": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {
+                      "type": "object",
+                      "properties": {
+                        "sync_context": {
+                          "description": "MaaSyncContextAPI",
+                          "type": "string"
+                        },
+                        "task_name": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["sync_context", "task_name"]
+                    }
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "object",
+                              "properties": {
+                                "out_task_result": {
+                                  "type": "string"
+                                },
+                                "return": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": ["out_task_result", "return"]
+                            },
+                            "success": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": ["success"]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
+    "/api/MaaSyncContextInputText": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {
+                      "type": "object",
+                      "properties": {
+                        "sync_context": {
+                          "description": "MaaSyncContextAPI",
+                          "type": "string"
+                        },
+                        "text": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["sync_context", "text"]
+                    }
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "object",
+                              "properties": {
+                                "return": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": ["return"]
+                            },
+                            "success": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": ["success"]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
+    "/api/MaaSyncContextPressKey": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {
+                      "type": "object",
+                      "properties": {
+                        "keycode": {
+                          "type": "number"
+                        },
+                        "sync_context": {
+                          "description": "MaaSyncContextAPI",
+                          "type": "string"
+                        }
+                      },
+                      "required": ["keycode", "sync_context"]
+                    }
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "object",
+                              "properties": {
+                                "return": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": ["return"]
+                            },
+                            "success": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": ["success"]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
+    "/api/MaaSyncContextRunAction": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {
+                      "type": "object",
+                      "properties": {
+                        "cur_box": {
+                          "type": "object",
+                          "properties": {
+                            "height": {
+                              "type": "number"
+                            },
+                            "width": {
+                              "type": "number"
+                            },
+                            "x": {
+                              "type": "number"
+                            },
+                            "y": {
+                              "type": "number"
+                            }
+                          },
+                          "required": ["height", "width", "x", "y"]
+                        },
+                        "cur_rec_detail": {
+                          "type": "string"
+                        },
+                        "sync_context": {
+                          "description": "MaaSyncContextAPI",
+                          "type": "string"
+                        },
+                        "task_name": {
+                          "type": "string"
+                        },
+                        "task_param": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "cur_box",
+                        "cur_rec_detail",
+                        "sync_context",
+                        "task_name",
+                        "task_param"
+                      ]
+                    }
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "object",
+                              "properties": {
+                                "return": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": ["return"]
+                            },
+                            "success": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": ["success"]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
+    "/api/MaaSyncContextRunRecognizer": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {
+                      "type": "object",
+                      "properties": {
+                        "image": {
+                          "description": "MaaImageBuffer",
+                          "type": "string"
+                        },
+                        "sync_context": {
+                          "description": "MaaSyncContextAPI",
+                          "type": "string"
+                        },
+                        "task_name": {
+                          "type": "string"
+                        },
+                        "task_param": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["image", "sync_context", "task_name", "task_param"]
+                    }
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "object",
+                              "properties": {
+                                "out_box": {
+                                  "type": "object",
+                                  "properties": {
+                                    "height": {
+                                      "type": "number"
+                                    },
+                                    "width": {
+                                      "type": "number"
+                                    },
+                                    "x": {
+                                      "type": "number"
+                                    },
+                                    "y": {
+                                      "type": "number"
+                                    }
+                                  },
+                                  "required": ["height", "width", "x", "y"]
+                                },
+                                "out_detail": {
+                                  "type": "string"
+                                },
+                                "return": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": ["out_box", "out_detail", "return"]
+                            },
+                            "success": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": ["success"]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
+    "/api/MaaSyncContextRunTask": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {
+                      "type": "object",
+                      "properties": {
+                        "param": {
+                          "type": "string"
+                        },
+                        "sync_context": {
+                          "description": "MaaSyncContextAPI",
+                          "type": "string"
+                        },
+                        "task_name": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["param", "sync_context", "task_name"]
+                    }
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "object",
+                              "properties": {
+                                "return": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": ["return"]
+                            },
+                            "success": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": ["success"]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
+    "/api/MaaSyncContextScreencap": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {
+                      "type": "object",
+                      "properties": {
+                        "out_image": {
+                          "description": "MaaImageBuffer",
+                          "type": "string"
+                        },
+                        "sync_context": {
+                          "description": "MaaSyncContextAPI",
+                          "type": "string"
+                        }
+                      },
+                      "required": ["out_image", "sync_context"]
+                    }
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "object",
+                              "properties": {
+                                "return": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": ["return"]
+                            },
+                            "success": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": ["success"]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
+    "/api/MaaSyncContextSwipe": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {
+                      "type": "object",
+                      "properties": {
+                        "duration": {
+                          "type": "number"
+                        },
+                        "sync_context": {
+                          "description": "MaaSyncContextAPI",
+                          "type": "string"
+                        },
+                        "x1": {
+                          "type": "number"
+                        },
+                        "x2": {
+                          "type": "number"
+                        },
+                        "y1": {
+                          "type": "number"
+                        },
+                        "y2": {
+                          "type": "number"
+                        }
+                      },
+                      "required": ["duration", "sync_context", "x1", "x2", "y1", "y2"]
+                    }
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "object",
+                              "properties": {
+                                "return": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": ["return"]
+                            },
+                            "success": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": ["success"]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
+    "/api/MaaSyncContextTouchDown": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {
+                      "type": "object",
+                      "properties": {
+                        "contact": {
+                          "type": "number"
+                        },
+                        "pressure": {
+                          "type": "number"
+                        },
+                        "sync_context": {
+                          "description": "MaaSyncContextAPI",
+                          "type": "string"
+                        },
+                        "x": {
+                          "type": "number"
+                        },
+                        "y": {
+                          "type": "number"
+                        }
+                      },
+                      "required": ["contact", "pressure", "sync_context", "x", "y"]
+                    }
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "object",
+                              "properties": {
+                                "return": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": ["return"]
+                            },
+                            "success": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": ["success"]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
+    "/api/MaaSyncContextTouchMove": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {
+                      "type": "object",
+                      "properties": {
+                        "contact": {
+                          "type": "number"
+                        },
+                        "pressure": {
+                          "type": "number"
+                        },
+                        "sync_context": {
+                          "description": "MaaSyncContextAPI",
+                          "type": "string"
+                        },
+                        "x": {
+                          "type": "number"
+                        },
+                        "y": {
+                          "type": "number"
+                        }
+                      },
+                      "required": ["contact", "pressure", "sync_context", "x", "y"]
+                    }
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "object",
+                              "properties": {
+                                "return": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": ["return"]
+                            },
+                            "success": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": ["success"]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
+    "/api/MaaSyncContextTouchUp": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {
+                      "type": "object",
+                      "properties": {
+                        "contact": {
+                          "type": "number"
+                        },
+                        "sync_context": {
+                          "description": "MaaSyncContextAPI",
+                          "type": "string"
+                        }
+                      },
+                      "required": ["contact", "sync_context"]
                     }
                   },
                   "required": ["application/json"]
@@ -8140,6 +9111,18 @@
     "/api/MaaSetGlobalOptionString",
     "/api/MaaSetImageEncoded",
     "/api/MaaSetTaskParam",
+    "/api/MaaSyncContextClick",
+    "/api/MaaSyncContextGetTaskResult",
+    "/api/MaaSyncContextInputText",
+    "/api/MaaSyncContextPressKey",
+    "/api/MaaSyncContextRunAction",
+    "/api/MaaSyncContextRunRecognizer",
+    "/api/MaaSyncContextRunTask",
+    "/api/MaaSyncContextScreencap",
+    "/api/MaaSyncContextSwipe",
+    "/api/MaaSyncContextTouchDown",
+    "/api/MaaSyncContextTouchMove",
+    "/api/MaaSyncContextTouchUp",
     "/api/MaaTaskStatus",
     "/api/MaaThriftControllerCreate",
     "/api/MaaToolkitFindWindow",

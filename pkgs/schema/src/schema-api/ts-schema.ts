@@ -172,6 +172,42 @@ export interface paths {
   '/api/MaaSetTaskParam': {
     post: operations['_api_MaaSetTaskParam']
   }
+  '/api/MaaSyncContextClick': {
+    post: operations['_api_MaaSyncContextClick']
+  }
+  '/api/MaaSyncContextGetTaskResult': {
+    post: operations['_api_MaaSyncContextGetTaskResult']
+  }
+  '/api/MaaSyncContextInputText': {
+    post: operations['_api_MaaSyncContextInputText']
+  }
+  '/api/MaaSyncContextPressKey': {
+    post: operations['_api_MaaSyncContextPressKey']
+  }
+  '/api/MaaSyncContextRunAction': {
+    post: operations['_api_MaaSyncContextRunAction']
+  }
+  '/api/MaaSyncContextRunRecognizer': {
+    post: operations['_api_MaaSyncContextRunRecognizer']
+  }
+  '/api/MaaSyncContextRunTask': {
+    post: operations['_api_MaaSyncContextRunTask']
+  }
+  '/api/MaaSyncContextScreencap': {
+    post: operations['_api_MaaSyncContextScreencap']
+  }
+  '/api/MaaSyncContextSwipe': {
+    post: operations['_api_MaaSyncContextSwipe']
+  }
+  '/api/MaaSyncContextTouchDown': {
+    post: operations['_api_MaaSyncContextTouchDown']
+  }
+  '/api/MaaSyncContextTouchMove': {
+    post: operations['_api_MaaSyncContextTouchMove']
+  }
+  '/api/MaaSyncContextTouchUp': {
+    post: operations['_api_MaaSyncContextTouchUp']
+  }
   '/api/MaaTaskStatus': {
     post: operations['_api_MaaTaskStatus']
   }
@@ -1600,7 +1636,6 @@ export interface operations {
           data: string
           /** MaaImageBuffer */
           handle: string
-          size: number
         }
       }
     }
@@ -1625,6 +1660,314 @@ export interface operations {
           /** MaaInstanceAPI */
           inst: string
           param: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaSyncContextClick: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaSyncContextAPI */
+          sync_context: string
+          x: number
+          y: number
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaSyncContextGetTaskResult: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaSyncContextAPI */
+          sync_context: string
+          task_name: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              out_task_result: string
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaSyncContextInputText: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaSyncContextAPI */
+          sync_context: string
+          text: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaSyncContextPressKey: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          keycode: number
+          /** MaaSyncContextAPI */
+          sync_context: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaSyncContextRunAction: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          cur_box: {
+            height: number
+            width: number
+            x: number
+            y: number
+          }
+          cur_rec_detail: string
+          /** MaaSyncContextAPI */
+          sync_context: string
+          task_name: string
+          task_param: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaSyncContextRunRecognizer: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaImageBuffer */
+          image: string
+          /** MaaSyncContextAPI */
+          sync_context: string
+          task_name: string
+          task_param: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              out_box: {
+                height: number
+                width: number
+                x: number
+                y: number
+              }
+              out_detail: string
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaSyncContextRunTask: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          param: string
+          /** MaaSyncContextAPI */
+          sync_context: string
+          task_name: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaSyncContextScreencap: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaImageBuffer */
+          out_image: string
+          /** MaaSyncContextAPI */
+          sync_context: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaSyncContextSwipe: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          duration: number
+          /** MaaSyncContextAPI */
+          sync_context: string
+          x1: number
+          x2: number
+          y1: number
+          y2: number
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaSyncContextTouchDown: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          contact: number
+          pressure: number
+          /** MaaSyncContextAPI */
+          sync_context: string
+          x: number
+          y: number
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaSyncContextTouchMove: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          contact: number
+          pressure: number
+          /** MaaSyncContextAPI */
+          sync_context: string
+          x: number
+          y: number
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaSyncContextTouchUp: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          contact: number
+          /** MaaSyncContextAPI */
+          sync_context: string
         }
       }
     }

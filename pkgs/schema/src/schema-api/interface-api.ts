@@ -341,6 +341,78 @@ export interface IApi {
     >['content']['application/json']
     Response: paths['/api/MaaSetTaskParam']['post']['responses']['200']['content']['application/json']
   }
+  '/api/MaaSyncContextClick': {
+    Body?: NonNullable<
+      paths['/api/MaaSyncContextClick']['post']['requestBody']
+    >['content']['application/json']
+    Response: paths['/api/MaaSyncContextClick']['post']['responses']['200']['content']['application/json']
+  }
+  '/api/MaaSyncContextGetTaskResult': {
+    Body?: NonNullable<
+      paths['/api/MaaSyncContextGetTaskResult']['post']['requestBody']
+    >['content']['application/json']
+    Response: paths['/api/MaaSyncContextGetTaskResult']['post']['responses']['200']['content']['application/json']
+  }
+  '/api/MaaSyncContextInputText': {
+    Body?: NonNullable<
+      paths['/api/MaaSyncContextInputText']['post']['requestBody']
+    >['content']['application/json']
+    Response: paths['/api/MaaSyncContextInputText']['post']['responses']['200']['content']['application/json']
+  }
+  '/api/MaaSyncContextPressKey': {
+    Body?: NonNullable<
+      paths['/api/MaaSyncContextPressKey']['post']['requestBody']
+    >['content']['application/json']
+    Response: paths['/api/MaaSyncContextPressKey']['post']['responses']['200']['content']['application/json']
+  }
+  '/api/MaaSyncContextRunAction': {
+    Body?: NonNullable<
+      paths['/api/MaaSyncContextRunAction']['post']['requestBody']
+    >['content']['application/json']
+    Response: paths['/api/MaaSyncContextRunAction']['post']['responses']['200']['content']['application/json']
+  }
+  '/api/MaaSyncContextRunRecognizer': {
+    Body?: NonNullable<
+      paths['/api/MaaSyncContextRunRecognizer']['post']['requestBody']
+    >['content']['application/json']
+    Response: paths['/api/MaaSyncContextRunRecognizer']['post']['responses']['200']['content']['application/json']
+  }
+  '/api/MaaSyncContextRunTask': {
+    Body?: NonNullable<
+      paths['/api/MaaSyncContextRunTask']['post']['requestBody']
+    >['content']['application/json']
+    Response: paths['/api/MaaSyncContextRunTask']['post']['responses']['200']['content']['application/json']
+  }
+  '/api/MaaSyncContextScreencap': {
+    Body?: NonNullable<
+      paths['/api/MaaSyncContextScreencap']['post']['requestBody']
+    >['content']['application/json']
+    Response: paths['/api/MaaSyncContextScreencap']['post']['responses']['200']['content']['application/json']
+  }
+  '/api/MaaSyncContextSwipe': {
+    Body?: NonNullable<
+      paths['/api/MaaSyncContextSwipe']['post']['requestBody']
+    >['content']['application/json']
+    Response: paths['/api/MaaSyncContextSwipe']['post']['responses']['200']['content']['application/json']
+  }
+  '/api/MaaSyncContextTouchDown': {
+    Body?: NonNullable<
+      paths['/api/MaaSyncContextTouchDown']['post']['requestBody']
+    >['content']['application/json']
+    Response: paths['/api/MaaSyncContextTouchDown']['post']['responses']['200']['content']['application/json']
+  }
+  '/api/MaaSyncContextTouchMove': {
+    Body?: NonNullable<
+      paths['/api/MaaSyncContextTouchMove']['post']['requestBody']
+    >['content']['application/json']
+    Response: paths['/api/MaaSyncContextTouchMove']['post']['responses']['200']['content']['application/json']
+  }
+  '/api/MaaSyncContextTouchUp': {
+    Body?: NonNullable<
+      paths['/api/MaaSyncContextTouchUp']['post']['requestBody']
+    >['content']['application/json']
+    Response: paths['/api/MaaSyncContextTouchUp']['post']['responses']['200']['content']['application/json']
+  }
   '/api/MaaTaskStatus': {
     Body?: NonNullable<
       paths['/api/MaaTaskStatus']['post']['requestBody']
