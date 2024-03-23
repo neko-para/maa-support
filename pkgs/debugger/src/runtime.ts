@@ -2,18 +2,13 @@ import '@maa/maa'
 import {
   $callback,
   $controller,
-  $customActionRun,
-  $customActionStop,
   $device,
   $global,
   $instance,
   $resource,
-  APICallbackId,
   AdbType,
   ControllerId,
   ControllerOption,
-  CustomActionRunId,
-  CustomActionStopId,
   GlobalOption,
   InstanceId,
   ResourceId
@@ -173,122 +168,84 @@ export class MaaFrameworkDebugRuntime extends EventEmitter {
       return false
     }
 
-    const callbackId: APICallbackId = (await $callback.add())!
+    const [callbackId, stopCallback] = await $callback.APICallback.setup(
+      async ({ msg, details_json }) => {
+        this.sendEvent('output', `${msg} ${details_json}`)
 
-    const proc = async () => {
-      try {
-        const ids = await $callback.pull(callbackId)
-        setTimeout(async () => {
-          try {
-            for (const cid of ids) {
-              await $callback.process(callbackId, cid, async (msg, detail) => {
-                this.sendEvent('output', `${msg} ${detail}`)
+        console.log(msg, details_json)
 
-                console.log(msg, detail)
+        const debugDetail = JSON.parse(details_json) as {
+          id: number
+          entry: string
+          uuid: string
+          hash: string
+          name: string
+          latest_hit: string
+          recognition: object
+          run_times: number
+          status: string
+        }
+        switch (msg) {
+          case 'Task.Debug.ReadyToRun':
+            if (this.taskIndex[debugDetail.name].bp) {
+              // 目前不存在next和stepIn的区别，因此不会在next的时候提前触发breakpoint
+              this.pauseNext = false
 
-                const debugDetail = JSON.parse(detail) as {
-                  id: number
-                  entry: string
-                  uuid: string
-                  hash: string
-                  name: string
-                  latest_hit: string
-                  recognition: object
-                  run_times: number
-                  status: string
-                }
-                switch (msg) {
-                  case 'Task.Debug.ReadyToRun':
-                    if (this.taskIndex[debugDetail.name].bp) {
-                      // 目前不存在next和stepIn的区别，因此不会在next的时候提前触发breakpoint
-                      this.pauseNext = false
-
-                      let resolve: () => void = () => {}
-                      const pro = new Promise<void>(res => {
-                        resolve = res
-                      })
-                      this.pauseContext = {
-                        task: debugDetail.name,
-                        conti: resolve
-                      }
-                      this.sendEvent('stopOnBreakpoint', this.taskIndex[debugDetail.name].bp!.id)
-                      await pro
-                    } else if (this.pauseNext) {
-                      this.pauseNext = false
-
-                      let resolve: () => void = () => {}
-                      const pro = new Promise<void>(res => {
-                        resolve = res
-                      })
-                      this.pauseContext = {
-                        task: debugDetail.name,
-                        conti: resolve
-                      }
-                      this.sendEvent('stopOnStep')
-                      await pro
-                    }
-                  // case 'Task.Debug.Runout':
-                  // case 'Task.Debug.Completed':
-                }
+              let resolve: () => void = () => {}
+              const pro = new Promise<void>(res => {
+                resolve = res
               })
-            }
-            setTimeout(proc, 0)
-          } catch (_) {}
-        }, 1000)
-      } catch (_) {}
-    }
-    setTimeout(proc, 0)
+              this.pauseContext = {
+                task: debugDetail.name,
+                conti: resolve
+              }
+              this.sendEvent('stopOnBreakpoint', this.taskIndex[debugDetail.name].bp!.id)
+              await pro
+            } else if (this.pauseNext) {
+              this.pauseNext = false
 
-    const actionRunId: CustomActionRunId = (await $customActionRun.add())!
-    const runProc = async () => {
-      try {
-        const ids = await $customActionRun.pull(actionRunId)
-        setTimeout(async () => {
-          try {
-            for (const cid of ids) {
-              await $customActionRun.process(
-                actionRunId,
-                cid,
-                async (sync_ctx, task, param, box, detail) => {
-                  this.sendEvent('output', `${sync_ctx} ${task} ${param} ${box} ${detail}`)
-                  console.log(sync_ctx, task, param, box, detail)
-                  return true
-                }
-              )
-            }
-            setTimeout(runProc, 0)
-          } catch (_) {}
-        }, 1000)
-      } catch (_) {}
-    }
-    setTimeout(runProc, 0)
-
-    const actionStopId: CustomActionStopId = (await $customActionStop.add())!
-    const stopProc = async () => {
-      try {
-        const ids = await $customActionStop.pull(actionStopId)
-        setTimeout(async () => {
-          try {
-            for (const cid of ids) {
-              await $customActionStop.process(actionStopId, cid, async () => {
-                this.sendEvent('output', `action stop`)
-                console.log('action stop')
+              let resolve: () => void = () => {}
+              const pro = new Promise<void>(res => {
+                resolve = res
               })
+              this.pauseContext = {
+                task: debugDetail.name,
+                conti: resolve
+              }
+              this.sendEvent('stopOnStep')
+              await pro
             }
-            setTimeout(stopProc, 0)
-          } catch (_) {}
-        }, 1000)
-      } catch (_) {}
-    }
-    setTimeout(stopProc, 0)
+          // case 'Task.Debug.Runout':
+          // case 'Task.Debug.Completed':
+        }
+      }
+    )
 
-    const controllerId: ControllerId = (await $controller.createAdb(info, arg.agent, callbackId))!
-    const resourceId: ResourceId = (await $resource.create(callbackId))!
-    const instanceId: InstanceId = (await $instance.create(callbackId))!
+    const [actionRunId, stopActionRun] = await $callback.CustomActionRun.setup(
+      async ({ sync_context, task_name, custom_action_param, cur_box, cur_rec_detail }) => {
+        this.sendEvent(
+          'output',
+          `${sync_context} ${task_name} ${custom_action_param} ${cur_box} ${cur_rec_detail}`
+        )
+        console.log(sync_context, task_name, custom_action_param, cur_box, cur_rec_detail)
+        return {
+          return: 1
+        }
+      }
+    )
+
+    const [actionStopId, stopActionStop] = await $callback.CustomActionStop.setup(async () => {
+      this.sendEvent('output', `action stop`)
+      console.log('action stop')
+    })
+
+    const controllerId: ControllerId = (await $controller.createAdb(info, arg.agent, callbackId!))!
+    const resourceId: ResourceId = (await $resource.create(callbackId!))!
+    const instanceId: InstanceId = (await $instance.create(callbackId!))!
     await $instance.bindCtrl(instanceId, controllerId)
     await $instance.bindRes(instanceId, resourceId)
 
-    await $instance.registerCustomAction(instanceId, 'TestAct', actionRunId, actionStopId)
+    await $instance.registerCustomAction(instanceId, 'TestAct', actionRunId!, actionStopId!)
 
     if (arg.controller) {
       if (arg.controller.long) {
@@ -324,7 +281,9 @@ export class MaaFrameworkDebugRuntime extends EventEmitter {
       $instance.destroy(instanceId)
       $resource.destroy(resourceId)
       $controller.destroy(controllerId)
-      $callback.del(callbackId)
+      stopCallback()
+      stopActionRun()
+      stopActionStop()
     }
 
     if (this.expectStop) {
