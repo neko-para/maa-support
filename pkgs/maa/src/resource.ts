@@ -35,6 +35,10 @@ async function loaded(res: ResourceId) {
   return (await api.MaaResourceLoaded({ res })).return > 0
 }
 
+async function clear(res: ResourceId) {
+  return (await api.MaaResourceClear({ res })).return > 0
+}
+
 async function getHash(res: ResourceId) {
   const ret = await api.MaaResourceGetHash({ res })
   return ret.return > 0 ? ret.buffer : null
@@ -54,6 +58,7 @@ export const $resource = {
   status,
   wait,
   loaded,
+  clear,
   getHash,
   getTaskList
 }
