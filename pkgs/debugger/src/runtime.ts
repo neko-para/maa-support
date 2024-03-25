@@ -13,6 +13,7 @@ import {
   type ResourceId,
   TrivialCallback,
   findDevice,
+  init,
   setOption,
   version
 } from '@maa/maa'
@@ -130,15 +131,15 @@ export class MaaFrameworkDebugRuntime extends EventEmitter {
       this.expectStop = true
     }
 
-    let ver: string
-
     try {
-      ver = await version()
+      await init(13126)
     } catch (_) {
       this.sendEvent('output', `连接MaaHttp失败`)
       afterStop()
       return false
     }
+
+    const ver = await version()
 
     this.sendEvent('output', `Maa版本: ${ver}`)
 
@@ -303,7 +304,6 @@ export class MaaFrameworkDebugRuntime extends EventEmitter {
         done()
       })
     }
-
     ;(await instance.postTask(arg.task, arg.param ?? {})).wait().then(() => {
       this.stopRunning = done => {
         this.expectStop = true

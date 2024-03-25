@@ -40,7 +40,7 @@ function makeApiHelper(): {
     {
       get(_, key: string) {
         return async (data: any) => {
-          const res = await (requestApi as any)[`/api/${key}`]({
+          const res = await (requestApi as any)[`/api/${key}`]['post']({
             baseURL,
             data: data ?? {}
           })
@@ -72,7 +72,7 @@ function makeCallbackHelper(): {
           {
             get(__, key2: string) {
               return async (data: any) => {
-                const res = await (requestApi as any)[`/callback/${key}/${key2}`]({
+                const res = await (requestApi as any)[`/callback/${key}/${key2}`]['post']({
                   baseURL,
                   data: data ?? {}
                 })
@@ -107,7 +107,7 @@ function makeHandleHelper(): {
           {
             get(__, key2: string) {
               return async (data: any) => {
-                const res = await (requestApi as any)[`/handle/${key}/${key2}`]({
+                const res = await (requestApi as any)[`/handle/${key}/${key2}`]['post']({
                   baseURL,
                   data: data ?? {}
                 })
