@@ -14,10 +14,10 @@ export async function findDevice(adb_path?: string) {
   ) {
     return null
   }
+  const count = (await api.MaaToolkitWaitForFindDeviceToComplete()).return
   if (!((await api.MaaToolkitIsFindDeviceCompleted()).return > 0)) {
     return null
   }
-  const count = (await api.MaaToolkitGetDeviceCount()).return
   return await Promise.all(
     Array.from({ length: count }, (_, i) => i).map(async index => {
       return {
