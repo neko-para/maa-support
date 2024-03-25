@@ -14,13 +14,15 @@ type ApiRoutes = FilterPrefix<keyof IApi, '/api/'>
 type CallbackRoutes = GetPrefix<FilterPrefix<keyof IApi, '/callback/'>>
 type HandleRoutes = GetPrefix<FilterPrefix<keyof IApi, '/handle/'>>
 
-type GetApi<K extends ApiRoutes> = `/api/${K}` extends keyof IApi ? IApi[`/api/${K}`] : never
+type GetApi<K extends ApiRoutes> = `/api/${K}` extends keyof IApi
+  ? IApi[`/api/${K}`]['post']
+  : never
 type GetCallback<
   K extends CallbackRoutes,
   S extends CallbackSub
-> = `/callback/${K}/${S}` extends keyof IApi ? IApi[`/callback/${K}/${S}`] : never
+> = `/callback/${K}/${S}` extends keyof IApi ? IApi[`/callback/${K}/${S}`]['post'] : never
 type GetHandle<K extends HandleRoutes, S extends HandleSub> = `/handle/${K}/${S}` extends keyof IApi
-  ? IApi[`/handle/${K}/${S}`]
+  ? IApi[`/handle/${K}/${S}`]['post']
   : never
 
 let baseURL = 'http://127.0.0.1:13126'

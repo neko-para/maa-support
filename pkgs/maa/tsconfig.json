@@ -1,7 +1,11 @@
 {
   "extends": "@tsconfig/node18/tsconfig.json",
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "test/**/*.ts"],
   "compilerOptions": {
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "module": "es2015",
+    "moduleResolution": "bundler",
+    "verbatimModuleSyntax": true,
+    "lib": ["es2023"]
   }
 }

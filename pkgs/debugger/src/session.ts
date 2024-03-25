@@ -12,10 +12,10 @@ import {
   Thread,
   logger
 } from '@vscode/debugadapter'
-import { DebugProtocol } from '@vscode/debugprotocol'
+import type { DebugProtocol } from '@vscode/debugprotocol'
 import path from 'path'
 
-import { IRuntimeBreakPoint, MaaFrameworkDebugRuntime } from './runtime'
+import { type IRuntimeBreakPoint, MaaFrameworkDebugRuntime } from './runtime'
 
 export interface ILaunchRequestArguments extends DebugProtocol.LaunchRequestArguments {
   resource: string

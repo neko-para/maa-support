@@ -1,17 +1,20 @@
 import '@maa/maa'
 import {
-  $callback,
-  $controller,
-  $device,
-  $global,
-  $instance,
-  $resource,
+  AdbController,
   AdbType,
-  ControllerId,
+  type ControllerId,
   ControllerOption,
+  CustomActionRunCallback,
+  CustomActionStopCallback,
   GlobalOption,
-  InstanceId,
-  ResourceId
+  Instance,
+  type InstanceId,
+  Resource,
+  type ResourceId,
+  TrivialCallback,
+  findDevice,
+  setOption,
+  version
 } from '@maa/maa'
 import { EventEmitter } from 'events'
 import { existsSync, statSync } from 'fs'
@@ -19,8 +22,8 @@ import fs from 'fs/promises'
 import { visit } from 'jsonc-parser'
 import path from 'path'
 
-import { ILaunchRequestArguments } from './session'
-import { PipelineEntry, PipelineFile } from './types'
+import type { ILaunchRequestArguments } from './session'
+import type { PipelineEntry, PipelineFile } from './types'
 
 export interface IRuntimeBreakPoint {
   id: number
@@ -130,7 +133,7 @@ export class MaaFrameworkDebugRuntime extends EventEmitter {
     let ver: string
 
     try {
-      ver = await $global.version()
+      ver = await version()
     } catch (_) {
       this.sendEvent('output', `连接MaaHttp失败`)
       afterStop()
@@ -140,26 +143,25 @@ export class MaaFrameworkDebugRuntime extends EventEmitter {
     this.sendEvent('output', `Maa版本: ${ver}`)
 
     if (arg.log) {
-      if (await $global.setOptionS(GlobalOption.LogDir, arg.log)) {
+      if (await setOption(GlobalOption.LogDir, arg.log)) {
         this.sendEvent('output', `日志目录: ${arg.log}`)
       }
     }
 
-    await $global.setOptionB(GlobalOption.DebugMessage, true)
+    await setOption(GlobalOption.DebugMessage, true)
 
     if (this.expectStop) {
       afterStop()
       return false
     }
 
-    await $device.post()
-    const count = await $device.wait()
-    if (count === 0) {
+    const devices = await findDevice()
+    if (!devices) {
       this.sendEvent('output', `未找到设备`)
       return false
     }
 
-    const info = await $device.get(0)
+    const info = devices[0]
 
     info.type = (info.type & ~AdbType.Screencap_Mask) | AdbType.Screencap_Encode
 
@@ -168,122 +170,114 @@ export class MaaFrameworkDebugRuntime extends EventEmitter {
       return false
     }
 
-    const [callbackId, stopCallback] = await $callback.APICallback.setup(
-      async ({ msg, details_json }) => {
-        this.sendEvent('output', `${msg} ${details_json}`)
+    const callback = new TrivialCallback()
+    await callback.prepareCallback(async (msg, details_json) => {
+      this.sendEvent('output', `${msg} ${details_json}`)
 
-        console.log(msg, details_json)
+      console.log(msg, details_json)
 
-        const debugDetail = JSON.parse(details_json) as {
-          id: number
-          entry: string
-          uuid: string
-          hash: string
-          name: string
-          latest_hit: string
-          recognition: object
-          run_times: number
-          status: string
-        }
-        switch (msg) {
-          case 'Task.Debug.ReadyToRun':
-            if (this.taskIndex[debugDetail.name].bp) {
-              // 目前不存在next和stepIn的区别，因此不会在next的时候提前触发breakpoint
-              this.pauseNext = false
-
-              let resolve: () => void = () => {}
-              const pro = new Promise<void>(res => {
-                resolve = res
-              })
-              this.pauseContext = {
-                task: debugDetail.name,
-                conti: resolve
-              }
-              this.sendEvent('stopOnBreakpoint', this.taskIndex[debugDetail.name].bp!.id)
-              await pro
-            } else if (this.pauseNext) {
-              this.pauseNext = false
-
-              let resolve: () => void = () => {}
-              const pro = new Promise<void>(res => {
-                resolve = res
-              })
-              this.pauseContext = {
-                task: debugDetail.name,
-                conti: resolve
-              }
-              this.sendEvent('stopOnStep')
-              await pro
-            }
-          // case 'Task.Debug.Runout':
-          // case 'Task.Debug.Completed':
-        }
+      const debugDetail = JSON.parse(details_json) as {
+        id: number
+        entry: string
+        uuid: string
+        hash: string
+        name: string
+        latest_hit: string
+        recognition: object
+        run_times: number
+        status: string
       }
-    )
+      switch (msg) {
+        case 'Task.Debug.ReadyToRun':
+          if (this.taskIndex[debugDetail.name].bp) {
+            // 目前不存在next和stepIn的区别，因此不会在next的时候提前触发breakpoint
+            this.pauseNext = false
 
-    const [actionRunId, stopActionRun] = await $callback.CustomActionRun.setup(
-      async ({ sync_context, task_name, custom_action_param, cur_box, cur_rec_detail }) => {
+            let resolve: () => void = () => {}
+            const pro = new Promise<void>(res => {
+              resolve = res
+            })
+            this.pauseContext = {
+              task: debugDetail.name,
+              conti: resolve
+            }
+            this.sendEvent('stopOnBreakpoint', this.taskIndex[debugDetail.name].bp!.id)
+            await pro
+          } else if (this.pauseNext) {
+            this.pauseNext = false
+
+            let resolve: () => void = () => {}
+            const pro = new Promise<void>(res => {
+              resolve = res
+            })
+            this.pauseContext = {
+              task: debugDetail.name,
+              conti: resolve
+            }
+            this.sendEvent('stopOnStep')
+            await pro
+          }
+        // case 'Task.Debug.Runout':
+        // case 'Task.Debug.Completed':
+      }
+    })
+
+    const actionRun = new CustomActionRunCallback()
+    await actionRun.prepareCallback(
+      async (sync_context, task_name, custom_action_param, cur_box, cur_rec_detail) => {
         this.sendEvent(
           'output',
           `${sync_context} ${task_name} ${custom_action_param} ${cur_box} ${cur_rec_detail}`
         )
         console.log(sync_context, task_name, custom_action_param, cur_box, cur_rec_detail)
-        return {
-          return: 1
-        }
+        return true
       }
     )
 
-    const [actionStopId, stopActionStop] = await $callback.CustomActionStop.setup(async () => {
+    const actionStop = new CustomActionStopCallback()
+    await actionStop.prepareCallback(async () => {
       this.sendEvent('output', `action stop`)
       console.log('action stop')
     })
 
-    const controllerId: ControllerId = (await $controller.createAdb(info, arg.agent, callbackId!))!
-    const resourceId: ResourceId = (await $resource.create(callbackId!))!
-    const instanceId: InstanceId = (await $instance.create(callbackId!))!
-    await $instance.bindCtrl(instanceId, controllerId)
-    await $instance.bindRes(instanceId, resourceId)
+    const controller = new AdbController()
+    await controller.create(info, arg.agent, callback)
 
-    await $instance.registerCustomAction(instanceId, 'TestAct', actionRunId!, actionStopId!)
+    const resource = new Resource()
+    await resource.create(callback)
+
+    const instance = new Instance()
+    await instance.create(callback)
+
+    await instance.bindCtrl(controller)
+    await instance.bindRes(resource)
+
+    await instance.registerCustomAction('TestAct', actionRun, actionStop)
 
     if (arg.controller) {
       if (arg.controller.long) {
-        await $controller.setOptionI(
-          controllerId,
-          ControllerOption.ScreenshotTargetLongSide,
-          arg.controller.long
-        )
+        await controller.setOption(ControllerOption.ScreenshotTargetLongSide, arg.controller.long)
       } else if (arg.controller.short) {
-        await $controller.setOptionI(
-          controllerId,
-          ControllerOption.ScreenshotTargetShortSide,
-          arg.controller.short
-        )
+        await controller.setOption(ControllerOption.ScreenshotTargetShortSide, arg.controller.short)
       }
       if (arg.controller.packageEntry) {
-        await $controller.setOptionS(
-          controllerId,
+        await controller.setOption(
           ControllerOption.DefaultAppPackageEntry,
           arg.controller.packageEntry
         )
       }
       if (arg.controller.package) {
-        await $controller.setOptionS(
-          controllerId,
-          ControllerOption.DefaultAppPackage,
-          arg.controller.package
-        )
+        await controller.setOption(ControllerOption.DefaultAppPackage, arg.controller.package)
       }
     }
 
     const clear = () => {
-      $instance.destroy(instanceId)
-      $resource.destroy(resourceId)
-      $controller.destroy(controllerId)
-      stopCallback()
-      stopActionRun()
-      stopActionStop()
+      instance.dispose()
+      resource.dispose()
+      controller.dispose()
+      callback.dispose()
+      actionRun.dispose()
+      actionStop.dispose()
     }
 
     if (this.expectStop) {
@@ -292,10 +286,10 @@ export class MaaFrameworkDebugRuntime extends EventEmitter {
       return false
     }
 
-    await $controller.wait(controllerId, await $controller.postConnection(controllerId))
-    await $resource.wait(resourceId, await $resource.postPath(resourceId, arg.resource))
+    await (await controller.postConnection()).wait()
+    await (await resource.postPath(arg.resource)).wait()
 
-    if (!(await $instance.inited(instanceId))) {
+    if (!(await instance.inited())) {
       this.sendEvent('output', `Maa实例初始化失败`)
       clear()
       afterStop()
@@ -303,24 +297,22 @@ export class MaaFrameworkDebugRuntime extends EventEmitter {
     }
 
     this.stopRunning = done => {
-      $instance.postStop(instanceId).then(() => {
+      instance.postStop().then(() => {
         this.expectStop = true
         clear()
         done()
       })
     }
 
-    $instance
-      .wait(instanceId, await $instance.postTask(instanceId, arg.task, JSON.stringify(arg.param)))
-      .then(() => {
-        this.stopRunning = done => {
-          this.expectStop = true
-          done()
-        }
-        clear()
+    ;(await instance.postTask(arg.task, arg.param ?? {})).wait().then(() => {
+      this.stopRunning = done => {
+        this.expectStop = true
+        done()
+      }
+      clear()
 
-        this.sendEvent('end')
-      })
+      this.sendEvent('end')
+    })
 
     return !this.expectStop
   }

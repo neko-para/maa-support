@@ -3,6 +3,7 @@
   "main": "src/index.ts",
   "devDependencies": {
     "@maa/schema": "workspace:*",
-    "@tsconfig/node18": "^18"
+    "@tsconfig/node18": "^18",
+    "axios": "^1.6.5"
   }
 }

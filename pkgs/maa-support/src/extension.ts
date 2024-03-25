@@ -1,8 +1,6 @@
 import { MaaFrameworkDebugSession } from '@maa/debugger/src/session'
 import * as vscode from 'vscode'
 
-import { NotebookController } from './notebook/controller'
-import { NotebookSerializer } from './notebook/serializer'
 import { GeneralPipelineLanguageSupport } from './pipeline/language'
 import { MaaFrameworkPipelineSpec } from './pipeline/spec/fw'
 import { MaaWpfPipelineSpec } from './pipeline/spec/wpf'
@@ -49,11 +47,6 @@ export function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(
     vscode.debug.registerDebugAdapterDescriptorFactory('maafw', new InlineDebugAdapterFactory())
-  )
-
-  context.subscriptions.push(
-    vscode.workspace.registerNotebookSerializer('maafw-notebook', new NotebookSerializer()),
-    new NotebookController()._controller
   )
 }
 
