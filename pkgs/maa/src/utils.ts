@@ -12,10 +12,16 @@ export type AdbTypeScreencap =
   | 'fastest lossless way'
   | 'fastest way'
 
+export type AdbTypeObj = {
+  touch?: AdbTypeTouch
+  key?: AdbTypeKey
+  screencap?: AdbTypeScreencap
+}
+
 export function toAdbType(
-  touch: AdbTypeTouch,
-  key: AdbTypeKey,
-  screencap: AdbTypeScreencap
+  touch: AdbTypeTouch | undefined,
+  key: AdbTypeKey | undefined,
+  screencap: AdbTypeScreencap | undefined
 ): AdbType {
   let type: AdbType = 0
 
@@ -77,11 +83,7 @@ export function toAdbType(
 }
 
 export function fromAdbType(type: AdbType) {
-  const ret = {} as {
-    touch?: AdbTypeTouch
-    key?: AdbTypeKey
-    screencap?: AdbTypeScreencap
-  }
+  const ret = {} as AdbTypeObj
 
   switch (type & AdbType.Touch_Mask) {
     case AdbType.Touch_Adb:

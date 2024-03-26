@@ -98,6 +98,9 @@ importers:
       '@types/node':
         specifier: '18'
         version: 18.19.14
+      '@types/uuid':
+        specifier: ^9.0.8
+        version: 9.0.8
       '@vitejs/plugin-vue':
         specifier: ^5.0.4
         version: 5.0.4(vite@5.2.4)(vue@3.4.21)
@@ -125,6 +128,9 @@ importers:
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1
+      uuid:
+        specifier: ^9.0.1
+        version: 9.0.1
       vfonts:
         specifier: ^0.0.3
         version: 0.0.3
@@ -1266,6 +1272,10 @@ packages:
     resolution: {integrity: sha512-EnQ4Us2rmOS64nHDWr0XqAD8DsO6f3XR6lf9UIIrZQpUzPVdN/oPuEzfDWNHSyXLvoGgjuEm/sPwFGSSs35Wtg==}
     dependencies:
       undici-types: 5.26.5
+    dev: true
+
+  /@types/uuid@9.0.8:
+    resolution: {integrity: sha512-jg+97EGIcY9AGHJJRaaPVgetKDsrTgbRjQ5Msgjh/DQKEFl0DtyRr/VCOyD1T2R1MNeWPK/u7JoGhlDZnKBAfA==}
     dev: true
 
   /@types/vscode@1.86.0:
@@ -3036,6 +3046,11 @@ packages:
 
   /util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
+    dev: true
+
+  /uuid@9.0.1:
+    resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
+    hasBin: true
     dev: true
 
   /v8-compile-cache-lib@3.0.1:

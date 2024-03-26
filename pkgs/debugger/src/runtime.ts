@@ -17,6 +17,7 @@ import {
   setOption,
   version
 } from '@maa/maa'
+import { __DisposableStack } from '@maa/maa/src/utils/dispose'
 import { EventEmitter } from 'events'
 import { existsSync, statSync } from 'fs'
 import fs from 'fs/promises'
@@ -272,13 +273,16 @@ export class MaaFrameworkDebugRuntime extends EventEmitter {
       }
     }
 
+    const clearStack = new __DisposableStack()
+    clearStack.add(instance)
+    clearStack.add(resource)
+    clearStack.add(controller)
+    clearStack.add(callback)
+    clearStack.add(actionRun)
+    clearStack.add(actionStop)
+
     const clear = () => {
-      instance.dispose()
-      resource.dispose()
-      controller.dispose()
-      callback.dispose()
-      actionRun.dispose()
-      actionStop.dispose()
+      clearStack.dispose()
     }
 
     if (this.expectStop) {

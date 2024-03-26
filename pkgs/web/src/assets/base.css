@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.maa-form {
+  display: grid;
+  grid-template-columns: max-content auto;
+  align-items: center;
+  gap: 0.5rem;
+}
