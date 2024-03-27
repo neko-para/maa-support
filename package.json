@@ -1,7 +1,8 @@
 {
   "name": "maa-support",
   "scripts": {
-    "dev": "cd pkgs/maa-support && node scripts/build.mjs",
+    "dev:ext": "cd pkgs/maa-support && node scripts/build.mjs",
+    "dev": "cd pkgs/web && npm run dev",
     "update": "cd pkgs/schema && npm run update"
   },
   "devDependencies": {

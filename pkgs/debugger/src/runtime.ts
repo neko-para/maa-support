@@ -133,7 +133,7 @@ export class MaaFrameworkDebugRuntime extends EventEmitter {
     }
 
     try {
-      await init(13126)
+      await init(13126, () => void)
     } catch (_) {
       this.sendEvent('output', `连接MaaHttp失败`)
       afterStop()

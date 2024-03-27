@@ -1,5 +1,8 @@
 {
   "name": "@maa/web",
+  "scripts": {
+    "dev": "vite dev"
+  },
   "devDependencies": {
     "@maa/maa": "workspace:*",
     "@types/node": "18",
