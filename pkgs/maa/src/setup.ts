@@ -69,3 +69,7 @@ export async function deinit(masterPort: number) {
   port = null
   clearInterval(heart)
 }
+
+export function initDirect(slavePort: number) {
+  port = slavePort
+}

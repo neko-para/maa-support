@@ -1,5 +1,6 @@
 import { api } from '@maa/schema'
 
+import type { Status } from '../types'
 import type { __Disposable } from '../utils/dispose'
 import type { CustomActionRunCallback, CustomActionStopCallback, TrivialCallback } from './callback'
 import type { Controller } from './controller'
@@ -25,11 +26,11 @@ class InstanceTaskHolder {
   }
 
   async status() {
-    return (await api.MaaTaskStatus({ inst: this._inst, id: this._id })).return > 0
+    return (await api.MaaTaskStatus({ inst: this._inst, id: this._id })).return as Status
   }
 
   async wait() {
-    return (await api.MaaWaitTask({ inst: this._inst, id: this._id })).return > 0
+    return (await api.MaaWaitTask({ inst: this._inst, id: this._id })).return as Status
   }
 }
 

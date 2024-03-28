@@ -1,5 +1,6 @@
 import { api } from '@maa/schema'
 
+import type { Status } from '../types'
 import type { __Disposable } from '../utils/dispose'
 import type { TrivialCallback } from './callback'
 
@@ -16,11 +17,11 @@ class ResourceActionHolder {
   }
 
   async status() {
-    return await api.MaaResourceStatus({ res: this._res, id: this._id })
+    return (await api.MaaResourceStatus({ res: this._res, id: this._id })).return as Status
   }
 
   async wait() {
-    return await api.MaaResourceWait({ res: this._res, id: this._id })
+    return (await api.MaaResourceWait({ res: this._res, id: this._id })).return as Status
   }
 }
 

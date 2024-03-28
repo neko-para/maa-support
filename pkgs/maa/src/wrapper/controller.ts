@@ -1,6 +1,6 @@
 import { api } from '@maa/schema'
 
-import { type AdbConfig, ControllerOption } from '../types'
+import { type AdbConfig, ControllerOption, Status } from '../types'
 import type { __Disposable } from '../utils/dispose'
 import type { TrivialCallback } from './callback'
 
@@ -17,11 +17,11 @@ class ControllerActionHolder {
   }
 
   async status() {
-    return (await api.MaaControllerStatus({ ctrl: this._ctrl, id: this._id })).return > 0
+    return (await api.MaaControllerStatus({ ctrl: this._ctrl, id: this._id })).return as Status
   }
 
   async wait() {
-    return (await api.MaaControllerWait({ ctrl: this._ctrl, id: this._id })).return > 0
+    return (await api.MaaControllerWait({ ctrl: this._ctrl, id: this._id })).return as Status
   }
 }
 

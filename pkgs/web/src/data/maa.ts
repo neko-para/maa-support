@@ -1,4 +1,4 @@
-import { deinit, init } from '@maa/maa'
+import { deinit, init, initDirect } from '@maa/maa'
 import { reactive } from 'vue'
 
 import { setting } from './setting'
@@ -7,16 +7,24 @@ export const maa = reactive({
   active: false,
 
   async init() {
-    if (
-      setting.port &&
-      (await init(setting.port, () => {
-        this.active = false
-      }))
-    ) {
+    if (!setting.port) {
+      return false
+    }
+    if (setting.directSlave) {
+      initDirect(setting.port)
       this.active = true
       return true
     } else {
-      return false
+      if (
+        await init(setting.port, () => {
+          this.active = false
+        })
+      ) {
+        this.active = true
+        return true
+      } else {
+        return false
+      }
     }
   },
 

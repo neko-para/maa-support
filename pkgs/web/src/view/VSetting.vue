@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { NButton, NCard, NInput, NInputNumber } from 'naive-ui'
+import { NButton, NCard, NInput, NInputNumber, NSwitch } from 'naive-ui'
 import { ref } from 'vue'
 
 import { maa } from '@/data/maa'
@@ -34,7 +34,14 @@ async function tryDeinit() {
               disconnect
             </n-button>
           </div>
-          <span>Port</span>
+          <span> Direct </span>
+          <div>
+            <n-switch
+              v-model:value="setting.directSlave"
+              :disabled="loading || maa.active"
+            ></n-switch>
+          </div>
+          <span> Port </span>
           <n-input-number
             v-model:value="setting.port"
             placeholder=""

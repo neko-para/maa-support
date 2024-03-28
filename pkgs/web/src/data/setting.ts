@@ -1,6 +1,7 @@
 import { reactive, watch } from 'vue'
 
 type DataSetting = {
+  directSlave?: boolean
   port?: number
   agentPath?: string
 }
