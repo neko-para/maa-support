@@ -1,8 +1,9 @@
 import { api } from '@maa/schema'
 
-import { type AdbConfig, ControllerOption, Status } from '../types'
+import { type AdbConfig, ControllerOption, Status, Win32Type } from '../types'
 import type { __Disposable } from '../utils/dispose'
 import type { TrivialCallback } from './callback'
+import type { HwndId } from './device'
 
 export type ControllerId = string & { __kind: 'MaaControllerAPI' }
 export type ControllerActionId = number & { __kind: 'MaaResourceActionId' }
@@ -138,6 +139,20 @@ export class AdbController extends Controller {
       await api.MaaAdbControllerCreateV2({
         ...cfg,
         agent_path,
+        callback: this._cb._cb!
+      })
+    ).return as ControllerId
+    return !!this._ctrl
+  }
+}
+
+export class Win32Controller extends Controller {
+  async create(hWnd: HwndId, type: Win32Type, callback: TrivialCallback) {
+    this._cb = callback
+    this._ctrl = (
+      await api.MaaWin32ControllerCreate({
+        hWnd,
+        type,
         callback: this._cb._cb!
       })
     ).return as ControllerId

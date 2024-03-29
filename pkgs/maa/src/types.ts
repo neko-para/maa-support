@@ -56,6 +56,22 @@ export const enum AdbType {
   Screencap_FastestWay = Screencap_Mask - (1 << 16)
 }
 
+export const enum Win32Type {
+  Invalid = 0,
+
+  Touch_SendMessage = 1,
+  Touch_Mask = 0xff,
+
+  Key_SendMessage = 1 << 8,
+  Key_Mask = 0xff00,
+
+  Screencap_GDI = 1 << 16,
+  Screencap_DXGI_DesktopDup = 2 << 16,
+  // DXGI_BackBuffer = 3 << 16,
+  DXGI_FramePool = 4 << 16,
+  Screencap_Mask = 0xff0000
+}
+
 export type MaaRect = {
   x: number
   y: number

@@ -1,4 +1,4 @@
-import { AdbType } from './types'
+import { AdbType, Win32Type } from './types'
 
 export type AdbTypeTouch = 'adb' | 'mini touch' | 'maa touch' | 'auto detect'
 export type AdbTypeKey = 'adb' | 'maa touch' | 'auto detect'
@@ -137,6 +137,84 @@ export function fromAdbType(type: AdbType) {
     case AdbType.Screencap_FastestWayDeprecated:
     case AdbType.Screencap_FastestWay:
       ret.screencap = 'fastest way'
+      break
+  }
+
+  return ret
+}
+
+export type Win32TypeTouch = 'send message'
+export type Win32TypeKey = 'send message'
+export type Win32TypeScreencap =
+  | 'gdi'
+  | 'dxgi desktop dup'
+  // | 'dxgi back buffer'
+  | 'dxgi frame pool'
+
+export type Win32TypeObj = {
+  touch?: Win32TypeTouch
+  key?: Win32TypeKey
+  screencap?: Win32TypeScreencap
+}
+
+export function toWin32Type(
+  touch: Win32TypeTouch | undefined,
+  key: Win32TypeKey | undefined,
+  screencap: Win32TypeScreencap | undefined
+): Win32Type {
+  let type: Win32Type = 0
+
+  switch (touch) {
+    case 'send message':
+      type |= Win32Type.Touch_SendMessage
+      break
+  }
+
+  switch (key) {
+    case 'send message':
+      type |= Win32Type.Key_SendMessage
+      break
+  }
+
+  switch (screencap) {
+    case 'gdi':
+      type |= Win32Type.Screencap_GDI
+      break
+    case 'dxgi desktop dup':
+      type |= Win32Type.Screencap_DXGI_DesktopDup
+      break
+    case 'dxgi frame pool':
+      type |= Win32Type.DXGI_FramePool
+      break
+  }
+
+  return type
+}
+
+export function fromWin32Type(type: Win32Type) {
+  const ret = {} as Win32TypeObj
+
+  switch (type & Win32Type.Touch_Mask) {
+    case Win32Type.Touch_SendMessage:
+      ret.touch = 'send message'
+      break
+  }
+
+  switch (type & Win32Type.Key_Mask) {
+    case Win32Type.Key_SendMessage:
+      ret.key = 'send message'
+      break
+  }
+
+  switch (type & Win32Type.Screencap_Mask) {
+    case Win32Type.Screencap_GDI:
+      ret.screencap = 'gdi'
+      break
+    case Win32Type.Screencap_DXGI_DesktopDup:
+      ret.screencap = 'dxgi desktop dup'
+      break
+    case Win32Type.DXGI_FramePool:
+      ret.screencap = 'dxgi frame pool'
       break
   }
 
