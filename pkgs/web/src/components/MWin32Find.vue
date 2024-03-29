@@ -15,7 +15,7 @@ defineEmits<{
 }>()
 
 async function performScan() {
-  return (await findWindow(props)).concat('0x1234567887654321' as HwndId)
+  return await findWindow(props)
 }
 
 defineExpose({
