@@ -10,6 +10,12 @@ type TopLevelRoute = 'main' | 'setting'
 
 const topLevelRoute = ref<TopLevelRoute>('main')
 
+type RouteInfo = {
+  key: TopLevelRoute
+  icon: string
+  comp: Component
+}
+
 const routes = [
   {
     key: 'main',
@@ -21,11 +27,7 @@ const routes = [
     icon: 'settings',
     comp: VSetting
   }
-] satisfies {
-  key: TopLevelRoute
-  icon: string
-  comp: Component
-}[]
+] satisfies RouteInfo[] as RouteInfo[]
 
 const getComp = computed(() => {
   return routes.find(x => x.key === topLevelRoute.value)!.comp

@@ -22,7 +22,7 @@ async function tryDeinit() {
 
 <template>
   <div class="flex-1 flex flex-col items-center">
-    <div class="container flex flex-col p-4">
+    <div class="container flex flex-col gap-4 p-4">
       <n-card title="Maa Http">
         <div class="maa-form">
           <div></div>

@@ -174,11 +174,6 @@ async function createInstanceImpl() {
     console.log('check callback failed')
     return false
   }
-  if (!data.value.config.path) {
-    console.log('check path failed')
-    await cb.dispose()
-    return false
-  }
   const inst = new Instance()
   if (!(await inst.create(cb))) {
     console.log('create failed')
@@ -230,13 +225,41 @@ async function disposeInstance() {
   instanceLoading.value = false
   return ret
 }
+
+const running = ref(false)
+
+async function startRunImpl() {
+  if (!data.value.config.task) {
+    console.log('failed for no task')
+    return false
+  }
+  return (
+    (await (
+      await data.value.shallow.instance?.postTask(
+        data.value.config.task,
+        data.value.config.param ?? '{}'
+      )
+    )?.wait()) === Status.Success
+  )
+}
+
+async function startRun() {
+  running.value = true
+  const ret = await startRunImpl()
+  running.value = false
+  return ret
+}
+
+async function postStop() {
+  await data.value.shallow.instance?.postStop()
+}
 </script>
 
 <template>
-  <div class="flex-1 flex flex-col items-center h-full">
-    <div class="container h-full">
-      <n-split :default-size="0.8" :min="0.5" :max="0.95">
-        <template #1>
+  <div class="flex-1 flex flex-col items-center h-full container">
+    <n-split :default-size="0.8" :min="0.5" :max="0.95" class="h-full">
+      <template #1>
+        <div class="w-full h-full overflow-y-auto">
           <div class="flex flex-col p-4 gap-4">
             <div class="flex">
               <n-input v-model:value="data.name" class="min-w-32" placeholder="" autosize></n-input>
@@ -255,7 +278,7 @@ async function disposeInstance() {
                     v-else
                     @click="disposeController"
                     :loading="controllerLoading"
-                    :disabled="!!data.shallow.instance"
+                    :disabled="instanceLoading || !!data.shallow.instance"
                   >
                     disconnect
                   </n-button>
@@ -267,7 +290,7 @@ async function disposeInstance() {
                   <div class="flex flex-col">
                     <m-adb-config
                       v-model:value="data.config.cfg"
-                      :disabled="!!data.shallow.controller"
+                      :disabled="controllerLoading || !!data.shallow.controller"
                     ></m-adb-config>
                     <n-divider></n-divider>
 
@@ -281,7 +304,7 @@ async function disposeInstance() {
                             <div class="flex items-center gap-2">
                               <n-button
                                 @click.stop="Object.assign(data.config.cfg, res)"
-                                :disabled="!!data.shallow.controller"
+                                :disabled="controllerLoading || !!data.shallow.controller"
                               >
                                 copy
                               </n-button>
@@ -321,7 +344,7 @@ async function disposeInstance() {
                     v-else
                     @click="disposeResource"
                     :loading="resourceLoading"
-                    :disabled="!!data.shallow.instance"
+                    :disabled="instanceLoading || !!data.shallow.instance"
                   >
                     disconnect
                   </n-button>
@@ -333,7 +356,7 @@ async function disposeInstance() {
                 <n-input
                   v-model:value="data.config.path"
                   placeholder=""
-                  :disabled="!!data.shallow.resource"
+                  :disabled="resourceLoading || !!data.shallow.resource"
                 ></n-input>
               </div>
             </n-card>
@@ -347,7 +370,12 @@ async function disposeInstance() {
                   >
                     connect
                   </n-button>
-                  <n-button v-else @click="disposeInstance" :loading="instanceLoading">
+                  <n-button
+                    v-else
+                    @click="disposeInstance"
+                    :loading="instanceLoading"
+                    :disabled="running"
+                  >
                     disconnect
                   </n-button>
                   <span> instance </span>
@@ -359,18 +387,33 @@ async function disposeInstance() {
                 <span> param </span>
                 <n-input v-model:value="data.config.param" placeholder=""></n-input>
               </div>
+              <n-divider></n-divider>
+              <div class="flex gap-2">
+                <n-button
+                  @click="startRun"
+                  :loading="running"
+                  :disabled="instanceLoading || !data.shallow.instance"
+                >
+                  run
+                </n-button>
+                <n-button @click="postStop" :disabled="!running || !data.shallow.instance">
+                  stop
+                </n-button>
+              </div>
             </n-card>
           </div>
-        </template>
-        <template #2>
+        </div>
+      </template>
+      <template #2>
+        <div class="w-full h-full overflow-auto">
           <div class="maa-form">
             <template v-for="(msg, idx) in log" :key="idx">
               <span> {{ msg[0] }} </span>
               <span> {{ msg[1] }} </span>
             </template>
           </div>
-        </template>
-      </n-split>
-    </div>
+        </div>
+      </template>
+    </n-split>
   </div>
 </template>
