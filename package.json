@@ -3,6 +3,7 @@
   "scripts": {
     "dev:ext": "cd pkgs/maa-support && node scripts/build.mjs",
     "dev": "cd pkgs/web && npm run dev",
+    "build": "cd pkgs/web && npm run build",
     "update": "cd pkgs/schema && npm run update"
   },
   "devDependencies": {

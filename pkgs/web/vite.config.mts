@@ -7,13 +7,13 @@ import { defineConfig } from 'vite'
 // https://vitejs.dev/config
 export default defineConfig({
   root: __dirname,
-  base: '/',
+  base: '/maa-support',
   server: {
     host: '127.0.0.1',
     port: 9877
   },
   build: {
-    outDir: '../../dist/client',
+    outDir: '../../dist',
     emptyOutDir: true,
     sourcemap: true
   },
