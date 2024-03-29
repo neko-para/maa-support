@@ -4,10 +4,12 @@ import {
   AdbController,
   Controller,
   type DeviceInfo,
+  type HwndId,
   Instance,
   Resource,
   Status,
   TrivialCallback,
+  Win32Controller,
   findDevice
 } from '@maa/maa'
 import {
@@ -24,6 +26,8 @@ import {
 import { computed, reactive, ref } from 'vue'
 
 import MAdbConfig from '@/components/MAdbConfig.vue'
+import MWin32Config from '@/components/MWin32Config.vue'
+import MWin32Find from '@/components/MWin32Find.vue'
 import { main } from '@/data/main'
 import { setting } from '@/data/setting'
 
@@ -35,12 +39,21 @@ const data = computed(() => {
   return main.data[props.id]
 })
 
-const scanning = ref(false)
-const scanResult = ref<DeviceInfo[] | null>(null)
+const win32FindEl = ref<InstanceType<typeof MWin32Find> | null>(null)
 
-async function performScan() {
+const scanning = ref(false)
+const adbScanResult = ref<DeviceInfo[] | null>(null)
+const win32ScanResult = ref<HwndId[] | null>(null)
+
+async function performScanAdb() {
   scanning.value = true
-  scanResult.value = await findDevice()
+  adbScanResult.value = await findDevice()
+  scanning.value = false
+}
+
+async function performScanWin32() {
+  scanning.value = true
+  win32ScanResult.value = (await win32FindEl.value?.performScan()) ?? null
   scanning.value = false
 }
 
@@ -85,15 +98,27 @@ async function createControllerImpl() {
       await adbCtrl.dispose()
       return false
     }
-    if ((await (await adbCtrl.postConnection()).wait()) === Status.Success) {
-      ctrl = adbCtrl
-    } else {
-      console.log('connect failed')
-      await adbCtrl.dispose()
+    ctrl = adbCtrl
+  } else if (data.value.config.type === 'win32') {
+    if (!data.value.config.cfg.winType || !data.value.config.cfg.hWnd) {
+      console.log('check winType or hWnd failed')
+      await cb.dispose()
       return false
     }
+    const winCtrl = new Win32Controller()
+    if (!(await winCtrl.create(data.value.config.cfg.hWnd, data.value.config.cfg.winType, cb))) {
+      console.log('create failed')
+      await winCtrl.dispose()
+      return false
+    }
+    ctrl = winCtrl
   } else {
     await cb.dispose()
+    return false
+  }
+  if ((await (await ctrl.postConnection()).wait()) !== Status.Success) {
+    console.log('connect failed')
+    await ctrl.dispose()
     return false
   }
   data.value.shallow.controller = ctrl
@@ -296,10 +321,10 @@ async function postStop() {
 
                     <div class="flex flex-col gap-2">
                       <div class="flex">
-                        <n-button @click="performScan" :loading="scanning"> scan </n-button>
+                        <n-button @click="performScanAdb" :loading="scanning"> scan </n-button>
                       </div>
                       <n-collapse>
-                        <n-collapse-item v-for="(res, idx) of scanResult ?? []" :key="idx">
+                        <n-collapse-item v-for="(res, idx) of adbScanResult ?? []" :key="idx">
                           <template #header>
                             <div class="flex items-center gap-2">
                               <n-button
@@ -320,12 +345,46 @@ async function postStop() {
                   </div>
                 </n-tab-pane>
                 <n-tab-pane name="win32" tab="Windows">
-                  <div
-                    class="grid items-center gap-2"
-                    style="grid-template-columns: max-content auto"
-                  >
-                    <span> Hwnd </span>
-                    <n-input v-model:value="data.config.cfg.hwnd" placeholder=""></n-input>
+                  <div class="flex flex-col">
+                    <div class="maa-form">
+                      <span> hWnd </span>
+                      <n-input v-model:value="data.config.cfg.hWnd" placeholder=""></n-input>
+                      <m-win32-config
+                        v-model:value="data.config.cfg.winType"
+                        :disabled="controllerLoading || !!data.shallow.controller"
+                      ></m-win32-config>
+                    </div>
+                    <n-divider></n-divider>
+
+                    <div class="flex flex-col gap-2">
+                      <m-win32-find
+                        ref="win32FindEl"
+                        v-model:class-name="data.config.cfg.className"
+                        v-model:window-name="data.config.cfg.windowName"
+                        v-model:exact-match="data.config.cfg.exactMatch"
+                      ></m-win32-find>
+                      <div class="flex">
+                        <n-button @click="performScanWin32" :loading="scanning"> scan </n-button>
+                      </div>
+                      <n-collapse>
+                        <n-collapse-item v-for="(res, idx) of win32ScanResult ?? []" :key="idx">
+                          <template #header>
+                            <div class="flex items-center gap-2">
+                              <n-button
+                                @click.stop="data.config.cfg.hWnd = res"
+                                :disabled="controllerLoading || !!data.shallow.controller"
+                              >
+                                copy
+                              </n-button>
+                              <span>
+                                {{ res }}
+                              </span>
+                            </div>
+                          </template>
+                          <!-- <m-adb-config :value="res" disabled></m-adb-config> -->
+                        </n-collapse-item>
+                      </n-collapse>
+                    </div>
                   </div>
                 </n-tab-pane>
               </n-tabs>

@@ -1,4 +1,12 @@
-import type { AdbConfig, Controller, Instance, Resource, TrivialCallback } from '@maa/maa'
+import type {
+  AdbConfig,
+  Controller,
+  HwndId,
+  Instance,
+  Resource,
+  TrivialCallback,
+  Win32Type
+} from '@maa/maa'
 import { v4 } from 'uuid'
 import { reactive, shallowReactive, watch } from 'vue'
 
@@ -8,7 +16,11 @@ type DataMain = {
     type: 'adb' | 'win32'
     cfg: Partial<
       AdbConfig & {
-        hwnd: string
+        className: string
+        windowName: string
+        exactMatch: boolean
+        hWnd: HwndId
+        winType: Win32Type
       }
     >
     path?: string
