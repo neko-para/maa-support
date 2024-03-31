@@ -1,7 +1,7 @@
 import { api } from '@maa/schema'
 
 import type { Status } from '../types'
-import type { __Disposable } from '../utils/dispose'
+import { __Disposable } from '../utils/dispose'
 import type { TrivialCallback } from './callback'
 
 export type ResourceId = string & { __kind: 'MaaResourceAPI' }
@@ -25,13 +25,12 @@ class ResourceActionHolder {
   }
 }
 
-export class Resource implements __Disposable {
+export class Resource extends __Disposable {
   _res: ResourceId | null = null
-  _cb: TrivialCallback | null = null
 
   async create(callback: TrivialCallback) {
-    this._cb = callback
-    this._res = (await api.MaaResourceCreate({ callback: this._cb._cb! })).return as ResourceId
+    this.defer(callback)
+    this._res = (await api.MaaResourceCreate({ callback: callback._cb! })).return as ResourceId
     return !!this._res
   }
 
@@ -40,11 +39,6 @@ export class Resource implements __Disposable {
       await api.MaaResourceDestroy({ res: this._res })
       this._res = null
     }
-    await this._cb?.dispose()
-  }
-
-  async destroy() {
-    await this.dispose()
   }
 
   async postPath(path: string) {

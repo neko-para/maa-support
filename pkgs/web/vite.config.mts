@@ -3,6 +3,7 @@ import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import path from 'path'
 import { defineConfig } from 'vite'
+import { transform } from 'esbuild'
 
 // https://vitejs.dev/config
 export default defineConfig({
@@ -25,10 +26,36 @@ export default defineConfig({
   },
   plugins: [
     vue(),
-    vueJsx()
+    vueJsx(),
     // VueI18nPlugin({
     //   include: [path.resolve(__dirname, './src/i18n/locales/*.json')],
     //   strictMessage: false
     // })
-  ]
+    {
+      name: 'fix-explicit-resource-management',
+
+      async transform(code, id, options) {
+        if (id.endsWith('.ts') || id.endsWith('.vue')) {
+          const result = await transform(code, {
+            sourcefile: id,
+            target: 'es2022',
+            sourcemap: true
+          })
+          return {
+            code: result.code,
+            map: result.map
+          }
+        }
+        return code
+      }
+    }
+  ],
+  esbuild: {
+    target: 'es2022'
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      target: 'es2022'
+    }
+  }
 })

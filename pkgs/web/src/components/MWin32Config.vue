@@ -72,7 +72,7 @@ const win32_type_screencap = computed<Win32TypeScreencap | undefined>({
 </script>
 
 <template>
-  <span> Type </span>
+  <span> type </span>
   <div class="flex gap-2">
     <n-select
       v-model:value="win32_type_touch"

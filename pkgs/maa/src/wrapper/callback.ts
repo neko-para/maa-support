@@ -2,7 +2,7 @@ import { callback } from '@maa/schema'
 
 import type { MaaRect } from '../types'
 import { wrapCallback } from '../utils/callback'
-import type { __Disposable } from '../utils/dispose'
+import { __Disposable } from '../utils/dispose'
 import { SyncContext, type SyncContextId } from './syncContext'
 
 export type TrivialId = string & { __kind: 'MaaAPICallback' }
@@ -22,16 +22,12 @@ const $callback = {
 
 export type TrivialCallbackFunc = (msg: string, details_json: string) => Promise<void>
 
-export class TrivialCallback implements __Disposable {
+export class TrivialCallback extends __Disposable {
   _func: TrivialCallbackFunc | null = null
   _cb: TrivialId | null = null
   _cbClear: (() => Promise<void>) | null = null
 
   async prepareCallback(callback: TrivialCallbackFunc) {
-    if (this._cbClear) {
-      await this._cbClear()
-      this._cbClear = null
-    }
     const [cb, clear] = await $callback.Trivial.setup(req => callback(req.msg, req.details_json))
     if (!cb) {
       return false
@@ -57,16 +53,12 @@ export type CustomRecognizerAnalyzeCallbackFunc = (
   custom_recognition_param: string
 ) => Promise<[boolean, out_box: MaaRect, out_detail: string]>
 
-export class CustomRecognizerAnalyzeCallback implements __Disposable {
+export class CustomRecognizerAnalyzeCallback extends __Disposable {
   _func: CustomRecognizerAnalyzeCallbackFunc | null = null
   _cb: CustomRecognizerAnalyzeId | null = null
   _cbClear: (() => Promise<void>) | null = null
 
   async prepareCallback(callback: CustomRecognizerAnalyzeCallbackFunc) {
-    if (this._cbClear) {
-      await this._cbClear()
-      this._cbClear = null
-    }
     const [cb, clear] = await $callback.CustomRecognizerAnalyze.setup(async req => {
       const [ret, box, detail] = await callback(
         new SyncContext(req.sync_context as SyncContextId),
@@ -104,16 +96,12 @@ export type CustomActionRunCallbackFunc = (
   cur_rec_detail: string
 ) => Promise<boolean>
 
-export class CustomActionRunCallback implements __Disposable {
+export class CustomActionRunCallback extends __Disposable {
   _func: CustomActionRunCallbackFunc | null = null
   _cb: CustomActionRunId | null = null
   _cbClear: (() => Promise<void>) | null = null
 
   async prepareCallback(callback: CustomActionRunCallbackFunc) {
-    if (this._cbClear) {
-      await this._cbClear()
-      this._cbClear = null
-    }
     const [cb, clear] = await $callback.CustomActionRun.setup(async req => ({
       return: (await callback(
         new SyncContext(req.sync_context as SyncContextId),
@@ -144,16 +132,12 @@ export class CustomActionRunCallback implements __Disposable {
 
 export type CustomActionStopCallbackFunc = () => Promise<void>
 
-export class CustomActionStopCallback implements __Disposable {
+export class CustomActionStopCallback extends __Disposable {
   _func: CustomActionStopCallbackFunc | null = null
   _cb: CustomActionStopId | null = null
   _cbClear: (() => Promise<void>) | null = null
 
   async prepareCallback(callback: CustomActionStopCallbackFunc) {
-    if (this._cbClear) {
-      await this._cbClear()
-      this._cbClear = null
-    }
     const [cb, clear] = await $callback.CustomActionStop.setup(async () => {
       await callback()
     })

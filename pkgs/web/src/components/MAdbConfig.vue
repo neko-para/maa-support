@@ -86,21 +86,21 @@ const adb_type_screencap = computed<AdbTypeScreencap | undefined>({
 
 <template>
   <div class="maa-form">
-    <span> Adb </span>
+    <span> adb </span>
     <n-input
       :value="value.adb_path"
       @update:value="v => $emit('update:value', { ...value, adb_path: v })"
       :disabled="disabled"
       placeholder=""
     ></n-input>
-    <span> Address </span>
+    <span> address </span>
     <n-input
       :value="value.address"
       @update:value="v => $emit('update:value', { ...value, address: v })"
       :disabled="disabled"
       placeholder=""
     ></n-input>
-    <span> Type </span>
+    <span> type </span>
     <div class="flex gap-2">
       <n-select
         v-model:value="adb_type_touch"
@@ -121,7 +121,7 @@ const adb_type_screencap = computed<AdbTypeScreencap | undefined>({
         placeholder=""
       ></n-select>
     </div>
-    <span> Config </span>
+    <span> config </span>
     <n-input
       :value="value.config"
       @update:value="v => $emit('update:value', { ...value, config: v })"

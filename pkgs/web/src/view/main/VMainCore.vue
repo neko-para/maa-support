@@ -3,6 +3,7 @@ import {
   type AdbConfig,
   AdbController,
   Controller,
+  ControllerOption,
   type DeviceInfo,
   type HwndId,
   Instance,
@@ -26,6 +27,7 @@ import {
 import { computed, reactive, ref } from 'vue'
 
 import MAdbConfig from '@/components/MAdbConfig.vue'
+import MIcon from '@/components/MIcon.vue'
 import MWin32Config from '@/components/MWin32Config.vue'
 import MWin32Find from '@/components/MWin32Find.vue'
 import { main } from '@/data/main'
@@ -40,6 +42,9 @@ const data = computed(() => {
 })
 
 const win32FindEl = ref<InstanceType<typeof MWin32Find> | null>(null)
+
+const longSide = ref<number | null>(null)
+const shortSide = ref<number | null>(null)
 
 const scanning = ref(false)
 const adbScanResult = ref<DeviceInfo[] | null>(null)
@@ -60,15 +65,13 @@ async function performScanWin32() {
 const log = ref<[msg: string, detail: string][]>([])
 
 async function prepareCallback() {
-  const cb = new TrivialCallback()
+  await using cb = new TrivialCallback()
   if (
     await cb.prepareCallback(async (msg, detail) => {
       log.value.push([msg, detail])
     })
   ) {
-    return cb
-  } else {
-    cb.dispose()
+    return cb.ref()
   }
   return null
 }
@@ -80,48 +83,57 @@ function checkAdbConfig(cfg: Partial<AdbConfig>): cfg is AdbConfig {
 }
 
 async function createControllerImpl() {
-  const cb = await prepareCallback()
+  await using cb = await prepareCallback()
   if (!cb) {
     console.log('check callback failed')
     return false
   }
-  let ctrl: Controller
+  let outCtrl: Controller
   if (data.value.config.type === 'adb') {
     if (!checkAdbConfig(data.value.config.cfg) || !setting.agentPath) {
       console.log('check config or agentPath failed')
-      await cb.dispose()
       return false
     }
-    const adbCtrl = new AdbController()
+    await using adbCtrl = new AdbController()
     if (!(await adbCtrl.create(data.value.config.cfg, setting.agentPath!, cb))) {
       console.log('create failed')
-      await adbCtrl.dispose()
       return false
     }
-    ctrl = adbCtrl
+    outCtrl = adbCtrl.ref()
   } else if (data.value.config.type === 'win32') {
     if (!data.value.config.cfg.winType || !data.value.config.cfg.hWnd) {
       console.log('check winType or hWnd failed')
-      await cb.dispose()
       return false
     }
-    const winCtrl = new Win32Controller()
+    await using winCtrl = new Win32Controller()
     if (!(await winCtrl.create(data.value.config.cfg.hWnd, data.value.config.cfg.winType, cb))) {
       console.log('create failed')
-      await winCtrl.dispose()
       return false
     }
-    ctrl = winCtrl
+    outCtrl = winCtrl.ref()
   } else {
-    await cb.dispose()
+    return false
+  }
+  await using ctrl = outCtrl
+  if (
+    data.value.config.startEntry &&
+    !(await ctrl.setOption(ControllerOption.DefaultAppPackageEntry, data.value.config.startEntry))
+  ) {
+    console.log('set option failed')
+    return false
+  }
+  if (
+    data.value.config.stopEntry &&
+    !(await ctrl.setOption(ControllerOption.DefaultAppPackage, data.value.config.stopEntry))
+  ) {
+    console.log('set option failed')
     return false
   }
   if ((await (await ctrl.postConnection()).wait()) !== Status.Success) {
     console.log('connect failed')
-    await ctrl.dispose()
     return false
   }
-  data.value.shallow.controller = ctrl
+  data.value.shallow.controller = ctrl.ref()
   return true
 }
 
@@ -147,24 +159,22 @@ async function disposeController() {
 const resourceLoading = ref(false)
 
 async function createResourceImpl() {
-  const cb = await prepareCallback()
+  await using cb = await prepareCallback()
   if (!cb) {
     console.log('check callback failed')
     return false
   }
   if (!data.value.config.path) {
     console.log('check path failed')
-    await cb.dispose()
     return false
   }
-  const res = new Resource()
+  await using res = new Resource()
   if (!(await res.create(cb))) {
     console.log('create failed')
-    await res.dispose()
     return false
   }
   if ((await (await res.postPath(data.value.config.path!)).wait()) === Status.Success) {
-    data.value.shallow.resource = res
+    data.value.shallow.resource = res.ref()
     return true
   } else {
     await res.dispose()
@@ -194,25 +204,22 @@ async function disposeResource() {
 const instanceLoading = ref(false)
 
 async function createInstanceImpl() {
-  const cb = await prepareCallback()
+  await using cb = await prepareCallback()
   if (!cb) {
     console.log('check callback failed')
     return false
   }
-  const inst = new Instance()
+  await using inst = new Instance()
   if (!(await inst.create(cb))) {
     console.log('create failed')
-    await inst.dispose()
     return false
   }
   if (!data.value.shallow.controller && !(await createController())) {
     console.log('failed for controller')
-    await inst.dispose()
     return false
   }
   if (!data.value.shallow.resource && !(await createResource())) {
     console.log('failed for resource')
-    await inst.dispose()
     return false
   }
   if (
@@ -220,14 +227,12 @@ async function createInstanceImpl() {
     !(await inst.bindRes(data.value.shallow.resource!))
   ) {
     console.log('failed for bind')
-    await inst.dispose()
     return false
   }
   if (await inst.inited()) {
-    data.value.shallow.instance = inst
+    data.value.shallow.instance = inst.ref()
     return true
   } else {
-    await inst.dispose()
     return false
   }
 }
@@ -310,6 +315,44 @@ async function postStop() {
                   <span> controller </span>
                 </div>
               </template>
+              <div class="maa-form mb-4">
+                <span> start entry </span>
+                <n-input
+                  :value="data.config.startEntry ?? null"
+                  @update:value="v => (data.config.startEntry = v)"
+                  :disabled="controllerLoading || !!data.shallow.controller"
+                  placeholder=""
+                >
+                  <template #suffix>
+                    <n-button
+                      v-if="data.config.startEntry"
+                      @click="data.config.startEntry = undefined"
+                      :disabled="controllerLoading || !!data.shallow.controller"
+                      text
+                    >
+                      <m-icon> close </m-icon>
+                    </n-button>
+                  </template>
+                </n-input>
+                <span> stop entry </span>
+                <n-input
+                  :value="data.config.stopEntry ?? null"
+                  @update:value="v => (data.config.stopEntry = v)"
+                  :disabled="controllerLoading || !!data.shallow.controller"
+                  placeholder=""
+                >
+                  <template #suffix>
+                    <n-button
+                      v-if="data.config.stopEntry"
+                      @click="data.config.stopEntry = undefined"
+                      :disabled="controllerLoading || !!data.shallow.controller"
+                      text
+                    >
+                      <m-icon> close </m-icon>
+                    </n-button>
+                  </template>
+                </n-input>
+              </div>
               <n-tabs v-model:value="data.config.type" animated>
                 <n-tab-pane name="adb" tab="Android">
                   <div class="flex flex-col">
@@ -347,7 +390,7 @@ async function postStop() {
                 <n-tab-pane name="win32" tab="Windows">
                   <div class="flex flex-col">
                     <div class="maa-form">
-                      <span> hWnd </span>
+                      <span> hwnd </span>
                       <n-input v-model:value="data.config.cfg.hWnd" placeholder=""></n-input>
                       <m-win32-config
                         v-model:value="data.config.cfg.winType"

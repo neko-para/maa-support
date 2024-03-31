@@ -1,9 +1,10 @@
 import { api } from '@maa/schema'
 
 import { type AdbConfig, ControllerOption, Status, Win32Type } from '../types'
-import type { __Disposable } from '../utils/dispose'
+import { __Disposable } from '../utils/dispose'
 import type { TrivialCallback } from './callback'
 import type { HwndId } from './device'
+import { Image } from './image'
 
 export type ControllerId = string & { __kind: 'MaaControllerAPI' }
 export type ControllerActionId = number & { __kind: 'MaaResourceActionId' }
@@ -26,20 +27,14 @@ class ControllerActionHolder {
   }
 }
 
-export class Controller implements __Disposable {
+export class Controller extends __Disposable {
   _ctrl: ControllerId | null = null
-  _cb: TrivialCallback | null = null
 
   async dispose() {
     if (this._ctrl) {
       await api.MaaControllerDestroy({ ctrl: this._ctrl })
       this._ctrl = null
     }
-    await this._cb?.dispose()
-  }
-
-  async destroy() {
-    await this.dispose()
   }
 
   async setOption(
@@ -114,32 +109,32 @@ export class Controller implements __Disposable {
     }
   }
 
-  async image(decode?: true): Promise<Buffer>
-  async image(decode: false): Promise<string>
-  async image(decode = true) {
-    const bufId = (await api.MaaCreateImageBuffer()).return
-    if ((await api.MaaControllerGetImage({ ctrl: this._ctrl!, buffer: bufId })).return === 0) {
-      await api.MaaDestroyImageBuffer({ handle: bufId })
-      return null
+  async image(img?: Image) {
+    let free = false
+    if (!img) {
+      free = true
+      img = new Image()
+      await img.create()
     }
-    const data = (await api.MaaGetImageEncoded({ handle: bufId })).return
-    await api.MaaDestroyImageBuffer({ handle: bufId })
-    if (decode) {
-      return Buffer.from(data, 'base64')
+    if ((await api.MaaControllerGetImage({ ctrl: this._ctrl!, buffer: img._img! })).return > 0) {
+      return img
     } else {
-      return data
+      if (free) {
+        await img.unref()
+      }
+      return null
     }
   }
 }
 
 export class AdbController extends Controller {
   async create(cfg: AdbConfig, agent_path: string, callback: TrivialCallback) {
-    this._cb = callback
+    this.defer(callback)
     this._ctrl = (
       await api.MaaAdbControllerCreateV2({
         ...cfg,
         agent_path,
-        callback: this._cb._cb!
+        callback: callback._cb!
       })
     ).return as ControllerId
     return !!this._ctrl
@@ -148,12 +143,12 @@ export class AdbController extends Controller {
 
 export class Win32Controller extends Controller {
   async create(hWnd: HwndId, type: Win32Type, callback: TrivialCallback) {
-    this._cb = callback
+    this.defer(callback)
     this._ctrl = (
       await api.MaaWin32ControllerCreate({
         hWnd,
         type,
-        callback: this._cb._cb!
+        callback: callback._cb!
       })
     ).return as ControllerId
     return !!this._ctrl

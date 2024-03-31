@@ -1,21 +1,76 @@
+const guard = new FinalizationRegistry((type: string) => {
+  throw `${type} object reclaimed with ref over 0`
+})
+
 // ts 5.2 provides Disposable, but stack is not available yet.
-export interface __Disposable {
-  dispose(): Promise<void>
-}
+export class __Disposable implements AsyncDisposable {
+  __ref: number = 1
+  __defer: (() => Promise<void>)[] = []
+  __deferObject: __Disposable[] = []
 
-export class __DisposableStack implements __Disposable {
-  _list: __Disposable[]
   constructor() {
-    this._list = []
+    guard.register(this, this.constructor.name, this)
   }
 
-  add(dispose: __Disposable) {
-    this._list.push(dispose)
+  defer<T extends __Disposable>(target: T): T
+  defer<T extends () => Promise<void>>(target: T): T
+  defer(target: __Disposable | (() => Promise<void>)) {
+    if (target instanceof __Disposable) {
+      target.ref()
+      this.__deferObject.push(target)
+    } else {
+      this.__defer.push(target)
+    }
+    return target
   }
 
-  async dispose() {
-    const lst = this._list
-    this._list = []
-    await Promise.all(lst.map(x => x.dispose()))
+  takeDefered(pred: (target: __Disposable) => boolean, dispose?: true): Promise<void>
+  takeDefered(pred: (target: __Disposable) => boolean, dispose: false): __Disposable[]
+  takeDefered(
+    pred: (target: __Disposable) => boolean,
+    dispose = true
+  ): __Disposable[] | Promise<void> {
+    const result: __Disposable[] = []
+    this.__deferObject = this.__deferObject.filter(target => {
+      if (pred(target)) {
+        result.push(target)
+        return false
+      } else {
+        return true
+      }
+    })
+    if (dispose) {
+      return Promise.all(result.map(target => target.unref())).then(() => void 0)
+    } else {
+      return result
+    }
+  }
+
+  ref(): this {
+    this.__ref = this.__ref + 1
+    return this
+  }
+
+  async unref() {
+    if (this.__ref === 0) {
+      throw 'unref object which __ref is 0'
+    }
+    this.__ref = this.__ref - 1
+    if (this.__ref === 0) {
+      await this.launchDispose()
+      guard.unregister(this)
+    }
+  }
+
+  async launchDispose() {
+    await this.dispose()
+    await Promise.all(this.__defer.map(x => x()))
+    await Promise.all(this.__deferObject.map(x => x.unref()))
+  }
+
+  async dispose() {}
+
+  async [Symbol.asyncDispose]() {
+    await this.unref()
   }
 }

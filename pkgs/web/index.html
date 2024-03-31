@@ -3,6 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <title>Maa</title>
+
+    <script>
+      Symbol.dispose ??= Symbol('Symbol.dispose')
+      Symbol.asyncDispose ??= Symbol('Symbol.asyncDispose')
+    </script>
   </head>
   <body>
     <div id="app"></div>

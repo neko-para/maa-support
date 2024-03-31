@@ -27,19 +27,19 @@ defineExpose({
   <n-card>
     <div class="flex flex-col gap-2">
       <div class="maa-form grid-rows-3">
-        <span> Class Name </span>
+        <span> class name </span>
         <n-input
           :value="className"
           @update:value="$emit('update:className', $event)"
           placeholder=""
         ></n-input>
-        <span> Window Name </span>
+        <span> window name </span>
         <n-input
           :value="windowName"
           @update:value="$emit('update:windowName', $event)"
           placeholder=""
         ></n-input>
-        <span> Exact Match </span>
+        <span> exact match </span>
         <div>
           <n-switch
             :value="exactMatch"

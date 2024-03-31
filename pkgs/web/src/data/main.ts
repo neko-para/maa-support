@@ -23,6 +23,8 @@ type DataMain = {
         winType: Win32Type
       }
     >
+    startEntry?: string
+    stopEntry?: string
     path?: string
     task?: string
     param?: string
