@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import {
+  type HwndId,
+  type Win32Config,
   Win32Type,
   type Win32TypeKey,
   type Win32TypeScreencap,
@@ -7,16 +9,16 @@ import {
   fromWin32Type,
   toWin32Type
 } from '@maa/maa'
-import { NSelect } from 'naive-ui'
+import { NInput, NSelect } from 'naive-ui'
 import { computed } from 'vue'
 
 const props = defineProps<{
-  value?: Win32Type
+  value?: Partial<Win32Config>
   disabled?: boolean
 }>()
 
 const emits = defineEmits<{
-  'update:value': [Win32Type | undefined]
+  'update:value': [Partial<Win32Config> | undefined]
 }>()
 
 const touchOpts = ['send message'].map(x => ({
@@ -36,10 +38,13 @@ const screencapOpts = ['gdi', 'dxgi desktop dup', 'dxgi frame pool'].map(x => ({
 
 const win32_type = computed<Win32Type | undefined>({
   set(type) {
-    emits('update:value', type)
+    emits('update:value', {
+      ...props.value,
+      type
+    })
   },
   get() {
-    return props.value
+    return props.value?.type
   }
 })
 
@@ -72,25 +77,34 @@ const win32_type_screencap = computed<Win32TypeScreencap | undefined>({
 </script>
 
 <template>
-  <span> type </span>
-  <div class="flex gap-2">
-    <n-select
-      v-model:value="win32_type_touch"
-      :options="touchOpts"
+  <div class="maa-form">
+    <span> hwnd </span>
+    <n-input
+      :value="value?.hwnd"
+      @update:value="v => $emit('update:value', { ...value, hwnd: v as string as HwndId })"
       :disabled="disabled"
       placeholder=""
-    ></n-select>
-    <n-select
-      v-model:value="win32_type_key"
-      :options="keyOpts"
-      :disabled="disabled"
-      placeholder=""
-    ></n-select>
-    <n-select
-      v-model:value="win32_type_screencap"
-      :options="screencapOpts"
-      :disabled="disabled"
-      placeholder=""
-    ></n-select>
+    ></n-input>
+    <span> type </span>
+    <div class="flex gap-2">
+      <n-select
+        v-model:value="win32_type_touch"
+        :options="touchOpts"
+        :disabled="disabled"
+        placeholder=""
+      ></n-select>
+      <n-select
+        v-model:value="win32_type_key"
+        :options="keyOpts"
+        :disabled="disabled"
+        placeholder=""
+      ></n-select>
+      <n-select
+        v-model:value="win32_type_screencap"
+        :options="screencapOpts"
+        :disabled="disabled"
+        placeholder=""
+      ></n-select>
+    </div>
   </div>
 </template>

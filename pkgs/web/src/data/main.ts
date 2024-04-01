@@ -5,6 +5,7 @@ import type {
   Instance,
   Resource,
   TrivialCallback,
+  Win32Config,
   Win32Type
 } from '@maa/maa'
 import { v4 } from 'uuid'
@@ -13,26 +14,34 @@ import { reactive, shallowReactive, watch } from 'vue'
 type DataMain = {
   name: string
   config: {
-    type: 'adb' | 'win32'
-    cfg: Partial<
-      AdbConfig & {
-        className: string
-        windowName: string
-        exactMatch: boolean
-        hWnd: HwndId
-        winType: Win32Type
-      }
-    >
-    startEntry?: string
-    stopEntry?: string
-    path?: string
-    task?: string
-    param?: string
+    controller: {
+      ctype?: 'adb' | 'win32'
+      adb_cfg?: Partial<AdbConfig>
+      win_cfg?: Partial<Win32Config>
+      startEntry?: string
+      stopEntry?: string
+    }
+    controllerCache: {
+      className?: string
+      windowName?: string
+      exactMatch?: boolean
+    }
+
+    resource: {
+      path?: string
+    }
+
+    instance: {
+      task?: string
+      param?: string
+    }
   }
   shallow: {
     controller?: Controller
     resource?: Resource
     instance?: Instance
+
+    [rest: symbol]: unknown
   }
 }
 
@@ -46,8 +55,10 @@ export const main = reactive({
     main.data[id] = {
       name: 'untitled',
       config: {
-        type: 'adb',
-        cfg: {}
+        controller: {},
+        controllerCache: {},
+        resource: {},
+        instance: {}
       },
       shallow: shallowReactive({})
     }
@@ -78,6 +89,17 @@ watch(
 if (localStorage.getItem('main')) {
   Object.assign(main, JSON.parse(localStorage.getItem('main') as string))
   for (const id of main.ids) {
+    main.data[id].name = main.data[id].name ?? 'untitled'
+    main.data[id].config = main.data[id].config ?? {
+      controller: {},
+      controllerCache: {},
+      resource: {},
+      instance: {}
+    }
+    main.data[id].config.controller = main.data[id].config.controller ?? {}
+    main.data[id].config.controllerCache = main.data[id].config.controllerCache ?? {}
+    main.data[id].config.resource = main.data[id].config.resource ?? {}
+    main.data[id].config.instance = main.data[id].config.instance ?? {}
     main.data[id].shallow = shallowReactive({})
   }
 }

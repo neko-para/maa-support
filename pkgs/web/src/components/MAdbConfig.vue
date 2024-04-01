@@ -12,7 +12,7 @@ import { NInput, NSelect } from 'naive-ui'
 import { computed } from 'vue'
 
 const props = defineProps<{
-  value: Partial<AdbConfig>
+  value?: Partial<AdbConfig>
   disabled?: boolean
 }>()
 
@@ -52,7 +52,7 @@ const adb_type = computed<AdbType | undefined>({
     })
   },
   get() {
-    return props.value.type
+    return props.value?.type
   }
 })
 
@@ -88,14 +88,14 @@ const adb_type_screencap = computed<AdbTypeScreencap | undefined>({
   <div class="maa-form">
     <span> adb </span>
     <n-input
-      :value="value.adb_path"
+      :value="value?.adb_path"
       @update:value="v => $emit('update:value', { ...value, adb_path: v })"
       :disabled="disabled"
       placeholder=""
     ></n-input>
     <span> address </span>
     <n-input
-      :value="value.address"
+      :value="value?.address"
       @update:value="v => $emit('update:value', { ...value, address: v })"
       :disabled="disabled"
       placeholder=""
@@ -123,7 +123,7 @@ const adb_type_screencap = computed<AdbTypeScreencap | undefined>({
     </div>
     <span> config </span>
     <n-input
-      :value="value.config"
+      :value="value?.config"
       @update:value="v => $emit('update:value', { ...value, config: v })"
       :disabled="disabled"
       placeholder=""

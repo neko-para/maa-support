@@ -43,9 +43,6 @@ const data = computed(() => {
 
 const win32FindEl = ref<InstanceType<typeof MWin32Find> | null>(null)
 
-const longSide = ref<number | null>(null)
-const shortSide = ref<number | null>(null)
-
 const scanning = ref(false)
 const adbScanResult = ref<DeviceInfo[] | null>(null)
 const win32ScanResult = ref<HwndId[] | null>(null)
@@ -78,8 +75,8 @@ async function prepareCallback() {
 
 const controllerLoading = ref(false)
 
-function checkAdbConfig(cfg: Partial<AdbConfig>): cfg is AdbConfig {
-  return !!(cfg.address && cfg.adb_path && cfg.type && cfg.config)
+function checkAdbConfig(cfg?: Partial<AdbConfig>): cfg is AdbConfig {
+  return !!(cfg && cfg.address && cfg.adb_path && cfg.type && cfg.config)
 }
 
 async function createControllerImpl() {
@@ -89,24 +86,33 @@ async function createControllerImpl() {
     return false
   }
   let outCtrl: Controller
-  if (data.value.config.type === 'adb') {
-    if (!checkAdbConfig(data.value.config.cfg) || !setting.agentPath) {
+  if (data.value.config.controller.ctype === 'adb') {
+    if (!checkAdbConfig(data.value.config.controller.adb_cfg) || !setting.agentPath) {
       console.log('check config or agentPath failed')
       return false
     }
     await using adbCtrl = new AdbController()
-    if (!(await adbCtrl.create(data.value.config.cfg, setting.agentPath!, cb))) {
+    if (!(await adbCtrl.create(data.value.config.controller.adb_cfg, setting.agentPath!, cb))) {
       console.log('create failed')
       return false
     }
     outCtrl = adbCtrl.ref()
-  } else if (data.value.config.type === 'win32') {
-    if (!data.value.config.cfg.winType || !data.value.config.cfg.hWnd) {
-      console.log('check winType or hWnd failed')
+  } else if (data.value.config.controller.ctype === 'win32') {
+    if (
+      !data.value.config.controller.win_cfg?.type ||
+      !data.value.config.controller.win_cfg?.hwnd
+    ) {
+      console.log('check type or hwnd failed')
       return false
     }
     await using winCtrl = new Win32Controller()
-    if (!(await winCtrl.create(data.value.config.cfg.hWnd, data.value.config.cfg.winType, cb))) {
+    if (
+      !(await winCtrl.create(
+        data.value.config.controller.win_cfg?.hwnd,
+        data.value.config.controller.win_cfg?.type,
+        cb
+      ))
+    ) {
       console.log('create failed')
       return false
     }
@@ -116,15 +122,21 @@ async function createControllerImpl() {
   }
   await using ctrl = outCtrl
   if (
-    data.value.config.startEntry &&
-    !(await ctrl.setOption(ControllerOption.DefaultAppPackageEntry, data.value.config.startEntry))
+    data.value.config.controller.startEntry &&
+    !(await ctrl.setOption(
+      ControllerOption.DefaultAppPackageEntry,
+      data.value.config.controller.startEntry
+    ))
   ) {
     console.log('set option failed')
     return false
   }
   if (
-    data.value.config.stopEntry &&
-    !(await ctrl.setOption(ControllerOption.DefaultAppPackage, data.value.config.stopEntry))
+    data.value.config.controller.stopEntry &&
+    !(await ctrl.setOption(
+      ControllerOption.DefaultAppPackage,
+      data.value.config.controller.stopEntry
+    ))
   ) {
     console.log('set option failed')
     return false
@@ -164,7 +176,7 @@ async function createResourceImpl() {
     console.log('check callback failed')
     return false
   }
-  if (!data.value.config.path) {
+  if (!data.value.config.resource.path) {
     console.log('check path failed')
     return false
   }
@@ -173,7 +185,7 @@ async function createResourceImpl() {
     console.log('create failed')
     return false
   }
-  if ((await (await res.postPath(data.value.config.path!)).wait()) === Status.Success) {
+  if ((await (await res.postPath(data.value.config.resource.path)).wait()) === Status.Success) {
     data.value.shallow.resource = res.ref()
     return true
   } else {
@@ -259,15 +271,15 @@ async function disposeInstance() {
 const running = ref(false)
 
 async function startRunImpl() {
-  if (!data.value.config.task) {
+  if (!data.value.config.instance.task) {
     console.log('failed for no task')
     return false
   }
   return (
     (await (
       await data.value.shallow.instance?.postTask(
-        data.value.config.task,
-        data.value.config.param ?? '{}'
+        data.value.config.instance.task,
+        data.value.config.instance.param ?? '{}'
       )
     )?.wait()) === Status.Success
   )
@@ -318,15 +330,15 @@ async function postStop() {
               <div class="maa-form mb-4">
                 <span> start entry </span>
                 <n-input
-                  :value="data.config.startEntry ?? null"
-                  @update:value="v => (data.config.startEntry = v)"
+                  :value="data.config.controller.startEntry ?? null"
+                  @update:value="v => (data.config.controller.startEntry = v)"
                   :disabled="controllerLoading || !!data.shallow.controller"
                   placeholder=""
                 >
                   <template #suffix>
                     <n-button
-                      v-if="data.config.startEntry"
-                      @click="data.config.startEntry = undefined"
+                      v-if="data.config.controller.startEntry"
+                      @click="data.config.controller.startEntry = undefined"
                       :disabled="controllerLoading || !!data.shallow.controller"
                       text
                     >
@@ -336,15 +348,15 @@ async function postStop() {
                 </n-input>
                 <span> stop entry </span>
                 <n-input
-                  :value="data.config.stopEntry ?? null"
-                  @update:value="v => (data.config.stopEntry = v)"
+                  :value="data.config.controller.stopEntry ?? null"
+                  @update:value="v => (data.config.controller.stopEntry = v)"
                   :disabled="controllerLoading || !!data.shallow.controller"
                   placeholder=""
                 >
                   <template #suffix>
                     <n-button
-                      v-if="data.config.stopEntry"
-                      @click="data.config.stopEntry = undefined"
+                      v-if="data.config.controller.stopEntry"
+                      @click="data.config.controller.stopEntry = undefined"
                       :disabled="controllerLoading || !!data.shallow.controller"
                       text
                     >
@@ -353,11 +365,15 @@ async function postStop() {
                   </template>
                 </n-input>
               </div>
-              <n-tabs v-model:value="data.config.type" animated>
+              <n-tabs
+                :value="data.config.controller.ctype ?? 'adb'"
+                @update:value="v => (data.config.controller.ctype = v)"
+                animated
+              >
                 <n-tab-pane name="adb" tab="Android">
                   <div class="flex flex-col">
                     <m-adb-config
-                      v-model:value="data.config.cfg"
+                      v-model:value="data.config.controller.adb_cfg"
                       :disabled="controllerLoading || !!data.shallow.controller"
                     ></m-adb-config>
                     <n-divider></n-divider>
@@ -371,7 +387,13 @@ async function postStop() {
                           <template #header>
                             <div class="flex items-center gap-2">
                               <n-button
-                                @click.stop="Object.assign(data.config.cfg, res)"
+                                @click.stop="
+                                  () => {
+                                    data.config.controller.adb_cfg =
+                                      data.config.controller.adb_cfg ?? {}
+                                    Object.assign(data.config.controller.adb_cfg, res)
+                                  }
+                                "
                                 :disabled="controllerLoading || !!data.shallow.controller"
                               >
                                 copy
@@ -389,22 +411,19 @@ async function postStop() {
                 </n-tab-pane>
                 <n-tab-pane name="win32" tab="Windows">
                   <div class="flex flex-col">
-                    <div class="maa-form">
-                      <span> hwnd </span>
-                      <n-input v-model:value="data.config.cfg.hWnd" placeholder=""></n-input>
-                      <m-win32-config
-                        v-model:value="data.config.cfg.winType"
-                        :disabled="controllerLoading || !!data.shallow.controller"
-                      ></m-win32-config>
-                    </div>
+                    <m-win32-config
+                      v-model:value="data.config.controller.win_cfg"
+                      :disabled="controllerLoading || !!data.shallow.controller"
+                    ></m-win32-config>
+
                     <n-divider></n-divider>
 
                     <div class="flex flex-col gap-2">
                       <m-win32-find
                         ref="win32FindEl"
-                        v-model:class-name="data.config.cfg.className"
-                        v-model:window-name="data.config.cfg.windowName"
-                        v-model:exact-match="data.config.cfg.exactMatch"
+                        v-model:class-name="data.config.controllerCache.className"
+                        v-model:window-name="data.config.controllerCache.windowName"
+                        v-model:exact-match="data.config.controllerCache.exactMatch"
                       ></m-win32-find>
                       <div class="flex">
                         <n-button @click="performScanWin32" :loading="scanning"> scan </n-button>
@@ -414,7 +433,13 @@ async function postStop() {
                           <template #header>
                             <div class="flex items-center gap-2">
                               <n-button
-                                @click.stop="data.config.cfg.hWnd = res"
+                                @click.stop="
+                                  () => {
+                                    data.config.controller.win_cfg =
+                                      data.config.controller.win_cfg ?? {}
+                                    data.config.controller.win_cfg.hwnd = res
+                                  }
+                                "
                                 :disabled="controllerLoading || !!data.shallow.controller"
                               >
                                 copy
@@ -456,7 +481,7 @@ async function postStop() {
               <div class="maa-form">
                 <span> path </span>
                 <n-input
-                  v-model:value="data.config.path"
+                  v-model:value="data.config.resource.path"
                   placeholder=""
                   :disabled="resourceLoading || !!data.shallow.resource"
                 ></n-input>
@@ -485,9 +510,9 @@ async function postStop() {
               </template>
               <div class="maa-form">
                 <span> task </span>
-                <n-input v-model:value="data.config.task" placeholder=""></n-input>
+                <n-input v-model:value="data.config.instance.task" placeholder=""></n-input>
                 <span> param </span>
-                <n-input v-model:value="data.config.param" placeholder=""></n-input>
+                <n-input v-model:value="data.config.instance.param" placeholder=""></n-input>
               </div>
               <n-divider></n-divider>
               <div class="flex gap-2">

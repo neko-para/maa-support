@@ -1,3 +1,5 @@
+import type { HwndId } from './wrapper/device'
+
 export const enum Status {
   Invalid = 0,
   Pending = 1000,
@@ -84,6 +86,11 @@ export interface AdbConfig {
   address: string
   type: AdbType
   config: string
+}
+
+export interface Win32Config {
+  hwnd: HwndId
+  type: Win32Type
 }
 
 export interface DeviceInfo extends AdbConfig {
