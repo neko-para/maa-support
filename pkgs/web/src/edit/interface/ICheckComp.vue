@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { NButton, NSwitch } from 'naive-ui'
+
 import type { ICheckInterface } from './ICheck'
 
 const props = defineProps<{

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { NButton, NInput } from 'naive-ui'
+
 import type { ITemplateInterface } from './ITemplate'
 
 const props = defineProps<{

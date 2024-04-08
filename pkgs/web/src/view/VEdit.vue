@@ -1,9 +1,9 @@
 <script setup lang="ts">
+import { BaklavaEditor, useBaklava } from '@baklavajs/renderer-vue'
+import '@baklavajs/themes/dist/syrup-dark.css'
+import * as zip from '@zip.js/zip.js'
 import { NButton, NConfigProvider, darkTheme } from 'naive-ui'
 import { onMounted, ref, shallowRef } from 'vue'
-import { BaklavaEditor, useBaklava } from '@baklavajs/renderer-vue'
-import * as zip from '@zip.js/zip.js'
-import '@baklavajs/themes/dist/syrup-dark.css'
 
 import MIcon from '@/components/MIcon.vue'
 import { TaskNode } from '@/edit/node'

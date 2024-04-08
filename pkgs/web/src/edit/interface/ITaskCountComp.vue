@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { NButton, NInputNumber } from 'naive-ui'
+
 import type { ITaskCountInterface } from './ITaskCount'
 
 const props = defineProps<{

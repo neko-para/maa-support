@@ -1,5 +1,6 @@
 <script setup lang="ts" generic="KeySet extends string">
 import { NButton, NSelect } from 'naive-ui'
+
 import type { ISelectInterface } from './ISelect'
 
 const props = defineProps<{

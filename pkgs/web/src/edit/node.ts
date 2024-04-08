@@ -1,16 +1,17 @@
 import {
-  defineDynamicNode,
-  SelectInterface,
   type DynamicNodeUpdateResult,
   NodeInterface,
-  NumberInterface
+  NumberInterface,
+  SelectInterface,
+  defineDynamicNode
 } from 'baklavajs'
-import { ISelectInterface } from './interface/ISelect'
+
+import { ICheckInterface } from './interface/ICheck'
 import { IRectInterface } from './interface/IRect'
+import { ISelectInterface } from './interface/ISelect'
 import { ITaskInterface } from './interface/ITask'
 import { ITaskCountInterface } from './interface/ITaskCount'
 import { ITemplateInterface } from './interface/ITemplate'
-import { ICheckInterface } from './interface/ICheck'
 
 export const TaskNode = defineDynamicNode({
   type: 'TaskNode',
