@@ -1,4 +1,4 @@
-import { deinit, init, initDirect } from '@maa/maa'
+import { GlobalOption, deinit, init, initDirect, setOption } from '@maa/maa'
 import { reactive } from 'vue'
 
 import { setting } from './setting'
@@ -12,6 +12,7 @@ export const maa = reactive({
     }
     if (setting.directSlave) {
       initDirect(setting.port)
+      await setOption(GlobalOption.DebugMessage, true)
       this.active = true
       return true
     } else {
@@ -20,6 +21,7 @@ export const maa = reactive({
           this.active = false
         })
       ) {
+        await setOption(GlobalOption.DebugMessage, true)
         this.active = true
         return true
       } else {

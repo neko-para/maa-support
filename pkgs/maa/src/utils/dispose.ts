@@ -1,9 +1,9 @@
 const guard = new FinalizationRegistry((type: string) => {
-  throw `${type} object reclaimed with ref over 0`
+  console.log(`${type} object reclaimed with ref over 0`)
 })
 
 // ts 5.2 provides Disposable, but stack is not available yet.
-export class __Disposable implements AsyncDisposable {
+export class __Disposable {
   __ref: number = 1
   __defer: (() => Promise<void>)[] = []
   __deferObject: __Disposable[] = []
@@ -12,10 +12,12 @@ export class __Disposable implements AsyncDisposable {
     guard.register(this, this.constructor.name, this)
   }
 
-  defer<T extends __Disposable>(target: T): T
-  defer<T extends () => Promise<void>>(target: T): T
-  defer(target: __Disposable | (() => Promise<void>)) {
-    if (target instanceof __Disposable) {
+  defer<T extends __Disposable | null | undefined>(target: T): T
+  defer<T extends (() => Promise<void>) | null | undefined>(target: T): T
+  defer(target?: __Disposable | (() => Promise<void>) | null | undefined) {
+    if (!target) {
+      return target
+    } else if (target instanceof __Disposable) {
       target.ref()
       this.__deferObject.push(target)
     } else {
@@ -69,8 +71,13 @@ export class __Disposable implements AsyncDisposable {
   }
 
   async dispose() {}
+}
 
-  async [Symbol.asyncDispose]() {
-    await this.unref()
+export async function awaitUsing<T>(func: (root: __Disposable) => Promise<T>): Promise<T> {
+  const root = new __Disposable()
+  try {
+    return await func(root)
+  } finally {
+    await root.unref()
   }
 }

@@ -1,15 +1,14 @@
-import type {
-  AdbConfig,
-  Controller,
-  HwndId,
-  Instance,
-  Resource,
-  TrivialCallback,
-  Win32Config,
-  Win32Type
+import {
+  type AdbConfig,
+  type Controller,
+  type Instance,
+  type Resource,
+  type Win32Config
 } from '@maa/maa'
 import { v4 } from 'uuid'
 import { reactive, shallowReactive, watch } from 'vue'
+
+import type { TaskMap } from './core/taskMap'
 
 type DataMain = {
   name: string
@@ -36,6 +35,9 @@ type DataMain = {
       param?: string
     }
   }
+  runtime: {
+    taskMap?: TaskMap
+  }
   shallow: {
     controller?: Controller
     resource?: Resource
@@ -45,14 +47,35 @@ type DataMain = {
   }
 }
 
-export const main = reactive({
-  data: {} as Record<string, DataMain>,
-  ids: [] as string[],
+class MainService {
+  data: Record<string, DataMain> = {}
+  ids: string[] = []
 
-  add: () => {
+  constructor() {
+    if (localStorage.getItem('main')) {
+      Object.assign(this, JSON.parse(localStorage.getItem('main') as string))
+      for (const id of this.ids) {
+        this.data[id].name = this.data[id].name ?? 'untitled'
+        this.data[id].config = this.data[id].config ?? {
+          controller: {},
+          controllerCache: {},
+          resource: {},
+          instance: {}
+        }
+        this.data[id].config.controller = this.data[id].config.controller ?? {}
+        this.data[id].config.controllerCache = this.data[id].config.controllerCache ?? {}
+        this.data[id].config.resource = this.data[id].config.resource ?? {}
+        this.data[id].config.instance = this.data[id].config.instance ?? {}
+        this.data[id].runtime = {}
+        this.data[id].shallow = shallowReactive({})
+      }
+    }
+  }
+
+  add() {
     const id = v4()
-    main.ids.splice(0, 0, id)
-    main.data[id] = {
+    this.ids.splice(0, 0, id)
+    this.data[id] = {
       name: 'untitled',
       config: {
         controller: {},
@@ -60,10 +83,13 @@ export const main = reactive({
         resource: {},
         instance: {}
       },
+      runtime: {},
       shallow: shallowReactive({})
     }
   }
-})
+}
+
+export const main = reactive(new MainService())
 
 watch(
   main,
@@ -76,7 +102,7 @@ watch(
           ids: v.ids
         },
         (k, v) => {
-          return k === 'shallow' ? undefined : v
+          return ['runtime', 'shallow'].includes(k) ? undefined : v
         }
       )
     )
@@ -85,21 +111,3 @@ watch(
     deep: true
   }
 )
-
-if (localStorage.getItem('main')) {
-  Object.assign(main, JSON.parse(localStorage.getItem('main') as string))
-  for (const id of main.ids) {
-    main.data[id].name = main.data[id].name ?? 'untitled'
-    main.data[id].config = main.data[id].config ?? {
-      controller: {},
-      controllerCache: {},
-      resource: {},
-      instance: {}
-    }
-    main.data[id].config.controller = main.data[id].config.controller ?? {}
-    main.data[id].config.controllerCache = main.data[id].config.controllerCache ?? {}
-    main.data[id].config.resource = main.data[id].config.resource ?? {}
-    main.data[id].config.instance = main.data[id].config.instance ?? {}
-    main.data[id].shallow = shallowReactive({})
-  }
-}

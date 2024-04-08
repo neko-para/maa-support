@@ -7,10 +7,12 @@ import {
   type DeviceInfo,
   type HwndId,
   Instance,
+  Message,
   Resource,
   Status,
   TrivialCallback,
   Win32Controller,
+  awaitUsing,
   findDevice
 } from '@maa/maa'
 import {
@@ -30,6 +32,7 @@ import MAdbConfig from '@/components/MAdbConfig.vue'
 import MIcon from '@/components/MIcon.vue'
 import MWin32Config from '@/components/MWin32Config.vue'
 import MWin32Find from '@/components/MWin32Find.vue'
+import { TaskMap } from '@/data/core/taskMap'
 import { main } from '@/data/main'
 import { setting } from '@/data/setting'
 
@@ -62,15 +65,26 @@ async function performScanWin32() {
 const log = ref<[msg: string, detail: string][]>([])
 
 async function prepareCallback() {
-  await using cb = new TrivialCallback()
-  if (
-    await cb.prepareCallback(async (msg, detail) => {
-      log.value.push([msg, detail])
-    })
-  ) {
-    return cb.ref()
-  }
-  return null
+  return awaitUsing(async root => {
+    const cb = root.defer(new TrivialCallback())
+    if (
+      await cb.prepareCallback(async (msg, detail) => {
+        log.value.push([msg, detail])
+        if (msg === Message.Task_Debug_ReadyToRun) {
+          const res = JSON.parse(detail) as {
+            name: string
+            is_sub: boolean
+          }
+          data.value.runtime.taskMap?.push(res.name, res.is_sub)
+        } else if (msg === Message.Task_Debug_EndSub) {
+          data.value.runtime.taskMap?.done()
+        }
+      })
+    ) {
+      return cb.ref()
+    }
+    return null
+  })
 }
 
 const controllerLoading = ref(false)
@@ -80,73 +94,75 @@ function checkAdbConfig(cfg?: Partial<AdbConfig>): cfg is AdbConfig {
 }
 
 async function createControllerImpl() {
-  await using cb = await prepareCallback()
-  if (!cb) {
-    console.log('check callback failed')
-    return false
-  }
-  let outCtrl: Controller
-  if (data.value.config.controller.ctype === 'adb') {
-    if (!checkAdbConfig(data.value.config.controller.adb_cfg) || !setting.agentPath) {
-      console.log('check config or agentPath failed')
+  return awaitUsing(async root => {
+    const cb = root.defer(await prepareCallback())
+    if (!cb) {
+      console.log('check callback failed')
       return false
     }
-    await using adbCtrl = new AdbController()
-    if (!(await adbCtrl.create(data.value.config.controller.adb_cfg, setting.agentPath!, cb))) {
-      console.log('create failed')
+    let outCtrl: Controller
+    if (!data.value.config.controller.ctype || data.value.config.controller.ctype === 'adb') {
+      if (!checkAdbConfig(data.value.config.controller.adb_cfg) || !setting.agentPath) {
+        console.log('check config or agentPath failed')
+        return false
+      }
+      const adbCtrl = root.defer(new AdbController())
+      if (!(await adbCtrl.create(data.value.config.controller.adb_cfg, setting.agentPath!, cb))) {
+        console.log('create failed')
+        return false
+      }
+      outCtrl = adbCtrl.ref()
+    } else if (data.value.config.controller.ctype === 'win32') {
+      if (
+        !data.value.config.controller.win_cfg?.type ||
+        !data.value.config.controller.win_cfg?.hwnd
+      ) {
+        console.log('check type or hwnd failed')
+        return false
+      }
+      const winCtrl = root.defer(new Win32Controller())
+      if (
+        !(await winCtrl.create(
+          data.value.config.controller.win_cfg?.hwnd,
+          data.value.config.controller.win_cfg?.type,
+          cb
+        ))
+      ) {
+        console.log('create failed')
+        return false
+      }
+      outCtrl = winCtrl.ref()
+    } else {
       return false
     }
-    outCtrl = adbCtrl.ref()
-  } else if (data.value.config.controller.ctype === 'win32') {
+    const ctrl = root.defer(outCtrl)
     if (
-      !data.value.config.controller.win_cfg?.type ||
-      !data.value.config.controller.win_cfg?.hwnd
-    ) {
-      console.log('check type or hwnd failed')
-      return false
-    }
-    await using winCtrl = new Win32Controller()
-    if (
-      !(await winCtrl.create(
-        data.value.config.controller.win_cfg?.hwnd,
-        data.value.config.controller.win_cfg?.type,
-        cb
+      data.value.config.controller.startEntry &&
+      !(await ctrl.setOption(
+        ControllerOption.DefaultAppPackageEntry,
+        data.value.config.controller.startEntry
       ))
     ) {
-      console.log('create failed')
+      console.log('set option failed')
       return false
     }
-    outCtrl = winCtrl.ref()
-  } else {
-    return false
-  }
-  await using ctrl = outCtrl
-  if (
-    data.value.config.controller.startEntry &&
-    !(await ctrl.setOption(
-      ControllerOption.DefaultAppPackageEntry,
-      data.value.config.controller.startEntry
-    ))
-  ) {
-    console.log('set option failed')
-    return false
-  }
-  if (
-    data.value.config.controller.stopEntry &&
-    !(await ctrl.setOption(
-      ControllerOption.DefaultAppPackage,
-      data.value.config.controller.stopEntry
-    ))
-  ) {
-    console.log('set option failed')
-    return false
-  }
-  if ((await (await ctrl.postConnection()).wait()) !== Status.Success) {
-    console.log('connect failed')
-    return false
-  }
-  data.value.shallow.controller = ctrl.ref()
-  return true
+    if (
+      data.value.config.controller.stopEntry &&
+      !(await ctrl.setOption(
+        ControllerOption.DefaultAppPackage,
+        data.value.config.controller.stopEntry
+      ))
+    ) {
+      console.log('set option failed')
+      return false
+    }
+    if ((await (await ctrl.postConnection()).wait()) !== Status.Success) {
+      console.log('connect failed')
+      return false
+    }
+    data.value.shallow.controller = ctrl.ref()
+    return true
+  })
 }
 
 async function createController() {
@@ -171,27 +187,29 @@ async function disposeController() {
 const resourceLoading = ref(false)
 
 async function createResourceImpl() {
-  await using cb = await prepareCallback()
-  if (!cb) {
-    console.log('check callback failed')
-    return false
-  }
-  if (!data.value.config.resource.path) {
-    console.log('check path failed')
-    return false
-  }
-  await using res = new Resource()
-  if (!(await res.create(cb))) {
-    console.log('create failed')
-    return false
-  }
-  if ((await (await res.postPath(data.value.config.resource.path)).wait()) === Status.Success) {
-    data.value.shallow.resource = res.ref()
-    return true
-  } else {
-    await res.dispose()
-    return false
-  }
+  return awaitUsing(async root => {
+    const cb = root.defer(await prepareCallback())
+    if (!cb) {
+      console.log('check callback failed')
+      return false
+    }
+    if (!data.value.config.resource.path) {
+      console.log('check path failed')
+      return false
+    }
+    const res = root.defer(new Resource())
+    if (!(await res.create(cb))) {
+      console.log('create failed')
+      return false
+    }
+    if ((await (await res.postPath(data.value.config.resource.path)).wait()) === Status.Success) {
+      data.value.shallow.resource = res.ref()
+      return true
+    } else {
+      await res.dispose()
+      return false
+    }
+  })
 }
 
 async function createResource() {
@@ -216,37 +234,39 @@ async function disposeResource() {
 const instanceLoading = ref(false)
 
 async function createInstanceImpl() {
-  await using cb = await prepareCallback()
-  if (!cb) {
-    console.log('check callback failed')
-    return false
-  }
-  await using inst = new Instance()
-  if (!(await inst.create(cb))) {
-    console.log('create failed')
-    return false
-  }
-  if (!data.value.shallow.controller && !(await createController())) {
-    console.log('failed for controller')
-    return false
-  }
-  if (!data.value.shallow.resource && !(await createResource())) {
-    console.log('failed for resource')
-    return false
-  }
-  if (
-    !(await inst.bindCtrl(data.value.shallow.controller!)) ||
-    !(await inst.bindRes(data.value.shallow.resource!))
-  ) {
-    console.log('failed for bind')
-    return false
-  }
-  if (await inst.inited()) {
-    data.value.shallow.instance = inst.ref()
-    return true
-  } else {
-    return false
-  }
+  return awaitUsing(async root => {
+    const cb = root.defer(await prepareCallback())
+    if (!cb) {
+      console.log('check callback failed')
+      return false
+    }
+    const inst = root.defer(new Instance())
+    if (!(await inst.create(cb))) {
+      console.log('create failed')
+      return false
+    }
+    if (!data.value.shallow.controller && !(await createController())) {
+      console.log('failed for controller')
+      return false
+    }
+    if (!data.value.shallow.resource && !(await createResource())) {
+      console.log('failed for resource')
+      return false
+    }
+    if (
+      !(await inst.bindCtrl(data.value.shallow.controller!)) ||
+      !(await inst.bindRes(data.value.shallow.resource!))
+    ) {
+      console.log('failed for bind')
+      return false
+    }
+    if (await inst.inited()) {
+      data.value.shallow.instance = inst.ref()
+      return true
+    } else {
+      return false
+    }
+  })
 }
 
 async function createInstance() {
@@ -275,6 +295,7 @@ async function startRunImpl() {
     console.log('failed for no task')
     return false
   }
+  data.value.runtime.taskMap = reactive(new TaskMap())
   return (
     (await (
       await data.value.shallow.instance?.postTask(
@@ -527,6 +548,7 @@ async function postStop() {
                   stop
                 </n-button>
               </div>
+              <div>{{ data.runtime.taskMap?.dump?.() }}</div>
             </n-card>
           </div>
         </div>

@@ -8,6 +8,16 @@ export const enum Status {
   Failed = 4000
 }
 
+export const enum Message {
+  Task_Debug_ReadyToRun = 'Task.Debug.ReadyToRun',
+  Task_Debug_Runout = 'Task.Debug.Runout',
+  Task_Debug_Completed = 'Task.Debug.Completed',
+
+  Task_Debug_ListToRecognize = 'Task.Debug.ListToRecognize',
+  Task_Debug_Hit = 'Task.Debug.Hit',
+  Task_Debug_EndSub = 'Task.Debug.EndSub'
+}
+
 export const enum GlobalOption {
   Invalid = 0,
   LogDir = 1,

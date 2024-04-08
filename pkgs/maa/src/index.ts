@@ -9,3 +9,5 @@ export * from './wrapper/global'
 export * from './wrapper/instance'
 export * from './wrapper/resource'
 export * from './wrapper/syncContext'
+
+export * from './utils/dispose'
