@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  '@baklavajs/renderer-vue@2.4.3':
+    hash: xthtz3pt5cdva3tduosaqthxue
+    path: patches/@baklavajs__renderer-vue@2.4.3.patch
+
 importers:
 
   .:
@@ -92,6 +97,12 @@ importers:
 
   pkgs/web:
     devDependencies:
+      '@baklavajs/renderer-vue':
+        specifier: ^2.4.3
+        version: 2.4.3(patch_hash=xthtz3pt5cdva3tduosaqthxue)
+      '@baklavajs/themes':
+        specifier: ^2.4.3
+        version: 2.4.3
       '@maa/maa':
         specifier: workspace:*
         version: link:../maa
@@ -110,9 +121,15 @@ importers:
       '@vue/tsconfig':
         specifier: ^0.5.1
         version: 0.5.1
+      '@zip.js/zip.js':
+        specifier: ^2.7.41
+        version: 2.7.41
       autoprefixer:
         specifier: ^10.4.19
         version: 10.4.19(postcss@8.4.38)
+      baklavajs:
+        specifier: ^2.4.3
+        version: 2.4.3
       esbuild:
         specifier: ^0.20.0
         version: 0.20.2
@@ -522,6 +539,44 @@ packages:
       '@babel/helper-string-parser': 7.23.4
       '@babel/helper-validator-identifier': 7.22.20
       to-fast-properties: 2.0.0
+    dev: true
+
+  /@baklavajs/core@2.4.3:
+    resolution: {integrity: sha512-uGSOL6fPi8iBVjwUy3Qos6y28i7Me2ETqcXqWpnP/bFiBp2aAbIagbPHWUaZDgVQguEHVggGxsEdVd6mcDF+EA==}
+    dependencies:
+      '@baklavajs/events': 2.4.3
+      uuid: 9.0.1
+    dev: true
+
+  /@baklavajs/engine@2.4.3:
+    resolution: {integrity: sha512-h1wfftaMoLQSD5EX4kdvJrGTcs9/O0i5R97sA/b1jEBZ5mq1HSk34bOstcfVCYYmBPbg3YzA1tt2Clm0k4OX3g==}
+    dependencies:
+      '@baklavajs/core': 2.4.3
+      '@baklavajs/events': 2.4.3
+    dev: true
+
+  /@baklavajs/events@2.4.3:
+    resolution: {integrity: sha512-dBChHpvdi06K2EA0tKCFoLBtQHes+geIelyK2XYC894zRUicKh/8dvdTvRJLMQB+brv2phIRRF85mFrZO8uIYw==}
+    dev: true
+
+  /@baklavajs/interface-types@2.4.3:
+    resolution: {integrity: sha512-l40SOFmlGQGQQ0D1wmcKvjX1u9nVaqzu1BKAPsLBFvgvkumBHAqveWpHZk3FuABSwfN/+mmDoHAqMb/09QltxA==}
+    dependencies:
+      '@baklavajs/core': 2.4.3
+      '@baklavajs/engine': 2.4.3
+      '@baklavajs/renderer-vue': 2.4.3(patch_hash=xthtz3pt5cdva3tduosaqthxue)
+    dev: true
+
+  /@baklavajs/renderer-vue@2.4.3(patch_hash=xthtz3pt5cdva3tduosaqthxue):
+    resolution: {integrity: sha512-NrT730vOKxNCyefc18HCc8WvT+HhDFbaKRkMzzsYNTknFTOJdDLKDracuEIfcc/ShIVyyK5PxzBW8tJnuCvmoQ==}
+    dependencies:
+      '@baklavajs/core': 2.4.3
+      '@baklavajs/events': 2.4.3
+    dev: true
+    patched: true
+
+  /@baklavajs/themes@2.4.3:
+    resolution: {integrity: sha512-aoilVIrd8lgEnQGNV163aDzRetkxsCe7WL6fUOY/lefPv6K/nc/b3gNG0kJejuRu3RGzac4qQ7UlxB9qZe8etA==}
     dev: true
 
   /@cspotcode/source-map-support@0.8.1:
@@ -1445,6 +1500,11 @@ packages:
     resolution: {integrity: sha512-VcZK7MvpjuTPx2w6blwnwZAu5/LgBUtejFOi3pPGQFXQN5Ela03FUtd2Qtg4yWGGissVL0dr6Ro1LfOFh+PCuQ==}
     dev: true
 
+  /@zip.js/zip.js@2.7.41:
+    resolution: {integrity: sha512-EMxPWXlEqqvsK9jxPmNvEShrIXP2LYTdQnEfsBH6OQCnlZRVo/dJIgtzbKvtK9A8PBTDQdxwxulj+QKplmW2Xg==}
+    engines: {bun: '>=0.7.0', deno: '>=1.0.0', node: '>=16.5.0'}
+    dev: true
+
   /acorn-walk@8.3.2:
     resolution: {integrity: sha512-cjkyv4OtNCIeqhHrfS81QWXoCBPExR/J62oyEqepVw8WaQeSqpW2uhuLPh1m9eWhDuOo/jUXVTlifvesOWp/4A==}
     engines: {node: '>=0.4.0'}
@@ -1561,6 +1621,16 @@ packages:
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
       - debug
+    dev: true
+
+  /baklavajs@2.4.3:
+    resolution: {integrity: sha512-KACIv3TFKJvIzRbiiGR3lrN3KWV2NHbtXjoUvQaopqHjyW8AGPJ1JFzqQ/fdq3a85dwIkE/bVL0f8FZlwxGz2w==}
+    dependencies:
+      '@baklavajs/core': 2.4.3
+      '@baklavajs/engine': 2.4.3
+      '@baklavajs/interface-types': 2.4.3
+      '@baklavajs/renderer-vue': 2.4.3(patch_hash=xthtz3pt5cdva3tduosaqthxue)
+      '@baklavajs/themes': 2.4.3
     dev: true
 
   /balanced-match@1.0.2:

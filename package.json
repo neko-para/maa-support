@@ -8,5 +8,10 @@
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.3.0"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "@baklavajs/renderer-vue@2.4.3": "patches/@baklavajs__renderer-vue@2.4.3.patch"
+    }
   }
 }

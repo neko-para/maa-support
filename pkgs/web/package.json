@@ -5,13 +5,17 @@
     "build": "vite build"
   },
   "devDependencies": {
+    "@baklavajs/renderer-vue": "^2.4.3",
+    "@baklavajs/themes": "^2.4.3",
     "@maa/maa": "workspace:*",
     "@types/node": "18",
     "@types/uuid": "^9.0.8",
     "@vitejs/plugin-vue": "^5.0.4",
     "@vitejs/plugin-vue-jsx": "^3.1.0",
     "@vue/tsconfig": "^0.5.1",
+    "@zip.js/zip.js": "^2.7.41",
     "autoprefixer": "^10.4.19",
+    "baklavajs": "^2.4.3",
     "esbuild": "^0.20.0",
     "jsonc-parser": "^3.2.1",
     "material-symbols": "^0.17.1",

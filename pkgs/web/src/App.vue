@@ -4,11 +4,12 @@ import { type Component, computed, ref } from 'vue'
 
 import MIcon from './components/MIcon.vue'
 import VMain from './view/VMain.vue'
+import VEdit from './view/VEdit.vue'
 import VSetting from './view/VSetting.vue'
 
-type TopLevelRoute = 'main' | 'setting'
+type TopLevelRoute = 'main' | 'edit' | 'setting'
 
-const topLevelRoute = ref<TopLevelRoute>('main')
+const topLevelRoute = ref<TopLevelRoute>('edit')
 
 type RouteInfo = {
   key: TopLevelRoute
@@ -21,6 +22,11 @@ const routes = [
     key: 'main',
     icon: 'home',
     comp: VMain
+  },
+  {
+    key: 'edit',
+    icon: 'edit',
+    comp: VEdit
   },
   {
     key: 'setting',
