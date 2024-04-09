@@ -18,6 +18,17 @@ export const enum Message {
   Task_Debug_EndSub = 'Task.Debug.EndSub'
 }
 
+export const enum StdoutLevel {
+  Off = 0,
+  Fatal = 1,
+  Error = 2,
+  Warn = 3,
+  Info = 4,
+  Debug = 5,
+  Trace = 6,
+  All = 7
+}
+
 export const enum GlobalOption {
   Invalid = 0,
   LogDir = 1,

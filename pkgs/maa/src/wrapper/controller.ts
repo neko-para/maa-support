@@ -83,6 +83,26 @@ export class Controller extends __Disposable {
     return false
   }
 
+  async setLongSide(value: number) {
+    return await this.setOption(ControllerOption.ScreenshotTargetLongSide, value)
+  }
+
+  async setShortSide(value: number) {
+    return await this.setOption(ControllerOption.ScreenshotTargetShortSide, value)
+  }
+
+  async setDefaultStartApp(value: string) {
+    return await this.setOption(ControllerOption.DefaultAppPackageEntry, value)
+  }
+
+  async setDefaultStopApp(value: string) {
+    return await this.setOption(ControllerOption.DefaultAppPackage, value)
+  }
+
+  async setRecording(value: boolean) {
+    return await this.setOption(ControllerOption.Recording, value)
+  }
+
   async postConnection() {
     const id = (await api.MaaControllerPostConnection({ ctrl: this._ctrl! }))
       .return as ControllerActionId

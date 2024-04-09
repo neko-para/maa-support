@@ -173,7 +173,7 @@ async function createController() {
 }
 
 async function disposeControllerImpl() {
-  await data.value.shallow.controller?.dispose()
+  await data.value.shallow.controller?.unref()
   delete data.value.shallow.controller
 }
 
@@ -220,7 +220,7 @@ async function createResource() {
 }
 
 async function disposeResourceImpl() {
-  await data.value.shallow.resource?.dispose()
+  await data.value.shallow.resource?.unref()
   delete data.value.shallow.resource
 }
 
@@ -277,7 +277,7 @@ async function createInstance() {
 }
 
 async function disposeInstanceImpl() {
-  await data.value.shallow.instance?.dispose()
+  await data.value.shallow.instance?.unref()
   delete data.value.shallow.instance
 }
 
