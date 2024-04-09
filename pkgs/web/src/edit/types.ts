@@ -2,10 +2,10 @@ export type Rect = [number, number, number, number]
 
 export type Recognition =
   | {
-      type?: 'DirectHit'
+      recognition?: 'DirectHit'
     }
   | {
-      type: 'TemplateMatch'
+      recognition: 'TemplateMatch'
       roi?: Rect | Rect[]
       template: string | string[]
       threshold?: number | number[]
@@ -14,16 +14,113 @@ export type Recognition =
       method?: 1 | 3 | 5
       green_mask?: boolean
     }
+  | {
+      recognition: 'FeatureMatch'
+      roi?: Rect | Rect[]
+      template: string | string[]
+      count?: number
+      order_by?: 'Horizontal' | 'Vertical' | 'Score' | 'Area' | 'Random'
+      index?: number
+      green_mask?: boolean
+      detector?: 'SIFT' | 'KAZE' | 'AKAZE' | 'BRISK' | 'ORB'
+      ratio?: number
+    }
+  | {
+      recognition: 'ColorMatch'
+      roi?: Rect | Rect[]
+      method?: number
+      lower?: number[] | number[][]
+      upper?: number[] | number[][]
+      count?: number
+      order_by?: 'Horizontal' | 'Vertical' | 'Score' | 'Area' | 'Random'
+      index?: number
+      connected?: boolean
+    }
+  | {
+      recognition: 'OCR'
+      roi?: Rect | Rect[]
+      text: string
+      replace?: [string, string] | [string, string][]
+      order_by?: 'Horizontal' | 'Vertical' | 'Area' | 'Length' | 'Random'
+      index?: number
+      only_rec?: boolean
+      model?: string
+    }
+  | {
+      recognition: 'NeuralNetworkClassify'
+      cls_size: number
+      labels: string[]
+      model: string
+      expected: number | number[]
+      order_by?: 'Horizontal' | 'Vertical' | 'Score' | 'Random'
+      index?: number
+    }
+  | {
+      recognition: 'NeuralNetworkDetect'
+      cls_size: number
+      labels: string[]
+      model: string
+      expected: number | number[]
+      threshold?: number | number[]
+      order_by?: 'Horizontal' | 'Vertical' | 'Score' | 'Area' | 'Random'
+      index?: number
+    }
+  | {
+      recognition: 'Custom'
+      custom_recognition: string
+      custom_recognition_param?: unknown
+    }
+
+export type Target = true | string | Rect
 
 export type Action =
   | {
-      type?: 'DoNothing'
+      action?: 'DoNothing'
     }
   | {
-      type: 'Click'
-      target?: true | string | Rect
+      action: 'Click'
+      target?: Target
       target_offset?: Rect
     }
+  | {
+      action: 'Swipe'
+      begin?: Target
+      begin_offset?: Rect
+      end?: Target
+      end_offset?: Rect
+    }
+  | {
+      action: 'Key'
+      key: number | number[]
+    }
+  | {
+      action: 'Text'
+      // text
+    }
+  | {
+      action: 'StartApp'
+      package?: string
+    }
+  | {
+      action: 'StopApp'
+      package?: string
+    }
+  | {
+      action: 'StopTask'
+    }
+  | {
+      action: 'Custom'
+      custom_action: string
+      custom_action_param?: unknown
+    }
+
+export type Freeze = {
+  time?: number
+  target?: Target
+  target_offset?: Rect
+  threshold?: number
+  method?: 1 | 3 | 5
+}
 
 export type Task = Recognition &
   Action & {
@@ -32,8 +129,12 @@ export type Task = Recognition &
     inverse?: boolean
     enabled?: boolean
     timeout?: number
+    timeout_next?: string | string[]
     times_limit?: number
+    runout_next?: string | string[]
     pre_delay?: number
     post_delay?: number
+    pre_wait_freezes?: number | Freeze
+    post_wait_freezes?: number | Freeze
     focus?: boolean
   }
