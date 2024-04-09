@@ -1,9 +1,0 @@
-{
-  "extends": "@tsconfig/node18/tsconfig.json",
-  "include": ["src/**/*.ts"],
-  "compilerOptions": {
-    "resolveJsonModule": true,
-    "module": "es2015",
-    "moduleResolution": "bundler"
-  }
-}

@@ -1,4 +1,4 @@
-import { GlobalOption, deinit, init, initDirect, setOption } from '@maa/maa'
+import { GlobalOption, deinit, init, initDirect, setOption } from '@nekosu/maa'
 import { reactive } from 'vue'
 
 import { setting } from './setting'

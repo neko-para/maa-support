@@ -452,6 +452,76 @@
       },
       "required": ["post"]
     },
+    "/api/MaaClearImageList": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {
+                      "type": "object",
+                      "properties": {
+                        "handle": {
+                          "description": "MaaImageListBuffer",
+                          "type": "string"
+                        }
+                      },
+                      "required": ["handle"]
+                    }
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "object",
+                              "properties": {
+                                "return": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": ["return"]
+                            },
+                            "success": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": ["success"]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
     "/api/MaaControllerConnected": {
       "type": "object",
       "properties": {
@@ -1925,6 +1995,70 @@
       },
       "required": ["post"]
     },
+    "/api/MaaCreateImageListBuffer": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {
+                      "$ref": "#/definitions/Record<string,never>"
+                    }
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "object",
+                              "properties": {
+                                "return": {
+                                  "description": "MaaImageListBuffer",
+                                  "type": "string"
+                                }
+                              },
+                              "required": ["return"]
+                            },
+                            "success": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": ["success"]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
     "/api/MaaDbgControllerCreate": {
       "type": "object",
       "properties": {
@@ -2135,6 +2269,70 @@
       },
       "required": ["post"]
     },
+    "/api/MaaDestroyImageListBuffer": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {
+                      "type": "object",
+                      "properties": {
+                        "handle": {
+                          "description": "MaaImageListBuffer",
+                          "type": "string"
+                        }
+                      },
+                      "required": ["handle"]
+                    }
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "$ref": "#/definitions/Record<string,never>"
+                            },
+                            "success": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": ["success"]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
     "/api/MaaGetController": {
       "type": "object",
       "properties": {
@@ -2293,6 +2491,150 @@
                       "properties": {
                         "handle": {
                           "description": "MaaImageBuffer",
+                          "type": "string"
+                        }
+                      },
+                      "required": ["handle"]
+                    }
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "object",
+                              "properties": {
+                                "return": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": ["return"]
+                            },
+                            "success": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": ["success"]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
+    "/api/MaaGetImageListAt": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {
+                      "type": "object",
+                      "properties": {
+                        "handle": {
+                          "description": "MaaImageListBuffer",
+                          "type": "string"
+                        },
+                        "index": {
+                          "type": "number"
+                        }
+                      },
+                      "required": ["handle", "index"]
+                    }
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "object",
+                              "properties": {
+                                "return": {
+                                  "description": "MaaImageBuffer",
+                                  "type": "string"
+                                }
+                              },
+                              "required": ["return"]
+                            },
+                            "success": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": ["success"]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
+    "/api/MaaGetImageListSize": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {
+                      "type": "object",
+                      "properties": {
+                        "handle": {
+                          "description": "MaaImageListBuffer",
                           "type": "string"
                         }
                       },
@@ -2557,6 +2899,153 @@
       },
       "required": ["post"]
     },
+    "/api/MaaImageListAppend": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {
+                      "type": "object",
+                      "properties": {
+                        "handle": {
+                          "description": "MaaImageListBuffer",
+                          "type": "string"
+                        },
+                        "value": {
+                          "description": "MaaImageBuffer",
+                          "type": "string"
+                        }
+                      },
+                      "required": ["handle", "value"]
+                    }
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "object",
+                              "properties": {
+                                "return": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": ["return"]
+                            },
+                            "success": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": ["success"]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
+    "/api/MaaImageListRemove": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {
+                      "type": "object",
+                      "properties": {
+                        "handle": {
+                          "description": "MaaImageListBuffer",
+                          "type": "string"
+                        },
+                        "index": {
+                          "type": "number"
+                        }
+                      },
+                      "required": ["handle", "index"]
+                    }
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "object",
+                              "properties": {
+                                "return": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": ["return"]
+                            },
+                            "success": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": ["success"]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
     "/api/MaaInited": {
       "type": "object",
       "properties": {
@@ -2644,6 +3133,76 @@
                       "properties": {
                         "handle": {
                           "description": "MaaImageBuffer",
+                          "type": "string"
+                        }
+                      },
+                      "required": ["handle"]
+                    }
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "object",
+                              "properties": {
+                                "return": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": ["return"]
+                            },
+                            "success": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": ["success"]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
+    "/api/MaaIsImageListEmpty": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {
+                      "type": "object",
+                      "properties": {
+                        "handle": {
+                          "description": "MaaImageListBuffer",
                           "type": "string"
                         }
                       },
@@ -2821,6 +3380,178 @@
                                 }
                               },
                               "required": ["return"]
+                            },
+                            "success": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": ["success"]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
+    "/api/MaaQueryRecognitionDetail": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {
+                      "type": "object",
+                      "properties": {
+                        "draws": {
+                          "description": "MaaImageListBuffer",
+                          "type": "string"
+                        },
+                        "reco_id": {
+                          "type": "number"
+                        }
+                      },
+                      "required": ["draws", "reco_id"]
+                    }
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "object",
+                              "properties": {
+                                "hit": {
+                                  "type": "boolean"
+                                },
+                                "hit_box": {
+                                  "type": "object",
+                                  "properties": {
+                                    "height": {
+                                      "type": "number"
+                                    },
+                                    "width": {
+                                      "type": "number"
+                                    },
+                                    "x": {
+                                      "type": "number"
+                                    },
+                                    "y": {
+                                      "type": "number"
+                                    }
+                                  },
+                                  "required": ["height", "width", "x", "y"]
+                                },
+                                "hit_detail": {
+                                  "type": "string"
+                                },
+                                "return": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": ["hit", "hit_box", "hit_detail", "return"]
+                            },
+                            "success": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": ["success"]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
+    "/api/MaaQueryRunningDetail": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {
+                      "type": "object",
+                      "properties": {
+                        "run_id": {
+                          "type": "number"
+                        }
+                      },
+                      "required": ["run_id"]
+                    }
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "object",
+                              "properties": {
+                                "reco_id": {
+                                  "type": "number"
+                                },
+                                "return": {
+                                  "type": "number"
+                                },
+                                "successful": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": ["reco_id", "return", "successful"]
                             },
                             "success": {
                               "type": "boolean"
@@ -4132,82 +4863,6 @@
                                 }
                               },
                               "required": ["return"]
-                            },
-                            "success": {
-                              "type": "boolean"
-                            }
-                          },
-                          "required": ["success"]
-                        }
-                      },
-                      "required": ["application/json"]
-                    }
-                  },
-                  "required": ["content"]
-                }
-              },
-              "required": ["200"]
-            }
-          },
-          "required": ["responses"]
-        }
-      },
-      "required": ["post"]
-    },
-    "/api/MaaSyncContextGetTaskResult": {
-      "type": "object",
-      "properties": {
-        "post": {
-          "type": "object",
-          "properties": {
-            "requestBody": {
-              "type": "object",
-              "properties": {
-                "content": {
-                  "type": "object",
-                  "properties": {
-                    "application/json": {
-                      "type": "object",
-                      "properties": {
-                        "sync_context": {
-                          "description": "MaaSyncContextAPI",
-                          "type": "string"
-                        },
-                        "task_name": {
-                          "type": "string"
-                        }
-                      },
-                      "required": ["sync_context", "task_name"]
-                    }
-                  },
-                  "required": ["application/json"]
-                }
-              },
-              "required": ["content"]
-            },
-            "responses": {
-              "type": "object",
-              "properties": {
-                "200": {
-                  "type": "object",
-                  "properties": {
-                    "content": {
-                      "type": "object",
-                      "properties": {
-                        "application/json": {
-                          "type": "object",
-                          "properties": {
-                            "data": {
-                              "type": "object",
-                              "properties": {
-                                "out_task_result": {
-                                  "type": "string"
-                                },
-                                "return": {
-                                  "type": "number"
-                                }
-                              },
-                              "required": ["out_task_result", "return"]
                             },
                             "success": {
                               "type": "boolean"
@@ -8751,6 +9406,50 @@
       },
       "required": ["post"]
     },
+    "/handle/MaaControllerAPI/strip": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {}
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {}
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
     "/handle/MaaImageBuffer/dump": {
       "type": "object",
       "properties": {
@@ -8800,6 +9499,158 @@
                           },
                           "required": ["success"]
                         }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
+    "/handle/MaaImageBuffer/strip": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {}
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {}
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
+    "/handle/MaaImageListBuffer/dump": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {}
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "object",
+                              "properties": {
+                                "ids": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                }
+                              },
+                              "required": ["ids"]
+                            },
+                            "success": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": ["success"]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
+    "/handle/MaaImageListBuffer/strip": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {}
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {}
                       },
                       "required": ["application/json"]
                     }
@@ -8879,6 +9730,50 @@
       },
       "required": ["post"]
     },
+    "/handle/MaaInstanceAPI/strip": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {}
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {}
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
     "/handle/MaaResourceAPI/dump": {
       "type": "object",
       "properties": {
@@ -8928,6 +9823,50 @@
                           },
                           "required": ["success"]
                         }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
+    "/handle/MaaResourceAPI/strip": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {}
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {}
                       },
                       "required": ["application/json"]
                     }
@@ -9007,6 +9946,50 @@
       },
       "required": ["post"]
     },
+    "/handle/MaaSyncContextAPI/strip": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {}
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {}
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
     "/help": {
       "type": "object",
       "properties": {
@@ -9061,6 +10044,7 @@
     "/api/MaaClearCustomAction",
     "/api/MaaClearCustomRecognizer",
     "/api/MaaClearImage",
+    "/api/MaaClearImageList",
     "/api/MaaControllerConnected",
     "/api/MaaControllerDestroy",
     "/api/MaaControllerGetImage",
@@ -9081,19 +10065,28 @@
     "/api/MaaControllerWait",
     "/api/MaaCreate",
     "/api/MaaCreateImageBuffer",
+    "/api/MaaCreateImageListBuffer",
     "/api/MaaDbgControllerCreate",
     "/api/MaaDestroy",
     "/api/MaaDestroyImageBuffer",
+    "/api/MaaDestroyImageListBuffer",
     "/api/MaaGetController",
     "/api/MaaGetImageEncoded",
     "/api/MaaGetImageHeight",
+    "/api/MaaGetImageListAt",
+    "/api/MaaGetImageListSize",
     "/api/MaaGetImageType",
     "/api/MaaGetImageWidth",
     "/api/MaaGetResource",
+    "/api/MaaImageListAppend",
+    "/api/MaaImageListRemove",
     "/api/MaaInited",
     "/api/MaaIsImageEmpty",
+    "/api/MaaIsImageListEmpty",
     "/api/MaaPostStop",
     "/api/MaaPostTask",
+    "/api/MaaQueryRecognitionDetail",
+    "/api/MaaQueryRunningDetail",
     "/api/MaaRegisterCustomAction",
     "/api/MaaRegisterCustomRecognizer",
     "/api/MaaResourceClear",
@@ -9112,7 +10105,6 @@
     "/api/MaaSetImageEncoded",
     "/api/MaaSetTaskParam",
     "/api/MaaSyncContextClick",
-    "/api/MaaSyncContextGetTaskResult",
     "/api/MaaSyncContextInputText",
     "/api/MaaSyncContextPressKey",
     "/api/MaaSyncContextRunAction",
@@ -9176,10 +10168,17 @@
     "/callback/MaaAPICallback/req",
     "/callback/MaaAPICallback/res",
     "/handle/MaaControllerAPI/dump",
+    "/handle/MaaControllerAPI/strip",
     "/handle/MaaImageBuffer/dump",
+    "/handle/MaaImageBuffer/strip",
+    "/handle/MaaImageListBuffer/dump",
+    "/handle/MaaImageListBuffer/strip",
     "/handle/MaaInstanceAPI/dump",
+    "/handle/MaaInstanceAPI/strip",
     "/handle/MaaResourceAPI/dump",
+    "/handle/MaaResourceAPI/strip",
     "/handle/MaaSyncContextAPI/dump",
+    "/handle/MaaSyncContextAPI/strip",
     "/help"
   ],
   "definitions": {

@@ -1,5 +1,4 @@
-import { api } from '@maa/schema'
-
+import { api } from '../schema'
 import type { DeviceInfo } from '../types'
 
 export type HwndId = string & { __kind: 'MaaWin32Hwnd' }

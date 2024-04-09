@@ -6,6 +6,6 @@
     "module": "es2015",
     "moduleResolution": "bundler",
     "verbatimModuleSyntax": true,
-    "lib": ["es2023", "esnext.disposable"]
+    "lib": ["es2023"]
   }
 }

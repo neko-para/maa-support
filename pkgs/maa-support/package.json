@@ -146,7 +146,7 @@
     "dev": "node scripts/build.mjs"
   },
   "devDependencies": {
-    "@maa/maa": "workspace:*",
+    "@nekosu/maa": "workspace:*",
     "@maa/debugger": "workspace:*",
     "@types/node": "18.x",
     "@types/vscode": "^1.86.0",

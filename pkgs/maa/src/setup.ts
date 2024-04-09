@@ -1,5 +1,6 @@
-import { setBaseURL } from '@maa/schema'
 import axios from 'axios'
+
+import { setBaseURL } from './schema'
 
 let port: number | null = null
 let heart: NodeJS.Timeout

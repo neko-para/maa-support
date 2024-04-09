@@ -4,7 +4,7 @@ import {
   type Instance,
   type Resource,
   type Win32Config
-} from '@maa/maa'
+} from '@nekosu/maa'
 import { v4 } from 'uuid'
 import { reactive, shallowReactive, watch } from 'vue'
 

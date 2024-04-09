@@ -8,6 +8,9 @@ patchedDependencies:
   '@baklavajs/renderer-vue@2.4.3':
     hash: xthtz3pt5cdva3tduosaqthxue
     path: patches/@baklavajs__renderer-vue@2.4.3.patch
+  '@liangskyli/openapi-gen-ts@2.0.1':
+    hash: cmah544dh3cygoradgn7t4zagq
+    path: patches/@liangskyli__openapi-gen-ts@2.0.1.patch
 
 importers:
 
@@ -19,7 +22,7 @@ importers:
 
   pkgs/debugger:
     devDependencies:
-      '@maa/maa':
+      '@nekosu/maa':
         specifier: workspace:*
         version: link:../maa
       '@tsconfig/node18':
@@ -42,23 +45,24 @@ importers:
         version: 3.2.1
 
   pkgs/maa:
+    dependencies:
+      axios:
+        specifier: ^1.6.7
+        version: 1.6.7
     devDependencies:
-      '@maa/schema':
-        specifier: workspace:*
-        version: link:../schema
+      '@liangskyli/openapi-gen-ts':
+        specifier: ^2.0.1
+        version: 2.0.1(patch_hash=cmah544dh3cygoradgn7t4zagq)(prettier@3.2.5)
       '@tsconfig/node18':
         specifier: ^18
         version: 18.2.2
-      axios:
-        specifier: ^1.6.5
-        version: 1.6.7
 
   pkgs/maa-support:
     devDependencies:
       '@maa/debugger':
         specifier: workspace:*
         version: link:../debugger
-      '@maa/maa':
+      '@nekosu/maa':
         specifier: workspace:*
         version: link:../maa
       '@tsconfig/node18':
@@ -80,21 +84,6 @@ importers:
         specifier: ^5.3.3
         version: 5.3.3
 
-  pkgs/schema:
-    devDependencies:
-      '@liangskyli/openapi-gen-ts':
-        specifier: ^2.0.1
-        version: 2.0.1(prettier@3.2.5)
-      '@tsconfig/node18':
-        specifier: ^18
-        version: 18.2.2
-      axios:
-        specifier: ^1.6.5
-        version: 1.6.7
-      typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
-
   pkgs/web:
     devDependencies:
       '@baklavajs/renderer-vue':
@@ -103,7 +92,7 @@ importers:
       '@baklavajs/themes':
         specifier: ^2.4.3
         version: 2.4.3
-      '@maa/maa':
+      '@nekosu/maa':
         specifier: workspace:*
         version: link:../maa
       '@types/node':
@@ -1082,7 +1071,7 @@ packages:
     resolution: {integrity: sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==}
     dev: true
 
-  /@liangskyli/openapi-gen-ts@2.0.1(prettier@3.2.5):
+  /@liangskyli/openapi-gen-ts@2.0.1(patch_hash=cmah544dh3cygoradgn7t4zagq)(prettier@3.2.5):
     resolution: {integrity: sha512-aBCV3xu/AXsKiITZuTWgy0zC580eGmtHgt1Kh9fRVfGta9x5UZBpjbW5b1n8hQj0gwhOsvrwRNG7jRZ5k06P5Q==}
     engines: {node: '>=16.8.0'}
     hasBin: true
@@ -1102,6 +1091,7 @@ packages:
       - prettier
       - supports-color
     dev: true
+    patched: true
 
   /@liangskyli/utils@4.0.0(prettier@3.2.5):
     resolution: {integrity: sha512-IyYcGcBRR2gP3gaTkiSVtNQt0tyZu2w2c8MjconLis4pEkvGry7DrxDrSkvgW67soH0PpbrUAO+u1l3fOsAU3A==}
@@ -1585,7 +1575,6 @@ packages:
 
   /asynckit@0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
-    dev: true
 
   /autoprefixer@10.4.19(postcss@8.4.38):
     resolution: {integrity: sha512-BaENR2+zBZ8xXhM4pUaKUxlVdxZ0EZhjvbopwnXmxRUfqDmwSpC2lAi/QXvx7NRdPCo1WKEcEF6mV64si1z4Ew==}
@@ -1611,7 +1600,7 @@ packages:
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
       - debug
-    dev: true
+    dev: false
 
   /axios@1.6.8:
     resolution: {integrity: sha512-v/ZHtJDU39mDpyBoFVkETcd/uNdxrWRrg3bKpOKzXFA6Bvqopts6ALSMU3y6ijYxbw2B+wPrIv46egTzJXCLGQ==}
@@ -1755,7 +1744,6 @@ packages:
     engines: {node: '>= 0.8'}
     dependencies:
       delayed-stream: 1.0.0
-    dev: true
 
   /commander@11.1.0:
     resolution: {integrity: sha512-yPVavfyCcRhmorC7rWlkHn15b4wDVgVmBA7kV4QVBsF7kv/9TKJAbAXVTxvTnwP8HHKjRCJDClKbciiYS7p0DQ==}
@@ -1839,7 +1827,6 @@ packages:
   /delayed-stream@1.0.0:
     resolution: {integrity: sha512-ZySD7Nf91aLB0RxL4KGrKHBXl7Eds1DAmEdcoVawXnLD7SDhpNgtuII2aAkg7a7QS41jxPSZ17p4VdGnMHk3MQ==}
     engines: {node: '>=0.4.0'}
-    dev: true
 
   /didyoumean@1.2.2:
     resolution: {integrity: sha512-gxtyfqMg7GKyhQmb056K7M3xszy/myH8w+B4RT+QXBQsvAOdc3XymqDDPHx1BgPgsdAA5SIifona89YtRATDzw==}
@@ -2026,7 +2013,7 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
-    dev: true
+    dev: false
 
   /follow-redirects@1.15.6:
     resolution: {integrity: sha512-wWN62YITEaOpSK584EZXJafH1AGpO8RVgElfkuXbTOrPX4fIfOyEpW/CsiNd8JdYrAoOvafRTOEnvsO++qCqFA==}
@@ -2053,7 +2040,6 @@ packages:
       asynckit: 0.4.0
       combined-stream: 1.0.8
       mime-types: 2.1.35
-    dev: true
 
   /fraction.js@4.3.7:
     resolution: {integrity: sha512-ZsDfxO51wGAXREY55a7la9LScWpwv9RxIrYABrlvOFBlH/ShPnrtsXeuUIfXKKOVicNxQ+o8JTbJvjS4M89yew==}
@@ -2359,14 +2345,12 @@ packages:
   /mime-db@1.52.0:
     resolution: {integrity: sha512-sPU4uV7dYlvtWJxwwxHD0PuihVNiE7TyAbQ5SWxDCB9mUYvOgroQOwYQQOKPJ8CIbE+1ETVlOoK1UC2nU3gYvg==}
     engines: {node: '>= 0.6'}
-    dev: true
 
   /mime-types@2.1.35:
     resolution: {integrity: sha512-ZDY+bPm5zTTF+YpCrAU9nK0UgICYPT0QtT1NZWFv4s++TNkcgVaT0g6+4R2uI4MjQjzysHB1zxuWL50hzaeXiw==}
     engines: {node: '>= 0.6'}
     dependencies:
       mime-db: 1.52.0
-    dev: true
 
   /minimatch@3.1.2:
     resolution: {integrity: sha512-J7p63hRiAjw1NDEww1W7i37+ByIrOWO5XQQAzZ3VOcL0PNybwpfmV/N05zFAzwQ9USyEcX6t3UO+K5aqBQOIHw==}
@@ -2708,7 +2692,6 @@ packages:
 
   /proxy-from-env@1.1.0:
     resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==}
-    dev: true
 
   /queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}

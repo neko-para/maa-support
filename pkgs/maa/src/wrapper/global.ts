@@ -1,8 +1,4 @@
-// async function setOption(
-//   key: GlobalOption.ScreenshotTargetLongSide | GlobalOption.ScreenshotTargetShortSide,
-//   value: number
-import { api } from '@maa/schema'
-
+import { api } from '../schema'
 import { GlobalOption } from '../types'
 
 export async function version() {

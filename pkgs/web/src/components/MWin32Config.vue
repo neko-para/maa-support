@@ -8,7 +8,7 @@ import {
   type Win32TypeTouch,
   fromWin32Type,
   toWin32Type
-} from '@maa/maa'
+} from '@nekosu/maa'
 import { NInput, NSelect } from 'naive-ui'
 import { computed } from 'vue'
 

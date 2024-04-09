@@ -7,7 +7,7 @@ import {
   type AdbTypeTouch,
   fromAdbType,
   toAdbType
-} from '@maa/maa'
+} from '@nekosu/maa'
 import { NInput, NSelect } from 'naive-ui'
 import { computed } from 'vue'
 

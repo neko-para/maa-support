@@ -11,7 +11,8 @@
   },
   "pnpm": {
     "patchedDependencies": {
-      "@baklavajs/renderer-vue@2.4.3": "patches/@baklavajs__renderer-vue@2.4.3.patch"
+      "@baklavajs/renderer-vue@2.4.3": "patches/@baklavajs__renderer-vue@2.4.3.patch",
+      "@liangskyli/openapi-gen-ts@2.0.1": "patches/@liangskyli__openapi-gen-ts@2.0.1.patch"
     }
   }
 }

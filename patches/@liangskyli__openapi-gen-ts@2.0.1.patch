@@ -1,0 +1,26 @@
+diff --git a/lib/index.cjs b/lib/index.cjs
+index b1f08654acf9bb6fd9f4f492908b83b1e5e6bc95..a362cb2e50ef210d0c4b5d8362501c938d3a7d09 100644
+--- a/lib/index.cjs
++++ b/lib/index.cjs
+@@ -236,7 +236,7 @@ class GenRequest {
+     };
+     
+     export default request;
+-    export { AxiosRequestConfig };
++    export type { AxiosRequestConfig };
+   `);
+         this.requestString = requestData.join('');
+     }
+diff --git a/lib/index.js b/lib/index.js
+index 2a1aa2ef1c689e6912ad1e9004f379f0d0299686..a79920c0029145f7da17eb0f64eb3a094c59e409 100644
+--- a/lib/index.js
++++ b/lib/index.js
+@@ -206,7 +206,7 @@ class GenRequest {
+     };
+     
+     export default request;
+-    export { AxiosRequestConfig };
++    export type { AxiosRequestConfig };
+   `);
+         this.requestString = requestData.join('');
+     }

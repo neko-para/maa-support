@@ -1,5 +1,4 @@
-import { api } from '@maa/schema'
-
+import { api } from '../schema'
 import type { MaaRect } from '../types'
 import { Image } from './image'
 

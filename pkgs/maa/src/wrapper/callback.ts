@@ -1,5 +1,4 @@
-import { callback } from '@maa/schema'
-
+import { callback } from '../schema'
 import type { MaaRect } from '../types'
 import { wrapCallback } from '../utils/callback'
 import { __Disposable } from '../utils/dispose'
@@ -51,7 +50,7 @@ export type CustomRecognizerAnalyzeCallbackFunc = (
   image: Buffer,
   task_name: string,
   custom_recognition_param: string
-) => Promise<[boolean, out_box: MaaRect, out_detail: string]>
+) => Promise<[ret: boolean, out_box: MaaRect, out_detail: string]>
 
 export class CustomRecognizerAnalyzeCallback extends __Disposable {
   _func: CustomRecognizerAnalyzeCallbackFunc | null = null

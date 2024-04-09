@@ -22,6 +22,9 @@ export interface paths {
   '/api/MaaClearImage': {
     post: operations['_api_MaaClearImage']
   }
+  '/api/MaaClearImageList': {
+    post: operations['_api_MaaClearImageList']
+  }
   '/api/MaaControllerConnected': {
     post: operations['_api_MaaControllerConnected']
   }
@@ -82,6 +85,9 @@ export interface paths {
   '/api/MaaCreateImageBuffer': {
     post: operations['_api_MaaCreateImageBuffer']
   }
+  '/api/MaaCreateImageListBuffer': {
+    post: operations['_api_MaaCreateImageListBuffer']
+  }
   '/api/MaaDbgControllerCreate': {
     post: operations['_api_MaaDbgControllerCreate']
   }
@@ -90,6 +96,9 @@ export interface paths {
   }
   '/api/MaaDestroyImageBuffer': {
     post: operations['_api_MaaDestroyImageBuffer']
+  }
+  '/api/MaaDestroyImageListBuffer': {
+    post: operations['_api_MaaDestroyImageListBuffer']
   }
   '/api/MaaGetController': {
     post: operations['_api_MaaGetController']
@@ -100,6 +109,12 @@ export interface paths {
   '/api/MaaGetImageHeight': {
     post: operations['_api_MaaGetImageHeight']
   }
+  '/api/MaaGetImageListAt': {
+    post: operations['_api_MaaGetImageListAt']
+  }
+  '/api/MaaGetImageListSize': {
+    post: operations['_api_MaaGetImageListSize']
+  }
   '/api/MaaGetImageType': {
     post: operations['_api_MaaGetImageType']
   }
@@ -109,17 +124,32 @@ export interface paths {
   '/api/MaaGetResource': {
     post: operations['_api_MaaGetResource']
   }
+  '/api/MaaImageListAppend': {
+    post: operations['_api_MaaImageListAppend']
+  }
+  '/api/MaaImageListRemove': {
+    post: operations['_api_MaaImageListRemove']
+  }
   '/api/MaaInited': {
     post: operations['_api_MaaInited']
   }
   '/api/MaaIsImageEmpty': {
     post: operations['_api_MaaIsImageEmpty']
   }
+  '/api/MaaIsImageListEmpty': {
+    post: operations['_api_MaaIsImageListEmpty']
+  }
   '/api/MaaPostStop': {
     post: operations['_api_MaaPostStop']
   }
   '/api/MaaPostTask': {
     post: operations['_api_MaaPostTask']
+  }
+  '/api/MaaQueryRecognitionDetail': {
+    post: operations['_api_MaaQueryRecognitionDetail']
+  }
+  '/api/MaaQueryRunningDetail': {
+    post: operations['_api_MaaQueryRunningDetail']
   }
   '/api/MaaRegisterCustomAction': {
     post: operations['_api_MaaRegisterCustomAction']
@@ -174,9 +204,6 @@ export interface paths {
   }
   '/api/MaaSyncContextClick': {
     post: operations['_api_MaaSyncContextClick']
-  }
-  '/api/MaaSyncContextGetTaskResult': {
-    post: operations['_api_MaaSyncContextGetTaskResult']
   }
   '/api/MaaSyncContextInputText': {
     post: operations['_api_MaaSyncContextInputText']
@@ -367,17 +394,38 @@ export interface paths {
   '/handle/MaaControllerAPI/dump': {
     post: operations['_handle_MaaControllerAPI_dump']
   }
+  '/handle/MaaControllerAPI/strip': {
+    post: operations['_handle_MaaControllerAPI_strip']
+  }
   '/handle/MaaImageBuffer/dump': {
     post: operations['_handle_MaaImageBuffer_dump']
+  }
+  '/handle/MaaImageBuffer/strip': {
+    post: operations['_handle_MaaImageBuffer_strip']
+  }
+  '/handle/MaaImageListBuffer/dump': {
+    post: operations['_handle_MaaImageListBuffer_dump']
+  }
+  '/handle/MaaImageListBuffer/strip': {
+    post: operations['_handle_MaaImageListBuffer_strip']
   }
   '/handle/MaaInstanceAPI/dump': {
     post: operations['_handle_MaaInstanceAPI_dump']
   }
+  '/handle/MaaInstanceAPI/strip': {
+    post: operations['_handle_MaaInstanceAPI_strip']
+  }
   '/handle/MaaResourceAPI/dump': {
     post: operations['_handle_MaaResourceAPI_dump']
   }
+  '/handle/MaaResourceAPI/strip': {
+    post: operations['_handle_MaaResourceAPI_strip']
+  }
   '/handle/MaaSyncContextAPI/dump': {
     post: operations['_handle_MaaSyncContextAPI_dump']
+  }
+  '/handle/MaaSyncContextAPI/strip': {
+    post: operations['_handle_MaaSyncContextAPI_strip']
   }
   '/help': {
     post: operations['_help']
@@ -517,6 +565,28 @@ export interface operations {
       content: {
         'application/json': {
           /** MaaImageBuffer */
+          handle: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaClearImageList: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaImageListBuffer */
           handle: string
         }
       }
@@ -999,6 +1069,26 @@ export interface operations {
       }
     }
   }
+  _api_MaaCreateImageListBuffer: {
+    requestBody?: {
+      content: {
+        'application/json': Record<string, never>
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              /** MaaImageListBuffer */
+              return: string
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
   _api_MaaDbgControllerCreate: {
     requestBody?: {
       content: {
@@ -1065,6 +1155,26 @@ export interface operations {
       }
     }
   }
+  _api_MaaDestroyImageListBuffer: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaImageListBuffer */
+          handle: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: Record<string, never>
+            success: boolean
+          }
+        }
+      }
+    }
+  }
   _api_MaaGetController: {
     requestBody?: {
       content: {
@@ -1115,6 +1225,52 @@ export interface operations {
       content: {
         'application/json': {
           /** MaaImageBuffer */
+          handle: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaGetImageListAt: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaImageListBuffer */
+          handle: string
+          index: number
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              /** MaaImageBuffer */
+              return: string
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaGetImageListSize: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaImageListBuffer */
           handle: string
         }
       }
@@ -1199,6 +1355,53 @@ export interface operations {
       }
     }
   }
+  _api_MaaImageListAppend: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaImageListBuffer */
+          handle: string
+          /** MaaImageBuffer */
+          value: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaImageListRemove: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaImageListBuffer */
+          handle: string
+          index: number
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
   _api_MaaInited: {
     requestBody?: {
       content: {
@@ -1226,6 +1429,28 @@ export interface operations {
       content: {
         'application/json': {
           /** MaaImageBuffer */
+          handle: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaIsImageListEmpty: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaImageListBuffer */
           handle: string
         }
       }
@@ -1282,6 +1507,60 @@ export interface operations {
           'application/json': {
             data?: {
               return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaQueryRecognitionDetail: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaImageListBuffer */
+          draws: string
+          reco_id: number
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              hit: boolean
+              hit_box: {
+                height: number
+                width: number
+                x: number
+                y: number
+              }
+              hit_detail: string
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaQueryRunningDetail: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          run_id: number
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              reco_id: number
+              return: number
+              successful: boolean
             }
             success: boolean
           }
@@ -1692,30 +1971,6 @@ export interface operations {
         content: {
           'application/json': {
             data?: {
-              return: number
-            }
-            success: boolean
-          }
-        }
-      }
-    }
-  }
-  _api_MaaSyncContextGetTaskResult: {
-    requestBody?: {
-      content: {
-        'application/json': {
-          /** MaaSyncContextAPI */
-          sync_context: string
-          task_name: string
-        }
-      }
-    }
-    responses: {
-      200: {
-        content: {
-          'application/json': {
-            data?: {
-              out_task_result: string
               return: number
             }
             success: boolean
@@ -3115,6 +3370,20 @@ export interface operations {
       }
     }
   }
+  _handle_MaaControllerAPI_strip: {
+    requestBody?: {
+      content: {
+        'application/json': unknown
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': unknown
+        }
+      }
+    }
+  }
   _handle_MaaImageBuffer_dump: {
     requestBody?: {
       content: {
@@ -3130,6 +3399,53 @@ export interface operations {
             }
             success: boolean
           }
+        }
+      }
+    }
+  }
+  _handle_MaaImageBuffer_strip: {
+    requestBody?: {
+      content: {
+        'application/json': unknown
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': unknown
+        }
+      }
+    }
+  }
+  _handle_MaaImageListBuffer_dump: {
+    requestBody?: {
+      content: {
+        'application/json': unknown
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              ids: string[]
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _handle_MaaImageListBuffer_strip: {
+    requestBody?: {
+      content: {
+        'application/json': unknown
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': unknown
         }
       }
     }
@@ -3153,6 +3469,20 @@ export interface operations {
       }
     }
   }
+  _handle_MaaInstanceAPI_strip: {
+    requestBody?: {
+      content: {
+        'application/json': unknown
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': unknown
+        }
+      }
+    }
+  }
   _handle_MaaResourceAPI_dump: {
     requestBody?: {
       content: {
@@ -3172,6 +3502,20 @@ export interface operations {
       }
     }
   }
+  _handle_MaaResourceAPI_strip: {
+    requestBody?: {
+      content: {
+        'application/json': unknown
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': unknown
+        }
+      }
+    }
+  }
   _handle_MaaSyncContextAPI_dump: {
     requestBody?: {
       content: {
@@ -3187,6 +3531,20 @@ export interface operations {
             }
             success: boolean
           }
+        }
+      }
+    }
+  }
+  _handle_MaaSyncContextAPI_strip: {
+    requestBody?: {
+      content: {
+        'application/json': unknown
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': unknown
         }
       }
     }

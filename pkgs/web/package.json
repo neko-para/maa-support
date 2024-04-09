@@ -7,7 +7,7 @@
   "devDependencies": {
     "@baklavajs/renderer-vue": "^2.4.3",
     "@baklavajs/themes": "^2.4.3",
-    "@maa/maa": "workspace:*",
+    "@nekosu/maa": "workspace:*",
     "@types/node": "18",
     "@types/uuid": "^9.0.8",
     "@vitejs/plugin-vue": "^5.0.4",

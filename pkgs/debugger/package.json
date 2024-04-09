@@ -2,7 +2,7 @@
   "name": "@maa/debugger",
   "main": "src/debugger.ts",
   "devDependencies": {
-    "@maa/maa": "workspace:*",
+    "@nekosu/maa": "workspace:*",
     "@tsconfig/node18": "^18",
     "@types/node": "18",
     "@vscode/debugadapter": "^1.64.0",

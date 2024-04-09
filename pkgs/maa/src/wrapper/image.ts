@@ -1,5 +1,4 @@
-import { api } from '@maa/schema'
-
+import { api } from '../schema'
 import { __Disposable } from '../utils/dispose'
 
 export type ImageId = string & { __kind: 'MaaImageBuffer' }

@@ -14,7 +14,7 @@ import {
   Win32Controller,
   awaitUsing,
   findDevice
-} from '@maa/maa'
+} from '@nekosu/maa'
 import {
   NButton,
   NCard,

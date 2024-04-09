@@ -1,5 +1,4 @@
-import { api } from '@maa/schema'
-
+import { api } from '../schema'
 import { type AdbConfig, ControllerOption, Status, Win32Type } from '../types'
 import { __Disposable } from '../utils/dispose'
 import type { TrivialCallback } from './callback'

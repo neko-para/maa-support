@@ -1,5 +1,4 @@
-import { api } from '@maa/schema'
-
+import { api } from '../schema'
 import type { Status } from '../types'
 import { __Disposable } from '../utils/dispose'
 import type { CustomActionRunCallback, CustomActionStopCallback, TrivialCallback } from './callback'

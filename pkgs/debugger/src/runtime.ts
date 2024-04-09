@@ -1,4 +1,4 @@
-import '@maa/maa'
+import '@nekosu/maa'
 import {
   AdbController,
   AdbType,
@@ -16,8 +16,8 @@ import {
   init,
   setOption,
   version
-} from '@maa/maa'
-import { __DisposableStack } from '@maa/maa/src/utils/dispose'
+} from '@nekosu/maa'
+import { __DisposableStack } from '@nekosu/maa/src/utils/dispose'
 import { EventEmitter } from 'events'
 import { existsSync, statSync } from 'fs'
 import fs from 'fs/promises'

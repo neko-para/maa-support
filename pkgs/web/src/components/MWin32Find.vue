@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type HwndId, findWindow } from '@maa/maa'
+import { type HwndId, findWindow } from '@nekosu/maa'
 import { NCard, NInput, NSwitch } from 'naive-ui'
 
 const props = defineProps<{
