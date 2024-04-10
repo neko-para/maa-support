@@ -12,12 +12,12 @@ import {
   Resource,
   type ResourceId,
   TrivialCallback,
+  __Disposable,
   findDevice,
   init,
   setOption,
   version
 } from '@nekosu/maa'
-import { __DisposableStack } from '@nekosu/maa/src/utils/dispose'
 import { EventEmitter } from 'events'
 import { existsSync, statSync } from 'fs'
 import fs from 'fs/promises'
@@ -133,7 +133,7 @@ export class MaaFrameworkDebugRuntime extends EventEmitter {
     }
 
     try {
-      await init(13126, () => void)
+      await init(13126, () => void 0)
     } catch (_) {
       this.sendEvent('output', `连接MaaHttp失败`)
       afterStop()
@@ -273,16 +273,16 @@ export class MaaFrameworkDebugRuntime extends EventEmitter {
       }
     }
 
-    const clearStack = new __DisposableStack()
-    clearStack.add(instance)
-    clearStack.add(resource)
-    clearStack.add(controller)
-    clearStack.add(callback)
-    clearStack.add(actionRun)
-    clearStack.add(actionStop)
+    const clearStack = new __Disposable()
+    clearStack.defer(instance)
+    clearStack.defer(resource)
+    clearStack.defer(controller)
+    clearStack.defer(callback)
+    clearStack.defer(actionRun)
+    clearStack.defer(actionStop)
 
     const clear = () => {
-      clearStack.dispose()
+      clearStack.unref()
     }
 
     if (this.expectStop) {
