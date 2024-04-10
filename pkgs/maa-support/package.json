@@ -140,6 +140,12 @@
           }
         ]
       }
+    ],
+    "jsonValidation": [
+      {
+        "fileMatch": "**/pipeline/**/*.json",
+        "url": "./schemas/pipeline.schema.json"
+      }
     ]
   },
   "scripts": {
