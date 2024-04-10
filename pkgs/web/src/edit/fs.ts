@@ -1,7 +1,7 @@
 import * as zip from '@zip.js/zip.js'
 import { markRaw, reactive } from 'vue'
 
-import type { Task } from './types'
+import type { Task } from '../types'
 
 type FileEntry = {
   file: true

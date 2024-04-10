@@ -1,7 +1,7 @@
 import { NodeInterface } from 'baklavajs'
 import { markRaw } from 'vue'
 
-import type { Rect } from '../types'
+import type { Rect } from '../../types'
 import IRectComp from './IRectComp.vue'
 
 export class IRectInterface extends NodeInterface<Rect | undefined> {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { NButton, NInputNumber } from 'naive-ui'
 
-import type { Rect } from '../types'
+import type { Rect } from '../../types'
 import type { IRectInterface } from './IRect'
 
 const props = defineProps<{

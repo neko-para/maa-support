@@ -3,10 +3,12 @@ import { BaklavaEditor, useBaklava } from '@baklavajs/renderer-vue'
 import '@baklavajs/themes/dist/syrup-dark.css'
 import * as zip from '@zip.js/zip.js'
 import { NButton, NConfigProvider, darkTheme } from 'naive-ui'
-import { onMounted, ref, shallowRef } from 'vue'
+import { onMounted, reactive, ref, shallowRef } from 'vue'
 
 import MIcon from '@/components/MIcon.vue'
+import MTask from '@/components/MTask.vue'
 import { TaskNode } from '@/edit/node'
+import type { Task } from '@/types'
 
 const baklava = useBaklava()
 
@@ -46,14 +48,21 @@ function exportGraph() {
   console.log(baklava.editor.save())
   console.log(baklava.editor.graph)
 }
+
+const task = ref<Partial<Task>>({})
 </script>
 
 <template>
   <div class="flex flex-col w-full h-full">
     <input ref="selectZipEl" type="file" accept=".zip" class="hidden" />
+
     <div class="flex gap-2 p-2">
       <n-button @click="uploadZip"> 上传 </n-button>
       <n-button @click="exportGraph"> 导出 </n-button>
+    </div>
+    <div class="container mx-auto my-4">
+      {{ task }}
+      <m-task v-model:task="task"></m-task>
     </div>
     <div class="flex-1">
       <n-config-provider :theme="darkTheme" class="w-full h-full">

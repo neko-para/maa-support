@@ -28,7 +28,7 @@ export type Recognition =
   | {
       recognition: 'ColorMatch'
       roi?: Rect | Rect[]
-      method?: number
+      method?: 4 | 40 | 6
       lower?: number[] | number[][]
       upper?: number[] | number[][]
       count?: number
@@ -71,7 +71,9 @@ export type Recognition =
       custom_recognition_param?: unknown
     }
 
-export type Target = true | string | Rect
+// https://github.com/vuejs/vue/issues/11367
+// boolean should be after string to preserve empty prop
+export type Target = string | true | Rect
 
 export type Action =
   | {
@@ -138,3 +140,10 @@ export type Task = Recognition &
     post_wait_freezes?: number | Freeze
     focus?: boolean
   }
+
+export type RestrictWith<
+  T extends Record<string, unknown>,
+  K extends keyof T,
+  R extends T[K],
+  V extends T = T
+> = V extends unknown ? (V[K] extends R ? V : never) : never
