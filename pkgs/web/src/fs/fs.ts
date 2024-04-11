@@ -153,6 +153,26 @@ export class MemFS {
     process(path)
   }
 
+  async findAsync(
+    path: string,
+    file: (path: string, full: string, entry: FileEntry) => Promise<void>,
+    dir: (path: string, full: string, entry: DirEntry) => Promise<void>
+  ) {
+    const process = async (path: string, current = '') => {
+      for (const entry of this.readdir(path, true) ?? []) {
+        const subPath = '/' + this.join(path, entry[0])
+        const subCurr = this.join(current, entry[0])
+        if (entry[1].file) {
+          await file(subCurr, subPath, entry[1])
+        } else {
+          await dir(subCurr, subPath, entry[1])
+          await process(subPath, subCurr)
+        }
+      }
+    }
+    await process(path)
+  }
+
   readFile(path: string) {
     const p = this.resolve(path)
     const dir = this.track(this.dirname(p))
@@ -216,6 +236,23 @@ export class MemFS {
         }
       }
     }
+  }
+
+  async makeZip(writer: zip.ZipWriter<unknown>) {
+    await this.findAsync(
+      '',
+      async (path, full, entry) => {
+        if ('content' in entry) {
+          const reader = new zip.TextReader(entry.content!)
+          await writer.add(path, reader)
+        } else if (entry.uri) {
+          const data = await (await fetch(entry.uri)).blob()
+          const reader = new zip.BlobReader(data)
+          await writer.add(path, reader)
+        }
+      },
+      async (path, full, entry) => {}
+    )
   }
 }
 

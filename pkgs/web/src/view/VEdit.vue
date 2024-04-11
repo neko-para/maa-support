@@ -40,6 +40,24 @@ function uploadZip() {
   })
 }
 
+async function downloadZip() {
+  const blobWriter = new zip.BlobWriter('application/zip')
+  const writer = new zip.ZipWriter(blobWriter, { bufferedWrite: true })
+  await fs.makeZip(writer)
+  await writer.close()
+  const data = await blobWriter.getData()
+  const dataUrl = URL.createObjectURL(data)
+
+  const el = document.createElement('a')
+  el.href = dataUrl
+  el.download = 'resource.zip'
+  el.setAttribute('style', 'display:none')
+  document.body.appendChild(el)
+  el.click()
+  document.body.removeChild(el)
+  URL.revokeObjectURL(dataUrl)
+}
+
 const taskPath = ref<string | null>(null)
 const taskData = ref<Record<string, Partial<Task>>>({})
 const currentTask = ref<string | null>(null)
@@ -90,7 +108,7 @@ const taskListOpts = computed(() => {
         <div class="flex flex-col gap-2">
           <div class="flex gap-2 p-2">
             <n-button @click="uploadZip"> 导入 </n-button>
-            <!-- <n-button @click="exportGraph"> 导出 </n-button> -->
+            <n-button @click="downloadZip"> 导出 </n-button>
           </div>
           <n-tree :data="fsData" expand-on-click :node-props="nodeProps"></n-tree>
         </div>
