@@ -5,7 +5,7 @@ import { computed } from 'vue'
 import type { RestrictWith, Task } from '@/types'
 import { makeProp } from '@/utils/property'
 
-import { MRectEdit, MStringEdit, MThresholdEdit } from './MEdits'
+import { MRectEdit, MTemplateEdit, MThresholdEdit } from './MEdits'
 import MMultiEdit from './MMultiEdit.vue'
 
 type TaskType = Partial<RestrictWith<Task, 'recognition', 'TemplateMatch'>>
@@ -50,7 +50,7 @@ const green_mask = make('green_mask')
     v-model:value="template"
     :test="v => Array.isArray(v)"
     :def="() => ''"
-    :render="MStringEdit"
+    :render="MTemplateEdit"
   ></m-multi-edit>
   <n-button @click="threshold = null"> threshold </n-button>
   <m-multi-edit

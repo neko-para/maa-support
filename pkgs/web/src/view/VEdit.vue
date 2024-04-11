@@ -6,7 +6,7 @@ import { computed, onMounted, reactive, ref, shallowRef } from 'vue'
 
 import MIcon from '@/components/MIcon.vue'
 import MTask from '@/components/MTask.vue'
-import { fs, fsData } from '@/fs'
+import { fs, fsData, imageInfo, taskInfo } from '@/fs'
 import type { Task } from '@/types'
 
 const selectZipEl = ref<HTMLInputElement | null>(null)
@@ -104,6 +104,8 @@ const taskListOpts = computed(() => {
           <m-task v-if="task" :task="task"></m-task>
           <n-code :code="JSON.stringify(task, null, 2)" language="json"></n-code>
         </div>
+        {{ taskInfo }}
+        {{ imageInfo }}
       </template>
     </n-split>
   </div>

@@ -8,7 +8,9 @@ import { makeProp } from '@/utils/property'
 import MColorMatch from './task/MColorMatch.vue'
 import MCustomAction from './task/MCustomAction.vue'
 import MCustomReco from './task/MCustomReco.vue'
+import { MNextEdit } from './task/MEdits'
 import MFeatureMatch from './task/MFeatureMatch.vue'
+import MMultiEdit from './task/MMultiEdit.vue'
 import MOcr from './task/MOcr.vue'
 import MTemplateMatch from './task/MTemplateMatch.vue'
 
@@ -53,6 +55,7 @@ const actionOptions = [
 
 const recognition = make('recognition')
 const action = make('action')
+const next = make('next')
 </script>
 
 <template>
@@ -82,5 +85,13 @@ const action = make('action')
     <template v-if="task.action === 'Custom'">
       <m-custom-action :task="task"></m-custom-action>
     </template>
+
+    <n-button @click="next = null"> next </n-button>
+    <m-multi-edit
+      v-model:value="next"
+      :test="v => Array.isArray(v)"
+      :def="() => ''"
+      :render="MNextEdit"
+    ></m-multi-edit>
   </div>
 </template>

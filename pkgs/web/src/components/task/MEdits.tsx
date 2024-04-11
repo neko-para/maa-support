@@ -2,6 +2,9 @@ import { NInput, NInputNumber } from 'naive-ui'
 
 import type { Rect } from '@/types'
 
+import MImageChoice from './MImageChoice.vue'
+import MTaskChoice from './MTaskChoice.vue'
+
 type FixArray<T, L extends number, V extends T[] = []> = V['length'] extends L
   ? V
   : FixArray<T, L, [...V, T]>
@@ -78,6 +81,14 @@ export const MReplaceEdit = makeStringSeqEdit(2, ['From', 'To'])
 
 export function MStringEdit(value: string, update: (v: string) => void, index: number) {
   return <NInput value={value} onUpdateValue={update} placeholder={''}></NInput>
+}
+
+export function MNextEdit(value: string, update: (v: string) => void, index: number) {
+  return <MTaskChoice value={value} onUpdate:value={update}></MTaskChoice>
+}
+
+export function MTemplateEdit(value: string, update: (v: string) => void, index: number) {
+  return <MImageChoice value={value} onUpdate:value={update}></MImageChoice>
 }
 
 export function MThresholdEdit(value: number, update: (v: number) => void, index: number) {

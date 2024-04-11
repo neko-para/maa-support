@@ -5,7 +5,7 @@ import { computed } from 'vue'
 import type { RestrictWith, Task } from '@/types'
 import { makeProp } from '@/utils/property'
 
-import { MRectEdit, MStringEdit } from './MEdits'
+import { MRectEdit, MTemplateEdit } from './MEdits'
 import MMultiEdit from './MMultiEdit.vue'
 
 type TaskType = Partial<RestrictWith<Task, 'recognition', 'FeatureMatch'>>
@@ -51,7 +51,7 @@ const ratio = make('ratio')
     v-model:value="template"
     :test="v => Array.isArray(v)"
     :def="() => ''"
-    :render="MStringEdit"
+    :render="MTemplateEdit"
   ></m-multi-edit>
   <n-button @click="count = null"> count </n-button>
   <n-input-number

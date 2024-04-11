@@ -7,11 +7,14 @@ import { main } from '@/data/main'
 
 import VMainCore from './main/VMainCore.vue'
 
-const currentId = ref<string | null>(null)
+const currentId = ref<string | null>(main.active && main.active in main.data ? main.active : null)
 
 function tryDel(id: string) {
   if (currentId.value === id) {
     currentId.value = null
+  }
+  if (main.active === id) {
+    delete main.active
   }
   const idx = main.ids.indexOf(id)
   if (idx !== -1) {
@@ -33,7 +36,12 @@ function tryDel(id: string) {
         <template v-for="id in main.ids" :key="id">
           <div class="flex gap-2">
             <n-button
-              @click="currentId = id"
+              @click="
+                () => {
+                  currentId = id
+                  main.active = currentId
+                }
+              "
               class="flex-1"
               :type="currentId === id ? 'primary' : 'default'"
             >

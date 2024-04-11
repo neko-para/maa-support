@@ -58,6 +58,14 @@ export class MemFS {
     return path.split('/').filter(x => x)
   }
 
+  join(...segs: string[]) {
+    return segs
+      .map(p => this.resolve(p))
+      .flat()
+      .filter(x => x)
+      .join('/')
+  }
+
   track(items: string[], create = true): DirEntry | null {
     let current = this.root
     for (const item of items) {
@@ -123,6 +131,26 @@ export class MemFS {
     } else {
       return Object.keys(dir.child)
     }
+  }
+
+  find(
+    path: string,
+    file: (path: string, full: string, entry: FileEntry) => void,
+    dir: (path: string, full: string, entry: DirEntry) => void
+  ) {
+    const process = (path: string, current = '') => {
+      for (const entry of this.readdir(path, true) ?? []) {
+        const subPath = '/' + this.join(path, entry[0])
+        const subCurr = this.join(current, entry[0])
+        if (entry[1].file) {
+          file(subCurr, subPath, entry[1])
+        } else {
+          dir(subCurr, subPath, entry[1])
+          process(subPath, subCurr)
+        }
+      }
+    }
+    process(path)
   }
 
   readFile(path: string) {

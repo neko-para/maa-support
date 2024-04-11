@@ -50,6 +50,7 @@ type DataMain = {
 class MainService {
   data: Record<string, DataMain> = {}
   ids: string[] = []
+  active?: string
 
   constructor() {
     if (localStorage.getItem('main')) {
@@ -99,7 +100,8 @@ watch(
       JSON.stringify(
         {
           data: v.data,
-          ids: v.ids
+          ids: v.ids,
+          active: v.active ?? undefined
         },
         (k, v) => {
           return ['runtime', 'shallow'].includes(k) ? undefined : v
