@@ -14,21 +14,8 @@ const props = defineProps<{
   task: TaskType
 }>()
 
-const emits = defineEmits<{
-  'update:task': [TaskType]
-}>()
-
-const task = computed<TaskType>({
-  set(v) {
-    emits('update:task', v)
-  },
-  get() {
-    return props.task
-  }
-})
-
 function make<K extends keyof TaskType>(key: K) {
-  return makeProp(task, key)
+  return makeProp(() => props.task, key)
 }
 
 const methodOptions = [4, 40, 6].map(x => ({

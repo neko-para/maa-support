@@ -6,7 +6,10 @@ import type { Task } from '@/types'
 import { makeProp } from '@/utils/property'
 
 import MColorMatch from './task/MColorMatch.vue'
+import MCustomAction from './task/MCustomAction.vue'
+import MCustomReco from './task/MCustomReco.vue'
 import MFeatureMatch from './task/MFeatureMatch.vue'
+import MOcr from './task/MOcr.vue'
 import MTemplateMatch from './task/MTemplateMatch.vue'
 
 type TaskType = Partial<Task>
@@ -15,21 +18,8 @@ const props = defineProps<{
   task: TaskType
 }>()
 
-const emits = defineEmits<{
-  'update:task': [TaskType]
-}>()
-
-const task = computed<TaskType>({
-  set(v) {
-    emits('update:task', v)
-  },
-  get() {
-    return props.task
-  }
-})
-
 function make<K extends keyof TaskType>(key: K) {
-  return makeProp(task, key)
+  return makeProp(() => props.task, key)
 }
 
 const recognitionOptions = [
@@ -71,16 +61,26 @@ const action = make('action')
     <n-select v-model:value="recognition" :options="recognitionOptions" placeholder=""></n-select>
 
     <template v-if="task.recognition === 'TemplateMatch'">
-      <m-template-match v-model:task="task"></m-template-match>
+      <m-template-match :task="task"></m-template-match>
     </template>
     <template v-else-if="task.recognition === 'FeatureMatch'">
-      <m-feature-match v-model:task="task"></m-feature-match>
+      <m-feature-match :task="task"></m-feature-match>
     </template>
     <template v-else-if="task.recognition === 'ColorMatch'">
-      <m-color-match v-model:task="task"></m-color-match>
+      <m-color-match :task="task"></m-color-match>
+    </template>
+    <template v-else-if="task.recognition === 'OCR'">
+      <m-ocr :task="task"></m-ocr>
+    </template>
+    <template v-else-if="task.recognition === 'Custom'">
+      <m-custom-reco :task="task"></m-custom-reco>
     </template>
 
     <n-button @click="action = null"> action </n-button>
     <n-select v-model:value="action" :options="actionOptions" placeholder=""></n-select>
+
+    <template v-if="task.action === 'Custom'">
+      <m-custom-action :task="task"></m-custom-action>
+    </template>
   </div>
 </template>

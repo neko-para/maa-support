@@ -1,8 +1,6 @@
 import * as zip from '@zip.js/zip.js'
 import { markRaw, reactive } from 'vue'
 
-import type { Task } from '../types'
-
 type FileEntry = {
   file: true
 } & (
@@ -35,6 +33,13 @@ export class BlobManager {
     const url = URL.createObjectURL(new Blob([data]))
     this.index.add(url)
     return url
+  }
+
+  reset() {
+    for (const url of this.index) {
+      URL.revokeObjectURL(url)
+    }
+    this.index = new Set()
   }
 }
 
@@ -76,12 +81,20 @@ export class MemFS {
     return current
   }
 
+  reset() {
+    this.root = {
+      child: {}
+    }
+    this.blob.reset()
+  }
+
   dirname(res: string | string[]) {
     if (typeof res === 'string') {
       res = this.resolve(res)
     }
-    res.pop()
-    return res
+    const ret = [...res]
+    ret.pop()
+    return ret
   }
 
   basename(res: string | string[]) {
@@ -98,8 +111,35 @@ export class MemFS {
     return !!this.track(this.resolve(path))
   }
 
+  readdir(path: string, entry?: false): null | string[]
+  readdir(path: string, entry: true): null | [name: string, entry: FileEntry | DirEntry][]
+  readdir(path: string, entry = false) {
+    const dir = this.track(this.resolve(path))
+    if (!dir) {
+      return null
+    }
+    if (entry) {
+      return Object.entries(dir.child)
+    } else {
+      return Object.keys(dir.child)
+    }
+  }
+
+  readFile(path: string) {
+    const p = this.resolve(path)
+    const dir = this.track(this.dirname(p))
+    const file = this.basename(p)
+    if (!dir || !file || !(file in dir.child)) {
+      return null
+    }
+    if (!dir.child[file].file) {
+      return null
+    }
+    return dir.child[file]
+  }
+
   writeText(path: string, content: string) {
-    let p = this.resolve(path)
+    const p = this.resolve(path)
     const dir = this.track(this.dirname(p))
     const file = this.basename(p)
     if (!dir || !file) {
@@ -114,7 +154,7 @@ export class MemFS {
   }
 
   writeBlob(path: string, content: Uint8Array) {
-    let p = this.resolve(path)
+    const p = this.resolve(path)
     const dir = this.track(this.dirname(p))
     const file = this.basename(p)
     if (!dir || !file) {
@@ -129,16 +169,16 @@ export class MemFS {
   }
 
   async loadZip(reader: zip.ZipReader<unknown>) {
-    const writer = new zip.Uint8ArrayWriter()
     const decoder = new TextDecoder('utf8', { fatal: true })
     for (const entry of await reader.getEntries()) {
       if (entry.filename.endsWith('/')) {
         this.mkdir(entry.filename)
       } else {
+        const writer = new zip.Uint8ArrayWriter()
         const data = await entry.getData?.(writer)
         if (!data) {
           console.warn('read entry', entry, 'failed')
-          break
+          continue
         }
         try {
           const result = decoder.decode(data)
@@ -150,3 +190,8 @@ export class MemFS {
     }
   }
 }
+
+export const fs = reactive(new MemFS())
+
+// @ts-ignore
+window.fs = fs

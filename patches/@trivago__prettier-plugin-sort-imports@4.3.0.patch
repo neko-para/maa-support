@@ -1,0 +1,12 @@
+diff --git a/lib/src/preprocessors/vue-preprocessor.js b/lib/src/preprocessors/vue-preprocessor.js
+index 142e147bcbf4ba4a9de83632adfd46230c1623bd..d79540a5d05dda8b534e5b215485b86a66d48c41 100644
+--- a/lib/src/preprocessors/vue-preprocessor.js
++++ b/lib/src/preprocessors/vue-preprocessor.js
+@@ -10,6 +10,6 @@ function vuePreprocessor(code, options) {
+     if (!content) {
+         return code;
+     }
+-    return code.replace(content, "\n".concat((0, preprocessor_1.preprocessor)(content, options), "\n"));
++    return code.replace(content, () => "\n".concat((0, preprocessor_1.preprocessor)(content, options), "\n"));
+ }
+ exports.vuePreprocessor = vuePreprocessor;

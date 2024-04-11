@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { NButton, NInputNumber, NSelect, NSwitch } from 'naive-ui'
+import { NButton, NInput, NInputNumber, NSelect, NSwitch } from 'naive-ui'
 import { computed } from 'vue'
 
 import type { RestrictWith, Task } from '@/types'
 import { makeProp } from '@/utils/property'
 
-import { MRectEdit, MStringEdit, MThresholdEdit } from './MEdits'
+import { MRectEdit, MReplaceEdit, MStringEdit } from './MEdits'
 import MMultiEdit from './MMultiEdit.vue'
 
-type TaskType = Partial<RestrictWith<Task, 'recognition', 'TemplateMatch'>>
+type TaskType = Partial<RestrictWith<Task, 'recognition', 'OCR'>>
 
 const props = defineProps<{
   task: TaskType
@@ -23,18 +23,13 @@ const orderByOptions = ['Horizontal', 'Vertical', 'Score', 'Random'].map(x => ({
   value: x
 }))
 
-const methodOptions = [1, 3, 5].map(x => ({
-  label: `${x}`,
-  value: x
-}))
-
 const roi = make('roi')
-const template = make('template')
-const threshold = make('threshold')
+const text = make('text')
+const replace = make('replace')
 const orderBy = make('order_by')
 const index = make('index')
-const method = make('method')
-const green_mask = make('green_mask')
+const only_rec = make('only_rec')
+const model = make('model')
 </script>
 
 <template>
@@ -45,19 +40,19 @@ const green_mask = make('green_mask')
     :def="() => [0, 0, 0, 0]"
     :render="MRectEdit"
   ></m-multi-edit>
-  <n-button @click="template = null"> template </n-button>
+  <n-button @click="text = null"> text </n-button>
   <m-multi-edit
-    v-model:value="template"
+    v-model:value="text"
     :test="v => Array.isArray(v)"
     :def="() => ''"
     :render="MStringEdit"
   ></m-multi-edit>
-  <n-button @click="threshold = null"> threshold </n-button>
+  <n-button @click="replace = null"> replace </n-button>
   <m-multi-edit
-    v-model:value="threshold"
+    v-model:value="replace"
     :test="v => Array.isArray(v)"
-    :def="() => 0.7"
-    :render="MThresholdEdit"
+    :def="() => ['', '']"
+    :render="MReplaceEdit"
   ></m-multi-edit>
   <n-button @click="orderBy = null"> orderBy </n-button>
   <n-select v-model:value="orderBy" :options="orderByOptions" placeholder=""></n-select>
@@ -69,17 +64,17 @@ const green_mask = make('green_mask')
     :parse="v => parseInt(v) ?? null"
     :show-button="false"
   ></n-input-number>
-  <n-button @click="method = null"> method </n-button>
-  <n-select v-model:value="method" :options="methodOptions" placeholder=""></n-select>
-  <n-button @click="green_mask = null"> green_mask </n-button>
+  <n-button @click="only_rec = null"> only_rec </n-button>
   <div>
     <n-switch
-      :value="green_mask ?? false"
+      :value="only_rec ?? false"
       @update:value="
         v => {
-          green_mask = !!v
+          only_rec = !!v
         }
       "
     ></n-switch>
   </div>
+  <n-button @click="model = null"> model </n-button>
+  <n-input v-model="model" placeholder=""></n-input>
 </template>

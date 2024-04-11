@@ -1,24 +1,23 @@
-import { type WritableComputedRef, computed } from 'vue'
+import { computed } from 'vue'
 
 export function makeProp<T extends Record<string, unknown>, K extends keyof T>(
-  comp: WritableComputedRef<T>,
+  comp: () => T,
   key: K
 ) {
   type V = NonNullable<T[K]>
 
+  const getComp = computed(comp)
+
   return computed<V | null>({
     set(v) {
-      const value = { ...comp.value }
       if (v === null) {
-        delete value[key]
+        delete getComp.value[key]
       } else {
-        value[key] = v
+        getComp.value[key] = v
       }
-      comp.value = value
     },
     get() {
-      const value = comp.value
-      return key in value ? value[key] ?? null : null
+      return key in getComp.value ? getComp.value[key] ?? null : null
     }
   })
 }
