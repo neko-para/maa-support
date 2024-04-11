@@ -1,11 +1,22 @@
 <script setup lang="ts">
+import { Image } from '@nekosu/maa'
 import * as zip from '@zip.js/zip.js'
 import { NButton, NCode, NConfigProvider, NSelect, NSplit, NTree } from 'naive-ui'
 import type { TreeNodeProps } from 'naive-ui/es/tree/src/interface'
-import { computed, onMounted, reactive, ref, shallowRef } from 'vue'
+import {
+  type WatchStopHandle,
+  computed,
+  onMounted,
+  onUnmounted,
+  reactive,
+  ref,
+  shallowRef,
+  watch
+} from 'vue'
 
 import MIcon from '@/components/MIcon.vue'
 import MTask from '@/components/MTask.vue'
+import { main } from '@/data/main'
 import { fs, fsData, imageInfo, taskInfo } from '@/fs'
 import type { Task } from '@/types'
 
@@ -58,6 +69,7 @@ async function downloadZip() {
   URL.revokeObjectURL(dataUrl)
 }
 
+let watchStop: WatchStopHandle | null = null
 const taskPath = ref<string | null>(null)
 const taskData = ref<Record<string, Partial<Task>>>({})
 const currentTask = ref<string | null>(null)
@@ -80,9 +92,22 @@ const nodeProps: TreeNodeProps = ({ option }) => {
         if (!entry || entry.content === undefined) {
           return
         }
+        if (watchStop) {
+          watchStop()
+          watchStop = null
+        }
         taskPath.value = path
         taskData.value = JSON.parse(entry.content)
         currentTask.value = null
+        watchStop = watch(
+          () => taskData.value,
+          v => {
+            entry.content = JSON.stringify(v, null, 2)
+          },
+          {
+            deep: true
+          }
+        )
         return
       }
     }
@@ -96,6 +121,63 @@ const taskListOpts = computed(() => {
       label: name,
       value: name
     }))
+})
+
+function addTask() {
+  let name: string
+  for (let i = 0; ; i++) {
+    name = `untitled_${i}`
+    if (!(name in taskInfo.value)) {
+      break
+    }
+  }
+  taskData.value[name] = {}
+}
+
+function renameTask() {}
+
+const controller = computed(() => {
+  if (!main.active) {
+    return null
+  }
+  return main.data[main.active].shallow.controller ?? null
+})
+
+let timer: NodeJS.Timeout
+let imageHandle: Image
+const image = ref<string | null>(null)
+
+onMounted(async () => {
+  imageHandle = new Image()
+  await imageHandle.create()
+  let running = false
+  timer = setInterval(async () => {
+    if (running) {
+      return
+    }
+    if (controller.value) {
+      running = true
+      const ctrl = controller.value.ref()
+      await (await ctrl.postScreencap()).wait()
+      await ctrl.image(imageHandle)
+      await ctrl.unref()
+
+      const buffer = await imageHandle.encoded(true)
+      if (image.value) {
+        URL.revokeObjectURL(image.value)
+      }
+      image.value = URL.createObjectURL(new Blob([buffer.buffer]))
+      running = false
+    }
+  }, 1000)
+})
+
+onUnmounted(() => {
+  clearInterval(timer)
+  if (image.value) {
+    URL.revokeObjectURL(image.value)
+  }
+  imageHandle.unref()
 })
 </script>
 
@@ -117,10 +199,25 @@ const taskListOpts = computed(() => {
         <div class="container mx-auto pt-4 flex flex-col gap-4">
           <div class="flex items-center gap-2">
             <span> {{ taskPath }} </span>
-            <n-select v-model:value="currentTask" :options="taskListOpts" placeholder=""></n-select>
+            <template v-if="taskPath">
+              <n-button @click="addTask" text>
+                <m-icon> add </m-icon>
+              </n-button>
+              <n-button @click="renameTask" text :disabled="!currentTask">
+                <m-icon> edit </m-icon>
+              </n-button>
+              <n-select
+                v-model:value="currentTask"
+                :options="taskListOpts"
+                placeholder=""
+              ></n-select>
+            </template>
           </div>
           <m-task v-if="task" :task="task"></m-task>
           <n-code :code="JSON.stringify(task, null, 2)" language="json"></n-code>
+          <div v-if="controller">
+            <img v-if="image" :src="image" />
+          </div>
         </div>
         {{ taskInfo }}
         {{ imageInfo }}

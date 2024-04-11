@@ -16,6 +16,7 @@
     "@zip.js/zip.js": "^2.7.41",
     "autoprefixer": "^10.4.19",
     "baklavajs": "^2.4.3",
+    "buffer": "^6.0.3",
     "esbuild": "^0.20.0",
     "highlight.js": "^11.9.0",
     "jsonc-parser": "^3.2.1",
