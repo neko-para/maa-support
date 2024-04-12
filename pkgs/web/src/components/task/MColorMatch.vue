@@ -63,21 +63,24 @@ watch(
   <n-button @click="lower = null"> lower </n-button>
   <m-multi-edit
     v-if="!method || method === 4"
-    v-model:value="lower as [number, number, number]"
+    :value="lower as [number, number, number][]"
+    @update:value="v => (lower = v)"
     :test="v => v.length !== 3 || typeof v[0] !== 'number'"
     :def="() => [0, 0, 0]"
     :render="MRGBEdit"
   ></m-multi-edit>
   <m-multi-edit
     v-else-if="method === 40"
-    v-model:value="lower as [number, number, number]"
+    :value="lower as [number, number, number][]"
+    @update:value="v => (lower = v)"
     :test="v => v.length !== 3 || typeof v[0] !== 'number'"
     :def="() => [0, 0, 0]"
     :render="MHSVEdit"
   ></m-multi-edit>
   <m-multi-edit
     v-else-if="method === 6"
-    v-model:value="lower as [number]"
+    :value="lower as [number][]"
+    @update:value="v => (lower = v)"
     :test="v => v.length !== 1 || typeof v[0] !== 'number'"
     :def="() => [0]"
     :render="MGrayEdit"
@@ -86,21 +89,24 @@ watch(
   <n-button @click="upper = null"> upper </n-button>
   <m-multi-edit
     v-if="!method || method === 4"
-    v-model:value="upper as [number, number, number]"
+    :value="upper as [number, number, number][]"
+    @update:value="v => (upper = v)"
     :test="v => v.length !== 3 || typeof v[0] !== 'number'"
     :def="() => [0, 0, 0]"
     :render="MRGBEdit"
   ></m-multi-edit>
   <m-multi-edit
     v-else-if="method === 40"
-    v-model:value="upper as [number, number, number]"
+    :value="upper as [number, number, number][]"
+    @update:value="v => (upper = v)"
     :test="v => v.length !== 3 || typeof v[0] !== 'number'"
     :def="() => [0, 0, 0]"
     :render="MHSVEdit"
   ></m-multi-edit>
   <m-multi-edit
     v-else-if="method === 6"
-    v-model:value="upper as [number]"
+    :value="upper as [number][]"
+    @update:value="v => (upper = v)"
     :test="v => v.length !== 1 || typeof v[0] !== 'number'"
     :def="() => [0]"
     :render="MGrayEdit"
