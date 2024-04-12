@@ -1,6 +1,6 @@
 import { api } from '../schema'
 import type { MaaRect } from '../types'
-import { Image } from './image'
+import { ImageHandle } from './image'
 
 export type SyncContextId = string & { __kind: 'MaaSyncContextAPI' }
 
@@ -152,11 +152,11 @@ export class SyncContext {
     )
   }
 
-  async screencap(img?: Image) {
+  async screencap(img?: ImageHandle) {
     let free = false
     if (!img) {
       free = true
-      img = new Image()
+      img = new ImageHandle()
       await img.create()
     }
     if (

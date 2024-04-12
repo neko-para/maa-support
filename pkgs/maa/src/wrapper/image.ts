@@ -3,7 +3,7 @@ import { __Disposable } from '../utils/dispose'
 
 export type ImageId = string & { __kind: 'MaaImageBuffer' }
 
-export class Image extends __Disposable {
+export class ImageHandle extends __Disposable {
   _img: ImageId | null = null
 
   async create() {

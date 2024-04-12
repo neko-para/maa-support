@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Image } from '@nekosu/maa'
+import { ImageHandle, awaitUsing } from '@nekosu/maa'
 import * as zip from '@zip.js/zip.js'
 import { NButton, NCode, NConfigProvider, NSelect, NSplit, NTree } from 'naive-ui'
 import type { TreeNodeProps } from 'naive-ui/es/tree/src/interface'
@@ -14,6 +14,7 @@ import {
   watch
 } from 'vue'
 
+import MCrop from '@/components/MCrop.vue'
 import MIcon from '@/components/MIcon.vue'
 import MTask from '@/components/MTask.vue'
 import { main } from '@/data/main'
@@ -143,42 +144,35 @@ const controller = computed(() => {
   return main.data[main.active].shallow.controller ?? null
 })
 
-let timer: NodeJS.Timeout
-let imageHandle: Image
-const image = ref<string | null>(null)
+const imageLoading = ref(false)
+const cropEl = ref<InstanceType<typeof MCrop> | null>(null)
 
-onMounted(async () => {
-  imageHandle = new Image()
-  await imageHandle.create()
-  let running = false
-  timer = setInterval(async () => {
-    if (running) {
+async function screencap() {
+  if (!cropEl.value) {
+    console.log('crop loss!')
+    return
+  }
+  imageLoading.value = true
+  await awaitUsing(async root => {
+    if (!controller.value) {
       return
     }
-    if (controller.value) {
-      running = true
-      const ctrl = controller.value.ref()
-      await (await ctrl.postScreencap()).wait()
-      await ctrl.image(imageHandle)
-      await ctrl.unref()
+    const imageHandle = new ImageHandle()
+    root.transfer(imageHandle)
+    await imageHandle.create()
+    const ctrl = controller.value.ref()
+    await (await ctrl.postScreencap()).wait()
+    await ctrl.image(imageHandle)
+    await ctrl.unref()
 
-      const buffer = await imageHandle.encoded(true)
-      if (image.value) {
-        URL.revokeObjectURL(image.value)
-      }
-      image.value = URL.createObjectURL(new Blob([buffer.buffer]))
-      running = false
+    const buffer = await imageHandle.encoded(true)
+    const url = URL.createObjectURL(new Blob([buffer.buffer]))
+    if (!cropEl.value?.setImage(url)) {
+      URL.revokeObjectURL(url)
     }
-  }, 1000)
-})
-
-onUnmounted(() => {
-  clearInterval(timer)
-  if (image.value) {
-    URL.revokeObjectURL(image.value)
-  }
-  imageHandle.unref()
-})
+  })
+  imageLoading.value = false
+}
 </script>
 
 <template>
@@ -196,7 +190,7 @@ onUnmounted(() => {
         </div>
       </template>
       <template #2>
-        <div class="container mx-auto pt-4 flex flex-col gap-4">
+        <div class="container mx-auto p-4 flex flex-col gap-4">
           <div class="flex items-center gap-2">
             <span> {{ taskPath }} </span>
             <template v-if="taskPath">
@@ -215,8 +209,13 @@ onUnmounted(() => {
           </div>
           <m-task v-if="task" :task="task"></m-task>
           <n-code :code="JSON.stringify(task, null, 2)" language="json"></n-code>
-          <div v-if="controller">
-            <img v-if="image" :src="image" />
+          <div v-if="controller" class="flex flex-col">
+            <div class="flex gap-2">
+              <n-button @click="screencap" :disabled="!controller" :loading="imageLoading">
+                screencap
+              </n-button>
+            </div>
+            <m-crop ref="cropEl"></m-crop>
           </div>
         </div>
         {{ taskInfo }}

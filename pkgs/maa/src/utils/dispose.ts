@@ -26,6 +26,15 @@ export class __Disposable {
     return target
   }
 
+  transfer(target?: __Disposable) {
+    if (!target) {
+      return target
+    } else {
+      this.__deferObject.push(target)
+    }
+    return target
+  }
+
   takeDefered(pred: (target: __Disposable) => boolean, dispose?: true): Promise<void>
   takeDefered(pred: (target: __Disposable) => boolean, dispose: false): __Disposable[]
   takeDefered(

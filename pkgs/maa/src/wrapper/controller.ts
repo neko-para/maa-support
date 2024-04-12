@@ -3,7 +3,7 @@ import { type AdbConfig, ControllerOption, Status, Win32Type } from '../types'
 import { __Disposable } from '../utils/dispose'
 import type { TrivialCallback } from './callback'
 import type { HwndId } from './device'
-import { Image } from './image'
+import { ImageHandle } from './image'
 
 export type ControllerId = string & { __kind: 'MaaControllerAPI' }
 export type ControllerActionId = number & { __kind: 'MaaResourceActionId' }
@@ -128,11 +128,11 @@ export class Controller extends __Disposable {
     }
   }
 
-  async image(img?: Image) {
+  async image(img?: ImageHandle) {
     let free = false
     if (!img) {
       free = true
-      img = new Image()
+      img = new ImageHandle()
       await img.create()
     }
     if ((await api.MaaControllerGetImage({ ctrl: this._ctrl!, buffer: img._img! })).return > 0) {
