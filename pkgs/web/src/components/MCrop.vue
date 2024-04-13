@@ -1,5 +1,11 @@
 <script setup lang="ts">
+import { NButton } from 'naive-ui'
 import { computed, onMounted, onUnmounted, ref, shallowRef, watch } from 'vue'
+
+import { CropContext, Pos, Viewport } from '@/utils/pos'
+
+const canvasW = ref(0)
+const canvasH = ref(0)
 
 const image = ref<string | null>(null)
 const imageEl = shallowRef<HTMLImageElement | null>(null)
@@ -44,40 +50,21 @@ defineExpose({
 
 const canvasEl = ref<HTMLCanvasElement | null>(null)
 
-const offsetX = ref(0)
-const offsetY = ref(0)
-const trackX = ref(0)
-const trackY = ref(0)
-const trackBaseX = ref(0)
-const trackBaseY = ref(0)
+const context = ref<CropContext>(new CropContext())
 const tracking = ref(false)
-const scale = ref(1)
-
-const clipLeft = ref(0)
-const clipRight = ref(0)
-const clipTop = ref(0)
-const clipBottom = ref(0)
 const clipping = ref(false)
 
 function onScroll(ev: WheelEvent) {
-  if (ev.deltaY > 0) {
-    scale.value *= 1.1
-  } else {
-    scale.value /= 1.1
-  }
+  context.value.viewport.zoom(ev.deltaY > 0)
 }
 
 function onMouseDown(ev: PointerEvent) {
   if (ev.button === 0) {
-    trackBaseX.value = offsetX.value
-    trackBaseY.value = offsetY.value
-    trackX.value = ev.offsetX
-    trackY.value = ev.offsetX
+    context.value.viewport.startDrag(Pos.fromEvent(ev))
     tracking.value = true
     canvasEl.value!.setPointerCapture(ev.pointerId)
   } else if (ev.button === 2) {
-    clipLeft.value = clipRight.value = ev.offsetX - offsetX.value
-    clipTop.value = clipBottom.value = ev.offsetY - offsetY.value
+    context.value.startClip(Pos.fromEvent(ev))
     clipping.value = true
     canvasEl.value!.setPointerCapture(ev.pointerId)
   }
@@ -85,11 +72,9 @@ function onMouseDown(ev: PointerEvent) {
 
 function onMouseMove(ev: PointerEvent) {
   if (tracking.value) {
-    offsetX.value = ev.offsetX - trackX.value + trackBaseX.value
-    offsetY.value = ev.offsetY - trackY.value + trackBaseY.value
+    context.value.viewport.moveDrag(Pos.fromEvent(ev))
   } else if (clipping.value) {
-    clipRight.value = ev.offsetX - offsetX.value
-    clipBottom.value = ev.offsetY - offsetY.value
+    context.value.moveClip(Pos.fromEvent(ev))
   }
 }
 
@@ -105,7 +90,7 @@ function onMouseUp(ev: PointerEvent) {
 
 function draw(ctx: CanvasRenderingContext2D) {
   ctx.fillStyle = 'wheat'
-  ctx.fillRect(0, 0, 640, 640)
+  ctx.fillRect(0, 0, canvasW.value, canvasH.value)
   if (!imageEl.value) {
     return
   }
@@ -115,23 +100,25 @@ function draw(ctx: CanvasRenderingContext2D) {
     0,
     width.value,
     height.value,
-    offsetX.value,
-    offsetY.value,
-    width.value * scale.value,
-    height.value * scale.value
+    ...context.value.viewport.imagePos(width.value, height.value)
   )
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.2)'
-  ctx.fillRect(
-    offsetX.value + clipLeft.value,
-    offsetY.value + clipTop.value,
-    clipRight.value - clipLeft.value,
-    clipBottom.value - clipTop.value
-  )
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.3)'
+  ctx.fillRect(...context.value.clipPos())
 }
 
 let drawTimer: NodeJS.Timeout = 0 as unknown as NodeJS.Timeout
 
 onMounted(() => {
+  const resize = () => {
+    const rec = canvasEl.value!.getBoundingClientRect()
+    console.log(rec.width, rec.height)
+    canvasW.value = rec.width
+    canvasH.value = rec.height
+    canvasEl.value!.width = rec.width
+    canvasEl.value!.height = rec.height
+  }
+  canvasEl.value!.onresize = resize
+  resize()
   const ctx = canvasEl.value!.getContext('2d')
   if (ctx) {
     drawTimer = setInterval(() => draw(ctx), 20)
@@ -146,16 +133,16 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div>
-    offset {{ offsetX }} {{ offsetY }}
-    <br />
-    {{ clipLeft }} {{ clipTop }} {{ clipRight }} {{ clipBottom }}
-
-    <!-- <img v-if="image" :src="image" :width="expectSize[0]" :height="expectSize[1]" /> -->
+  <div class="flex flex-col gap-2">
+    <pre>{{ context }}</pre>
+    <div class="flex gap-2">
+      <n-button @click="() => context.viewport.reset()"> reset </n-button>
+      <n-button @click="() => context.ceilClip()"> ceil </n-button>
+      <n-button @click="() => context.boundClip(width, height)"> bound </n-button>
+    </div>
     <canvas
       ref="canvasEl"
-      :width="640"
-      :height="640"
+      class="flex-1"
       @wheel="onScroll"
       @pointerdown="onMouseDown"
       @pointermove="onMouseMove"

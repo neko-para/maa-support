@@ -190,7 +190,7 @@ async function screencap() {
         </div>
       </template>
       <template #2>
-        <div class="container mx-auto p-4 flex flex-col gap-4">
+        <div class="container mx-auto p-4 flex flex-col gap-4 h-full">
           <div class="flex items-center gap-2">
             <span> {{ taskPath }} </span>
             <template v-if="taskPath">
@@ -209,17 +209,15 @@ async function screencap() {
           </div>
           <m-task v-if="task" :task="task"></m-task>
           <n-code :code="JSON.stringify(task, null, 2)" language="json"></n-code>
-          <div v-if="controller" class="flex flex-col">
+          <div v-if="controller" class="flex flex-col flex-1">
             <div class="flex gap-2">
               <n-button @click="screencap" :disabled="!controller" :loading="imageLoading">
                 screencap
               </n-button>
             </div>
-            <m-crop ref="cropEl"></m-crop>
+            <m-crop ref="cropEl" class="flex-1"></m-crop>
           </div>
         </div>
-        {{ taskInfo }}
-        {{ imageInfo }}
       </template>
     </n-split>
   </div>
