@@ -52,6 +52,7 @@ export class MemFS {
       child: {}
     }
     this.blob = new BlobManager()
+    this.reset()
   }
 
   resolve(path: string) {
@@ -94,6 +95,9 @@ export class MemFS {
       child: {}
     }
     this.blob.reset()
+
+    this.mkdir('/pipeline')
+    this.mkdir('/image')
   }
 
   dirname(res: string | string[]) {

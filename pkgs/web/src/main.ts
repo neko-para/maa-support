@@ -16,4 +16,8 @@ document.head.appendChild(meta)
 
 maa.init()
 
+window.onbeforeunload = () => {
+  maa.deinit()
+}
+
 createApp(App).mount('#app')

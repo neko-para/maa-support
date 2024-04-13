@@ -44,19 +44,15 @@ onUnmounted(() => {
   }
 })
 
-defineExpose({
-  setImage,
-  loading
-})
-
 const canvasEl = ref<HTMLCanvasElement | null>(null)
 
 const context = ref<CropContext>(new CropContext())
 const tracking = ref(false)
 const clipping = ref(false)
+const current = ref<Pos>(new Pos())
 
 function onScroll(ev: WheelEvent) {
-  context.value.viewport.zoom(ev.deltaY > 0)
+  context.value.viewport.zoomAt(ev.deltaY > 0, Pos.fromEvent(ev))
 }
 
 function onMouseDown(ev: PointerEvent) {
@@ -72,6 +68,7 @@ function onMouseDown(ev: PointerEvent) {
 }
 
 function onMouseMove(ev: PointerEvent) {
+  current.value = Pos.fromEvent(ev)
   if (tracking.value) {
     context.value.viewport.moveDrag(Pos.fromEvent(ev))
   } else if (clipping.value) {
@@ -105,6 +102,13 @@ function draw(ctx: CanvasRenderingContext2D) {
   )
   ctx.fillStyle = 'rgba(255, 255, 255, 0.3)'
   ctx.fillRect(...context.value.clipPos())
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)'
+  ctx.beginPath()
+  ctx.moveTo(current.value.x, 0)
+  ctx.lineTo(current.value.x, canvasH.value)
+  ctx.moveTo(0, current.value.y)
+  ctx.lineTo(canvasW.value, current.value.y)
+  ctx.stroke()
 }
 
 let drawTimer: NodeJS.Timeout = 0 as unknown as NodeJS.Timeout
@@ -118,7 +122,7 @@ onMounted(() => {
     canvasEl.value!.width = rec.width
     canvasEl.value!.height = rec.height
   }
-  canvasEl.value!.onresize = resize
+  window.onresize = resize
   resize()
   const ctx = canvasEl.value!.getContext('2d')
   if (ctx) {
@@ -132,31 +136,54 @@ onUnmounted(() => {
   }
 })
 
-async function download() {
+async function getImage() {
+  if (!image.value) {
+    return null
+  }
   context.value.ceilClip()
   context.value.boundClip(width.value, height.value)
-  const buffer = await (await fetch(image.value!)).arrayBuffer()
+  const cropPos = context.value.cropPos()
+  if (cropPos[2] === 0 || cropPos[3] === 0) {
+    return null
+  }
+  const buffer = await (await fetch(image.value)).arrayBuffer()
   const jimp = await Jimp.read(Buffer.from(buffer))
-  const croped = jimp.crop(...context.value.cropPos())
+  const croped = jimp.crop(...cropPos)
   const result = await croped.getBufferAsync('image/png')
 
   const resultBlob = new Blob([result.buffer])
   const dataUrl = URL.createObjectURL(resultBlob)
 
+  return dataUrl
+}
+
+async function download() {
+  const dataUrl = await getImage()
+  if (!dataUrl) {
+    return
+  }
+
   triggerDownload(dataUrl, 'result.png')
 
   URL.revokeObjectURL(dataUrl)
 }
+
+defineExpose({
+  setImage,
+  getImage,
+  loading
+})
 </script>
 
 <template>
   <div class="flex flex-col gap-2">
     <pre>{{ context }}</pre>
-    <div class="flex gap-2">
+    <div class="flex items-center gap-2">
       <n-button @click="() => context.viewport.reset()"> reset </n-button>
       <n-button @click="() => context.ceilClip()"> ceil </n-button>
       <n-button @click="() => context.boundClip(width, height)"> bound </n-button>
       <n-button @click="download"> download </n-button>
+      <span> 左键拖动，右键裁剪；ceil对齐像素，bound移除出界范围 </span>
     </div>
     <canvas
       ref="canvasEl"

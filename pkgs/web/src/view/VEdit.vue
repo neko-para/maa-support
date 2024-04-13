@@ -204,7 +204,7 @@ async function screencap() {
             </template>
           </div>
           <m-task v-if="task" :task="task"></m-task>
-          <n-code :code="JSON.stringify(task, null, 2)" language="json"></n-code>
+          <n-code v-if="task" :code="JSON.stringify(task, null, 2)" language="json"></n-code>
           <div v-if="controller" class="flex flex-col flex-1">
             <div class="flex gap-2">
               <n-button @click="screencap" :disabled="!controller" :loading="imageLoading">
@@ -213,6 +213,7 @@ async function screencap() {
             </div>
             <m-crop ref="cropEl" class="flex-1"></m-crop>
           </div>
+          <span v-else> 暂无激活控制器，先去主界面连接 </span>
         </div>
       </template>
     </n-split>

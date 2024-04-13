@@ -112,6 +112,13 @@ export class Viewport {
     }
   }
 
+  zoomAt(direct: boolean, fix: Pos) {
+    const oldPos = this.fromView(fix)
+    this.zoom(direct)
+    const newFix = this.toView(oldPos)
+    this.origin = this.origin.sub(fix.sub(newFix))
+  }
+
   imagePos(width: number, height: number): Rect {
     return [...this.toView(new Pos()).flat(), ...this.toViewS(new Pos().set(width, height)).flat()]
   }

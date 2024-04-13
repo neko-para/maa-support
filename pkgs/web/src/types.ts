@@ -71,9 +71,7 @@ export type Recognition =
       custom_recognition_param?: unknown
     }
 
-// https://github.com/vuejs/vue/issues/11367
-// boolean should be after string to preserve empty prop
-export type Target = string | true | Rect
+export type Target = true | string | Rect
 
 export type Action =
   | {
