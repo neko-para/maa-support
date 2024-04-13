@@ -2,6 +2,7 @@
 import { NButton } from 'naive-ui'
 import { computed, onMounted, onUnmounted, ref, shallowRef, watch } from 'vue'
 
+import { triggerDownload } from '@/utils/download'
 import { CropContext, Pos, Viewport } from '@/utils/pos'
 
 const canvasW = ref(0)
@@ -130,6 +131,22 @@ onUnmounted(() => {
     clearInterval(drawTimer)
   }
 })
+
+async function download() {
+  context.value.ceilClip()
+  context.value.boundClip(width.value, height.value)
+  const buffer = await (await fetch(image.value!)).arrayBuffer()
+  const jimp = await Jimp.read(Buffer.from(buffer))
+  const croped = jimp.crop(...context.value.cropPos())
+  const result = await croped.getBufferAsync('image/png')
+
+  const resultBlob = new Blob([result.buffer])
+  const dataUrl = URL.createObjectURL(resultBlob)
+
+  triggerDownload(dataUrl, 'result.png')
+
+  URL.revokeObjectURL(dataUrl)
+}
 </script>
 
 <template>
@@ -139,6 +156,7 @@ onUnmounted(() => {
       <n-button @click="() => context.viewport.reset()"> reset </n-button>
       <n-button @click="() => context.ceilClip()"> ceil </n-button>
       <n-button @click="() => context.boundClip(width, height)"> bound </n-button>
+      <n-button @click="download"> download </n-button>
     </div>
     <canvas
       ref="canvasEl"

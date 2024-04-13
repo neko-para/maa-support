@@ -20,6 +20,7 @@ import MTask from '@/components/MTask.vue'
 import { main } from '@/data/main'
 import { fs, fsData, imageInfo, taskInfo } from '@/fs'
 import type { Task } from '@/types'
+import { triggerDownload } from '@/utils/download'
 
 const selectZipEl = ref<HTMLInputElement | null>(null)
 const selectedFile = shallowRef<File | null>(null)
@@ -60,13 +61,8 @@ async function downloadZip() {
   const data = await blobWriter.getData()
   const dataUrl = URL.createObjectURL(data)
 
-  const el = document.createElement('a')
-  el.href = dataUrl
-  el.download = 'resource.zip'
-  el.setAttribute('style', 'display:none')
-  document.body.appendChild(el)
-  el.click()
-  document.body.removeChild(el)
+  triggerDownload(dataUrl, 'resource.zip')
+
   URL.revokeObjectURL(dataUrl)
 }
 

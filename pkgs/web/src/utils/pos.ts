@@ -142,6 +142,10 @@ export class CropContext {
     ]
   }
 
+  cropPos(): Rect {
+    return [...this.clipStart.flat(), ...this.clipStop.sub(this.clipStart).flat()]
+  }
+
   ceilClip() {
     this.clipStart.makeRect(this.clipStop)
     this.clipStart = this.clipStart.floor()

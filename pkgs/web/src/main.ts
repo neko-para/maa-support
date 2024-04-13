@@ -1,4 +1,5 @@
 import { Buffer } from 'buffer'
+import 'jimp/browser/lib/jimp.js'
 import 'material-symbols'
 import { createApp } from 'vue'
 

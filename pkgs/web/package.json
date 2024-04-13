@@ -19,6 +19,7 @@
     "buffer": "^6.0.3",
     "esbuild": "^0.20.0",
     "highlight.js": "^11.9.0",
+    "jimp": "^0.22.12",
     "jsonc-parser": "^3.2.1",
     "material-symbols": "^0.17.1",
     "naive-ui": "^2.38.1",
