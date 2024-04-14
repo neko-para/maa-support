@@ -44,6 +44,7 @@ onUnmounted(() => {
   }
 })
 
+const canvasSizeEl = ref<HTMLDivElement | null>(null)
 const canvasEl = ref<HTMLCanvasElement | null>(null)
 
 const context = ref<CropContext>(new CropContext())
@@ -114,20 +115,19 @@ function draw(ctx: CanvasRenderingContext2D) {
 let drawTimer: NodeJS.Timeout = 0 as unknown as NodeJS.Timeout
 
 onMounted(() => {
+  const ctx = canvasEl.value!.getContext('2d')!
   const resize = () => {
-    const rec = canvasEl.value!.getBoundingClientRect()
+    const rec = canvasSizeEl.value!.getBoundingClientRect()
     console.log(rec.width, rec.height)
     canvasW.value = rec.width
     canvasH.value = rec.height
     canvasEl.value!.width = rec.width
     canvasEl.value!.height = rec.height
+    draw(ctx)
   }
-  window.onresize = resize
+  new ResizeObserver(resize).observe(canvasSizeEl.value!)
   resize()
-  const ctx = canvasEl.value!.getContext('2d')
-  if (ctx) {
-    drawTimer = setInterval(() => draw(ctx), 20)
-  }
+  drawTimer = setInterval(() => draw(ctx), 20)
 })
 
 onUnmounted(() => {
@@ -176,7 +176,7 @@ defineExpose({
 </script>
 
 <template>
-  <div class="flex flex-col gap-2">
+  <div class="flex flex-col gap-2 flex-1">
     <pre>{{ context }}</pre>
     <div class="flex items-center gap-2">
       <n-button @click="() => context.viewport.reset()"> reset </n-button>
@@ -185,14 +185,16 @@ defineExpose({
       <n-button @click="download"> download </n-button>
       <span> 左键拖动，右键裁剪；ceil对齐像素，bound移除出界范围 </span>
     </div>
-    <canvas
-      ref="canvasEl"
-      class="flex-1"
-      @wheel="onScroll"
-      @pointerdown="onMouseDown"
-      @pointermove="onMouseMove"
-      @pointerup="onMouseUp"
-      @contextmenu.prevent=""
-    ></canvas>
+    <div ref="canvasSizeEl" class="relative flex-1">
+      <canvas
+        ref="canvasEl"
+        class="absolute left-0 top-0"
+        @wheel="onScroll"
+        @pointerdown="onMouseDown"
+        @pointermove="onMouseMove"
+        @pointerup="onMouseUp"
+        @contextmenu.prevent=""
+      ></canvas>
+    </div>
   </div>
 </template>

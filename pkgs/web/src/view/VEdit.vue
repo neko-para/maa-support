@@ -211,7 +211,7 @@ async function screencap() {
                 screencap
               </n-button>
             </div>
-            <m-crop ref="cropEl" class="flex-1"></m-crop>
+            <m-crop ref="cropEl"></m-crop>
           </div>
           <span v-else> 暂无激活控制器，先去主界面连接 </span>
         </div>
