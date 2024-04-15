@@ -20,37 +20,18 @@ import MTask from '@/components/MTask.vue'
 import { main } from '@/data/main'
 import { fs, fsData, imageInfo, taskInfo } from '@/fs'
 import type { Task } from '@/types'
-import { triggerDownload } from '@/utils/download'
+import { triggerDownload, triggerUpload } from '@/utils/download'
 
-const selectZipEl = ref<HTMLInputElement | null>(null)
-const selectedFile = shallowRef<File | null>(null)
-let selectResolve = () => {}
-
-onMounted(() => {
-  selectZipEl.value!.addEventListener('change', event => {
-    selectedFile.value = (event.target as HTMLInputElement)?.files?.[0] ?? null
-    selectZipEl.value!.value = ''
-    selectResolve()
-  })
-})
-
-function uploadZip() {
-  selectResolve = () => {}
-  selectZipEl.value?.click()
-  new Promise<void>(resolve => {
-    selectResolve = resolve
-  }).then(async () => {
-    if (!selectedFile.value) {
-      return
-    }
-    const file = selectedFile.value
+async function uploadZip() {
+  const file = await triggerUpload('.zip')
+  if (file) {
     const reader = new zip.BlobReader(file)
     taskPath.value = null
     taskData.value = {}
     currentTask.value = null
     fs.reset()
     await fs.loadZip(new zip.ZipReader(reader))
-  })
+  }
 }
 
 async function downloadZip() {
@@ -169,12 +150,21 @@ async function screencap() {
   })
   imageLoading.value = false
 }
+
+async function uploadImage() {
+  const file = await triggerUpload('.png')
+  if (!file) {
+    return
+  }
+  const url = URL.createObjectURL(file)
+  if (!cropEl.value?.setImage(url)) {
+    URL.revokeObjectURL(url)
+  }
+}
 </script>
 
 <template>
   <div class="flex flex-col w-full h-full">
-    <input ref="selectZipEl" type="file" accept=".zip" class="hidden" />
-
     <n-split :min="0.1" :max="0.3" :default-size="0.2">
       <template #1>
         <div class="flex flex-col gap-2">
@@ -210,6 +200,7 @@ async function screencap() {
               <n-button @click="screencap" :disabled="!controller" :loading="imageLoading">
                 screencap
               </n-button>
+              <n-button @click="uploadImage" :loading="imageLoading"> upload </n-button>
               <span v-if="!controller"> 暂无激活控制器，先去主界面连接 </span>
             </div>
             <m-crop ref="cropEl"></m-crop>
