@@ -45,12 +45,23 @@ onUnmounted(() => {
 const canvasSizeEl = ref<HTMLDivElement | null>(null)
 const canvasEl = ref<HTMLCanvasElement | null>(null)
 
+type CornerType = 'lt' | 'lb' | 'rt' | 'rb'
+const corners: CornerType[] = ['lt', 'lb', 'rt', 'rb']
+type EdgeType = 'l' | 't' | 'r' | 'b'
+const edges: EdgeType[] = ['l', 't', 'r', 'b']
+const resizeCursor: Record<CornerType, string> = {
+  lt: 'nwse-resize',
+  rb: 'nwse-resize',
+  lb: 'nesw-resize',
+  rt: 'nesw-resize'
+}
+
 const cursor = ref<string>('default')
 const viewport = ref<Viewport>(new Viewport())
 const viewMoveDrag = ref<DragHandler>(new DragHandler())
 const cropMoveDrag = ref<DragHandler>(new DragHandler())
 const cornerMoveDrag = ref<DragHandler>(new DragHandler())
-const cornerMoveTarget = ref<'lt' | 'lb' | 'rt' | 'rb'>('lt')
+const cornerMoveTarget = ref<CornerType>('lt')
 const cropDrag = ref<DragHandler>(new DragHandler())
 const cropBox = ref<Box>(new Box())
 const current = ref<Pos>(new Pos())
@@ -72,25 +83,17 @@ function onMouseDown(ev: PointerEvent) {
   const mp = Pos.fromEvent(ev)
   current.value = mp
   if (ev.button === 0) {
-    console.log(mp.dis(cropBoxView.value.lt))
-    console.log(mp.dis(cropBoxView.value.rb))
-    if (mp.dis(cropBoxView.value.lt) <= 4) {
-      cornerMoveTarget.value = 'lt'
-      cornerMoveDrag.value.down(mp, cropBoxView.value.lt)
-      canvasEl.value!.setPointerCapture(ev.pointerId)
-    } else if (mp.dis(cropBoxView.value.lb) <= 4) {
-      cornerMoveTarget.value = 'lb'
-      cornerMoveDrag.value.down(mp, cropBoxView.value.lb)
-      canvasEl.value!.setPointerCapture(ev.pointerId)
-    } else if (mp.dis(cropBoxView.value.rt) <= 4) {
-      cornerMoveTarget.value = 'rt'
-      cornerMoveDrag.value.down(mp, cropBoxView.value.rt)
-      canvasEl.value!.setPointerCapture(ev.pointerId)
-    } else if (mp.dis(cropBoxView.value.rb) <= 4) {
-      cornerMoveTarget.value = 'rb'
-      cornerMoveDrag.value.down(mp, cropBoxView.value.rb)
-      canvasEl.value!.setPointerCapture(ev.pointerId)
-    } else if (cropBoxView.value.contains(mp)) {
+    let match = false
+    for (const corner of corners) {
+      if (mp.dis(cropBoxView.value[corner]) <= 4) {
+        cornerMoveTarget.value = corner
+        cornerMoveDrag.value.down(mp, cropBoxView.value[corner])
+        canvasEl.value!.setPointerCapture(ev.pointerId)
+        match = true
+        break
+      }
+    }
+    if (!match && cropBoxView.value.contains(mp)) {
       cropMoveDrag.value.down(mp, cropBoxView.value.origin)
       canvasEl.value!.setPointerCapture(ev.pointerId)
       cursor.value = 'grab'
@@ -150,15 +153,15 @@ function onMouseMove(ev: PointerEvent) {
     cropDrag.value.move(mp)
     cropBoxView.value = cropDrag.value.box
   } else {
-    if (mp.dis(cropBoxView.value.lt) <= 4) {
-      cursor.value = 'nwse-resize'
-    } else if (mp.dis(cropBoxView.value.lb) <= 4) {
-      cursor.value = 'nesw-resize'
-    } else if (mp.dis(cropBoxView.value.rt) <= 4) {
-      cursor.value = 'nesw-resize'
-    } else if (mp.dis(cropBoxView.value.rb) <= 4) {
-      cursor.value = 'nwse-resize'
-    } else {
+    let match = false
+    for (const corner of corners) {
+      if (mp.dis(cropBoxView.value[corner]) <= 4) {
+        cursor.value = resizeCursor[corner]
+        match = true
+        break
+      }
+    }
+    if (!match) {
       cursor.value = 'default'
     }
   }
