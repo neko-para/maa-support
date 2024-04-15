@@ -2,8 +2,8 @@
 import { NButton } from 'naive-ui'
 import { computed, onMounted, onUnmounted, ref, shallowRef, watch } from 'vue'
 
+import { Box, DragHandler, Pos, Size, Viewport } from '@/utils/2d'
 import { triggerDownload } from '@/utils/download'
-import { CropContext, Pos, Viewport } from '@/utils/pos'
 
 const canvasW = ref(0)
 const canvasH = ref(0)
@@ -11,8 +11,7 @@ const canvasH = ref(0)
 const image = ref<string | null>(null)
 const imageEl = shallowRef<HTMLImageElement | null>(null)
 const loading = ref(false)
-const width = ref(0)
-const height = ref(0)
+const imageSize = ref<Size>(new Size())
 
 async function setImage(url: string) {
   if (loading.value) {
@@ -32,8 +31,7 @@ async function setImage(url: string) {
   })
   loading.value = false
 
-  width.value = imageEl.value.width
-  height.value = imageEl.value.height
+  imageSize.value.set(imageEl.value.width, imageEl.value.height)
 
   return true
 }
@@ -47,42 +45,67 @@ onUnmounted(() => {
 const canvasSizeEl = ref<HTMLDivElement | null>(null)
 const canvasEl = ref<HTMLCanvasElement | null>(null)
 
-const context = ref<CropContext>(new CropContext())
-const tracking = ref(false)
-const clipping = ref(false)
+const viewport = ref<Viewport>(new Viewport())
+const viewMoveDrag = ref<DragHandler>(new DragHandler())
+const cropMoveDrag = ref<DragHandler>(new DragHandler())
+const cropDrag = ref<DragHandler>(new DragHandler())
+const cropBox = ref<Box>(new Box())
 const current = ref<Pos>(new Pos())
 
+const cropBoxView = computed<Box>({
+  get() {
+    return viewport.value.toView(cropBox.value)
+  },
+  set(b: Box) {
+    cropBox.value = viewport.value.fromView(b)
+  }
+})
+
 function onScroll(ev: WheelEvent) {
-  context.value.viewport.zoomAt(ev.deltaY > 0, Pos.fromEvent(ev))
+  viewport.value.zoom(ev.deltaY > 0, Pos.fromEvent(ev))
 }
 
 function onMouseDown(ev: PointerEvent) {
+  const mp = Pos.fromEvent(ev)
+  current.value = mp
   if (ev.button === 0) {
-    context.value.viewport.startDrag(Pos.fromEvent(ev))
-    tracking.value = true
+    if (cropBoxView.value.contains(mp)) {
+      cropMoveDrag.value.down(mp, cropBoxView.value.origin)
+      canvasEl.value!.setPointerCapture(ev.pointerId)
+    }
+  } else if (ev.button === 1) {
+    viewMoveDrag.value.down(mp, viewport.value.offset)
     canvasEl.value!.setPointerCapture(ev.pointerId)
   } else if (ev.button === 2) {
-    context.value.startClip(Pos.fromEvent(ev))
-    clipping.value = true
+    cropDrag.value.down(mp, mp)
     canvasEl.value!.setPointerCapture(ev.pointerId)
   }
 }
 
 function onMouseMove(ev: PointerEvent) {
-  current.value = Pos.fromEvent(ev)
-  if (tracking.value) {
-    context.value.viewport.moveDrag(Pos.fromEvent(ev))
-  } else if (clipping.value) {
-    context.value.moveClip(Pos.fromEvent(ev))
+  const mp = Pos.fromEvent(ev)
+  current.value = mp
+  if (cropMoveDrag.value.state) {
+    cropMoveDrag.value.move(mp)
+    cropBoxView.value = cropBoxView.value.copy().setOrigin(cropMoveDrag.value.current)
+  } else if (viewMoveDrag.value.state) {
+    viewMoveDrag.value.move(mp)
+    viewport.value.offset = viewMoveDrag.value.current
+  } else if (cropDrag.value.state) {
+    cropDrag.value.move(mp)
+    cropBoxView.value = cropDrag.value.box
   }
 }
 
 function onMouseUp(ev: PointerEvent) {
-  if (tracking.value && ev.button === 0) {
-    tracking.value = false
+  if (cropMoveDrag.value.state && ev.button === 0) {
+    cropMoveDrag.value.up()
     canvasEl.value!.releasePointerCapture(ev.pointerId)
-  } else if (clipping.value && ev.button === 2) {
-    clipping.value = false
+  } else if (viewMoveDrag.value.state && ev.button === 1) {
+    viewMoveDrag.value.up()
+    canvasEl.value!.releasePointerCapture(ev.pointerId)
+  } else if (cropDrag.value.state && ev.button === 2) {
+    cropDrag.value.up()
     canvasEl.value!.releasePointerCapture(ev.pointerId)
   }
 }
@@ -97,12 +120,11 @@ function draw(ctx: CanvasRenderingContext2D) {
     imageEl.value,
     0,
     0,
-    width.value,
-    height.value,
-    ...context.value.viewport.imagePos(width.value, height.value)
+    ...imageSize.value.flat(),
+    ...viewport.value.toView(Box.from(new Pos(), imageSize.value)).flat()
   )
   ctx.fillStyle = 'rgba(255, 255, 255, 0.3)'
-  ctx.fillRect(...context.value.clipPos())
+  ctx.fillRect(...cropBoxView.value.flat())
   ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)'
   ctx.beginPath()
   ctx.moveTo(current.value.x, 0)
@@ -136,13 +158,21 @@ onUnmounted(() => {
   }
 })
 
+function cropCeil() {
+  cropBox.value.ceil()
+}
+
+function cropBound() {
+  cropBox.value = cropBox.value.intersect(Box.from(new Pos(), imageSize.value))
+}
+
 async function getImage() {
   if (!image.value) {
     return null
   }
-  context.value.ceilClip()
-  context.value.boundClip(width.value, height.value)
-  const cropPos = context.value.cropPos()
+  cropCeil()
+  cropBound()
+  const cropPos = cropBox.value.flat()
   if (cropPos[2] === 0 || cropPos[3] === 0) {
     return null
   }
@@ -177,13 +207,14 @@ defineExpose({
 
 <template>
   <div class="flex flex-col gap-2 flex-1">
-    <pre>{{ context }}</pre>
+    <pre>{{ viewport }}</pre>
+    <pre>{{ cropBox }}</pre>
     <div class="flex items-center gap-2">
-      <n-button @click="() => context.viewport.reset()"> reset </n-button>
-      <n-button @click="() => context.ceilClip()"> ceil </n-button>
-      <n-button @click="() => context.boundClip(width, height)"> bound </n-button>
+      <n-button @click="() => viewport.reset()"> reset </n-button>
+      <n-button @click="cropCeil"> ceil </n-button>
+      <n-button @click="cropBound"> bound </n-button>
       <n-button @click="download"> download </n-button>
-      <span> 左键拖动，右键裁剪；ceil对齐像素，bound移除出界范围 </span>
+      <span> 左键移动裁剪区域，中键移动视图，右键裁剪；ceil对齐像素，bound移除出界范围 </span>
     </div>
     <div ref="canvasSizeEl" class="relative flex-1">
       <canvas
