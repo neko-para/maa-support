@@ -197,8 +197,10 @@ export class Box {
   }
 
   ceil() {
-    this.origin = this.origin.floor()
-    this.size = this.size.ceil()
+    const lt = this.lt.floor()
+    const rb = this.rb.ceil()
+    this.origin = lt
+    this.size = rb.sub(lt)
   }
 
   contains(p: Pos) {
