@@ -45,6 +45,7 @@ onUnmounted(() => {
 const canvasSizeEl = ref<HTMLDivElement | null>(null)
 const canvasEl = ref<HTMLCanvasElement | null>(null)
 
+const cursor = ref<string>('default')
 const viewport = ref<Viewport>(new Viewport())
 const viewMoveDrag = ref<DragHandler>(new DragHandler())
 const cropMoveDrag = ref<DragHandler>(new DragHandler())
@@ -72,13 +73,16 @@ function onMouseDown(ev: PointerEvent) {
     if (cropBoxView.value.contains(mp)) {
       cropMoveDrag.value.down(mp, cropBoxView.value.origin)
       canvasEl.value!.setPointerCapture(ev.pointerId)
+      cursor.value = 'grab'
     }
   } else if (ev.button === 1) {
     viewMoveDrag.value.down(mp, viewport.value.offset)
     canvasEl.value!.setPointerCapture(ev.pointerId)
+    cursor.value = 'grab'
   } else if (ev.button === 2) {
     cropDrag.value.down(mp, mp)
     canvasEl.value!.setPointerCapture(ev.pointerId)
+    cursor.value = 'crosshair'
   }
 }
 
@@ -101,12 +105,15 @@ function onMouseUp(ev: PointerEvent) {
   if (cropMoveDrag.value.state && ev.button === 0) {
     cropMoveDrag.value.up()
     canvasEl.value!.releasePointerCapture(ev.pointerId)
+    cursor.value = 'default'
   } else if (viewMoveDrag.value.state && ev.button === 1) {
     viewMoveDrag.value.up()
     canvasEl.value!.releasePointerCapture(ev.pointerId)
+    cursor.value = 'default'
   } else if (cropDrag.value.state && ev.button === 2) {
     cropDrag.value.up()
     canvasEl.value!.releasePointerCapture(ev.pointerId)
+    cursor.value = 'default'
   }
 }
 
@@ -125,24 +132,24 @@ function draw(ctx: CanvasRenderingContext2D) {
   ctx.fillStyle = 'rgba(255, 255, 255, 0.3)'
   ctx.fillRect(...cropBoxView.value.flat())
 
-  ctx.save()
-  ctx.globalCompositeOperation = 'difference'
-  ctx.strokeStyle = 'white'
-  ctx.beginPath()
-  if (1 / viewport.value.scale >= 4) {
-    const pos = viewport.value.fromView(current.value).round()
-    for (let dx = -10; dx <= 10; dx += 1) {
-      for (let dy = -10; dy <= 10; dy += 1) {
-        const dpos = viewport.value.toView(pos.add(Size.from(dx, dy)))
-        ctx.moveTo(dpos.x, 0)
-        ctx.lineTo(dpos.x, canvasH.value)
-        ctx.moveTo(0, dpos.y)
-        ctx.lineTo(canvasW.value, dpos.y)
-      }
-    }
-  }
-  ctx.stroke()
-  ctx.restore()
+  // ctx.save()
+  // ctx.globalCompositeOperation = 'difference'
+  // ctx.strokeStyle = 'white'
+  // ctx.beginPath()
+  // if (1 / viewport.value.scale >= 4) {
+  //   const pos = viewport.value.fromView(current.value).round()
+  //   for (let dx = -10; dx <= 10; dx += 1) {
+  //     for (let dy = -10; dy <= 10; dy += 1) {
+  //       const dpos = viewport.value.toView(pos.add(Size.from(dx, dy)))
+  //       ctx.moveTo(dpos.x, 0)
+  //       ctx.lineTo(dpos.x, canvasH.value)
+  //       ctx.moveTo(0, dpos.y)
+  //       ctx.lineTo(canvasW.value, dpos.y)
+  //     }
+  //   }
+  // }
+  // ctx.stroke()
+  // ctx.restore()
 
   ctx.strokeStyle = 'rgba(255, 127, 127, 1)'
   ctx.beginPath()
@@ -245,6 +252,9 @@ defineExpose({
       <canvas
         ref="canvasEl"
         class="absolute left-0 top-0"
+        :style="{
+          cursor: cursor
+        }"
         @wheel="onScroll"
         @pointerdown="onMouseDown"
         @pointermove="onMouseMove"
