@@ -49,6 +49,8 @@ const cursor = ref<string>('default')
 const viewport = ref<Viewport>(new Viewport())
 const viewMoveDrag = ref<DragHandler>(new DragHandler())
 const cropMoveDrag = ref<DragHandler>(new DragHandler())
+const cornerMoveDrag = ref<DragHandler>(new DragHandler())
+const cornerMoveTarget = ref<'lt' | 'lb' | 'rt' | 'rb'>('lt')
 const cropDrag = ref<DragHandler>(new DragHandler())
 const cropBox = ref<Box>(new Box())
 const current = ref<Pos>(new Pos())
@@ -70,7 +72,25 @@ function onMouseDown(ev: PointerEvent) {
   const mp = Pos.fromEvent(ev)
   current.value = mp
   if (ev.button === 0) {
-    if (cropBoxView.value.contains(mp)) {
+    console.log(mp.dis(cropBoxView.value.lt))
+    console.log(mp.dis(cropBoxView.value.rb))
+    if (mp.dis(cropBoxView.value.lt) <= 4) {
+      cornerMoveTarget.value = 'lt'
+      cornerMoveDrag.value.down(mp, cropBoxView.value.lt)
+      canvasEl.value!.setPointerCapture(ev.pointerId)
+    } else if (mp.dis(cropBoxView.value.lb) <= 4) {
+      cornerMoveTarget.value = 'lb'
+      cornerMoveDrag.value.down(mp, cropBoxView.value.lb)
+      canvasEl.value!.setPointerCapture(ev.pointerId)
+    } else if (mp.dis(cropBoxView.value.rt) <= 4) {
+      cornerMoveTarget.value = 'rt'
+      cornerMoveDrag.value.down(mp, cropBoxView.value.rt)
+      canvasEl.value!.setPointerCapture(ev.pointerId)
+    } else if (mp.dis(cropBoxView.value.rb) <= 4) {
+      cornerMoveTarget.value = 'rb'
+      cornerMoveDrag.value.down(mp, cropBoxView.value.rb)
+      canvasEl.value!.setPointerCapture(ev.pointerId)
+    } else if (cropBoxView.value.contains(mp)) {
       cropMoveDrag.value.down(mp, cropBoxView.value.origin)
       canvasEl.value!.setPointerCapture(ev.pointerId)
       cursor.value = 'grab'
@@ -89,7 +109,38 @@ function onMouseDown(ev: PointerEvent) {
 function onMouseMove(ev: PointerEvent) {
   const mp = Pos.fromEvent(ev)
   current.value = mp
-  if (cropMoveDrag.value.state) {
+
+  if (cornerMoveDrag.value.state) {
+    cornerMoveDrag.value.move(mp)
+    const dlt = cornerMoveDrag.value.current.sub(cropBoxView.value.origin)
+    switch (cornerMoveTarget.value) {
+      case 'lt':
+        cropBoxView.value = cropBoxView.value
+          .copy()
+          .setSize(cropBoxView.value.size.sub(dlt))
+          .setOrigin(cornerMoveDrag.value.current)
+        break
+      case 'lb':
+        {
+          const v = cropBoxView.value.copy()
+          v.origin = Pos.from(cornerMoveDrag.value.current.x, v.origin.y)
+          v.size = Size.from(v.size.w - dlt.w, dlt.h)
+          cropBoxView.value = v
+        }
+        break
+      case 'rt':
+        {
+          const v = cropBoxView.value.copy()
+          v.origin = Pos.from(v.origin.x, cornerMoveDrag.value.current.y)
+          v.size = Size.from(dlt.w, v.size.h - dlt.h)
+          cropBoxView.value = v
+        }
+        break
+      case 'rb':
+        cropBoxView.value = cropBoxView.value.copy().setSize(dlt)
+        break
+    }
+  } else if (cropMoveDrag.value.state) {
     cropMoveDrag.value.move(mp)
     cropBoxView.value = cropBoxView.value.copy().setOrigin(cropMoveDrag.value.current)
   } else if (viewMoveDrag.value.state) {
@@ -98,11 +149,27 @@ function onMouseMove(ev: PointerEvent) {
   } else if (cropDrag.value.state) {
     cropDrag.value.move(mp)
     cropBoxView.value = cropDrag.value.box
+  } else {
+    if (mp.dis(cropBoxView.value.lt) <= 4) {
+      cursor.value = 'nwse-resize'
+    } else if (mp.dis(cropBoxView.value.lb) <= 4) {
+      cursor.value = 'nesw-resize'
+    } else if (mp.dis(cropBoxView.value.rt) <= 4) {
+      cursor.value = 'nesw-resize'
+    } else if (mp.dis(cropBoxView.value.rb) <= 4) {
+      cursor.value = 'nwse-resize'
+    } else {
+      cursor.value = 'default'
+    }
   }
 }
 
 function onMouseUp(ev: PointerEvent) {
-  if (cropMoveDrag.value.state && ev.button === 0) {
+  if (cornerMoveDrag.value.state && ev.button === 0) {
+    cornerMoveDrag.value.up()
+    canvasEl.value!.releasePointerCapture(ev.pointerId)
+    cursor.value = 'default'
+  } else if (cropMoveDrag.value.state && ev.button === 0) {
     cropMoveDrag.value.up()
     canvasEl.value!.releasePointerCapture(ev.pointerId)
     cursor.value = 'default'
@@ -239,8 +306,17 @@ defineExpose({
 
 <template>
   <div class="flex flex-col gap-2 flex-1">
-    <pre>{{ viewport }}</pre>
-    <pre>{{ cropBox }}</pre>
+    <pre
+      >{{ viewport }}
+{{ cropBox }}</pre
+    >
+    <span>
+      state:
+      {{ viewMoveDrag.state ? 'viewMoveDrag' : '' }}
+      {{ cropMoveDrag.state ? 'cropMoveDrag' : '' }}
+      {{ cornerMoveDrag.state ? 'cornerMoveDrag ' + cornerMoveTarget : '' }}
+      {{ cropDrag.state ? 'cropDrag' : '' }}
+    </span>
     <div class="flex items-center gap-2">
       <n-button @click="() => viewport.reset()"> reset </n-button>
       <n-button @click="cropCeil"> ceil </n-button>

@@ -70,6 +70,10 @@ export class Pos {
     return Pos.from(Math.round(this.x), Math.round(this.y))
   }
 
+  dis(p: Pos) {
+    return this.sub(p).len
+  }
+
   flat(): [number, number] {
     return [this.x, this.y]
   }
@@ -145,6 +149,10 @@ export class Size {
 
   round() {
     return Pos.from(Math.round(this.w), Math.round(this.h))
+  }
+
+  get len() {
+    return Math.sqrt(this.w * this.w + this.h * this.h)
   }
 
   flat(): [number, number] {
@@ -227,6 +235,14 @@ export class Box {
 
   get lt() {
     return this.origin.min(this.origin.add(this.size))
+  }
+
+  get lb() {
+    return Pos.from(this.lt.x, this.rb.y)
+  }
+
+  get rt() {
+    return Pos.from(this.rb.x, this.lt.y)
   }
 
   get rb() {
