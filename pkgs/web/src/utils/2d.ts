@@ -249,6 +249,22 @@ export class Box {
     return this.origin.max(this.origin.add(this.size))
   }
 
+  get l() {
+    return Math.min(this.origin.x, this.origin.x + this.size.w)
+  }
+
+  get t() {
+    return Math.min(this.origin.y, this.origin.y + this.size.h)
+  }
+
+  get r() {
+    return Math.max(this.origin.x, this.origin.x + this.size.w)
+  }
+
+  get b() {
+    return Math.max(this.origin.y, this.origin.y + this.size.h)
+  }
+
   flat(): [number, number, number, number] {
     return [...this.origin.flat(), ...this.size.flat()]
   }
