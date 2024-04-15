@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { NButton } from 'naive-ui'
-import { computed, onMounted, onUnmounted, ref, shallowRef, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, onUnmounted, ref, shallowRef, watch } from 'vue'
 
 import { Box, DragHandler, Pos, Size, Viewport } from '@/utils/2d'
 import { triggerDownload } from '@/utils/download'
@@ -113,19 +113,38 @@ function onMouseUp(ev: PointerEvent) {
 function draw(ctx: CanvasRenderingContext2D) {
   ctx.fillStyle = 'wheat'
   ctx.fillRect(0, 0, canvasW.value, canvasH.value)
-  if (!imageEl.value) {
-    return
+  if (imageEl.value) {
+    ctx.drawImage(
+      imageEl.value,
+      0,
+      0,
+      ...imageSize.value.flat(),
+      ...viewport.value.toView(Box.from(new Pos(), imageSize.value)).flat()
+    )
   }
-  ctx.drawImage(
-    imageEl.value,
-    0,
-    0,
-    ...imageSize.value.flat(),
-    ...viewport.value.toView(Box.from(new Pos(), imageSize.value)).flat()
-  )
   ctx.fillStyle = 'rgba(255, 255, 255, 0.3)'
   ctx.fillRect(...cropBoxView.value.flat())
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)'
+
+  ctx.save()
+  ctx.globalCompositeOperation = 'difference'
+  ctx.strokeStyle = 'white'
+  ctx.beginPath()
+  if (1 / viewport.value.scale >= 4) {
+    const pos = viewport.value.fromView(current.value).round()
+    for (let dx = -10; dx <= 10; dx += 1) {
+      for (let dy = -10; dy <= 10; dy += 1) {
+        const dpos = viewport.value.toView(pos.add(Size.from(dx, dy)))
+        ctx.moveTo(dpos.x, 0)
+        ctx.lineTo(dpos.x, canvasH.value)
+        ctx.moveTo(0, dpos.y)
+        ctx.lineTo(canvasW.value, dpos.y)
+      }
+    }
+  }
+  ctx.stroke()
+  ctx.restore()
+
+  ctx.strokeStyle = 'rgba(255, 127, 127, 1)'
   ctx.beginPath()
   ctx.moveTo(current.value.x, 0)
   ctx.lineTo(current.value.x, canvasH.value)
@@ -135,6 +154,7 @@ function draw(ctx: CanvasRenderingContext2D) {
 }
 
 let drawTimer: NodeJS.Timeout = 0 as unknown as NodeJS.Timeout
+let resizeObs: ResizeObserver
 
 onMounted(() => {
   const ctx = canvasEl.value!.getContext('2d')!
@@ -147,9 +167,14 @@ onMounted(() => {
     canvasEl.value!.height = rec.height
     draw(ctx)
   }
-  new ResizeObserver(resize).observe(canvasSizeEl.value!)
+  resizeObs = new ResizeObserver(resize)
+  resizeObs.observe(canvasSizeEl.value!)
   resize()
   drawTimer = setInterval(() => draw(ctx), 20)
+})
+
+onBeforeUnmount(() => {
+  resizeObs.unobserve(canvasSizeEl.value!)
 })
 
 onUnmounted(() => {

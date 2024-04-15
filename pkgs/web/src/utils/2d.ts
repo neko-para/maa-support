@@ -66,6 +66,10 @@ export class Pos {
     return Pos.from(Math.ceil(this.x), Math.ceil(this.y))
   }
 
+  round() {
+    return Pos.from(Math.round(this.x), Math.round(this.y))
+  }
+
   flat(): [number, number] {
     return [this.x, this.y]
   }
@@ -137,6 +141,10 @@ export class Size {
 
   ceil() {
     return Size.from(Math.ceil(this.w), Math.ceil(this.h))
+  }
+
+  round() {
+    return Pos.from(Math.round(this.w), Math.round(this.h))
   }
 
   flat(): [number, number] {
