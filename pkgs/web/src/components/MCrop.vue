@@ -311,6 +311,10 @@ async function getImage() {
   return dataUrl
 }
 
+function copyRoi() {
+  navigator.clipboard.writeText(JSON.stringify(cropBox.value.flat()))
+}
+
 async function download() {
   const dataUrl = await getImage()
   if (!dataUrl) {
@@ -331,21 +335,21 @@ defineExpose({
 
 <template>
   <div class="flex flex-col gap-2 flex-1">
-    <pre
-      >{{ viewport }}
-{{ cropBox }}</pre
-    >
-    <span>
-      state:
-      {{ viewMoveDrag.state ? 'viewMoveDrag' : '' }}
-      {{ cropMoveDrag.state ? 'cropMoveDrag' : '' }}
-      {{ cornerMoveDrag.state ? 'cornerMoveDrag ' + cornerMoveTarget : '' }}
-      {{ cropDrag.state ? 'cropDrag' : '' }}
-    </span>
+    <div class="flex gap-2">
+      <span> roi: {{ cropBox.flat() }} </span>
+      <span>
+        state:
+        {{ viewMoveDrag.state ? 'viewMoveDrag' : '' }}
+        {{ cropMoveDrag.state ? 'cropMoveDrag' : '' }}
+        {{ cornerMoveDrag.state ? 'cornerMoveDrag ' + cornerMoveTarget : '' }}
+        {{ cropDrag.state ? 'cropDrag' : '' }}
+      </span>
+    </div>
     <div class="flex items-center gap-2">
       <n-button @click="() => viewport.reset()"> reset </n-button>
       <n-button @click="cropCeil"> ceil </n-button>
       <n-button @click="cropBound"> bound </n-button>
+      <n-button @click="copyRoi"> roi </n-button>
       <n-button @click="download"> download </n-button>
       <span> 左键移动裁剪区域，中键移动视图，右键裁剪；ceil对齐像素，bound移除出界范围 </span>
     </div>

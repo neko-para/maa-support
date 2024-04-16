@@ -195,7 +195,7 @@ async function uploadImage() {
           </div>
           <m-task v-if="task" :task="task"></m-task>
           <n-code v-if="task" :code="JSON.stringify(task, null, 2)" language="json"></n-code>
-          <div class="flex flex-col flex-1">
+          <div class="flex flex-col flex-1 gap-2">
             <div class="flex gap-2 items-center">
               <n-button @click="screencap" :disabled="!controller" :loading="imageLoading">
                 screencap
