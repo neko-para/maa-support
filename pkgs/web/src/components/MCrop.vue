@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import { ImageHandle, awaitUsing } from '@nekosu/maa'
 import { NButton } from 'naive-ui'
 import { computed, onBeforeUnmount, onMounted, onUnmounted, ref, shallowRef, watch } from 'vue'
 
+import { main } from '@/data/main'
 import { Box, DragHandler, Pos, Size, Viewport } from '@/utils/2d'
-import { triggerDownload } from '@/utils/download'
+import { triggerDownload, triggerUpload } from '@/utils/download'
 
 const canvasW = ref(0)
 const canvasH = ref(0)
@@ -14,10 +16,6 @@ const loading = ref(false)
 const imageSize = ref<Size>(new Size())
 
 async function setImage(url: string) {
-  if (loading.value) {
-    return false
-  }
-  loading.value = true
   if (image.value) {
     URL.revokeObjectURL(image.value)
   }
@@ -29,11 +27,54 @@ async function setImage(url: string) {
   await new Promise(resolve => {
     imageEl.value!.onload = resolve
   })
-  loading.value = false
-
   imageSize.value.set(imageEl.value.width, imageEl.value.height)
-
   return true
+}
+
+const controller = computed(() => {
+  if (!main.active) {
+    return null
+  }
+  return main.data[main.active].shallow.controller ?? null
+})
+
+async function screencap() {
+  loading.value = true
+  await awaitUsing(async root => {
+    if (!controller.value) {
+      return
+    }
+    const imageHandle = new ImageHandle()
+    root.transfer(imageHandle)
+    await imageHandle.create()
+    const ctrl = controller.value.ref()
+    await (await ctrl.postScreencap()).wait()
+    await ctrl.image(imageHandle)
+    await ctrl.unref()
+
+    const buffer = await imageHandle.encoded(true)
+    const url = URL.createObjectURL(new Blob([buffer.buffer]))
+    if (!setImage(url)) {
+      URL.revokeObjectURL(url)
+    }
+  })
+  loading.value = false
+}
+
+async function uploadImage() {
+  loading.value = true
+  const file = await triggerUpload({
+    mimeTypes: ['image/png']
+  })
+  if (!file) {
+    loading.value = false
+    return
+  }
+  const url = URL.createObjectURL(file)
+  if (!setImage(url)) {
+    URL.revokeObjectURL(url)
+  }
+  loading.value = false
 }
 
 onUnmounted(() => {
@@ -306,9 +347,7 @@ async function getImage() {
   const result = await croped.getBufferAsync('image/png')
 
   const resultBlob = new Blob([result.buffer])
-  const dataUrl = URL.createObjectURL(resultBlob)
-
-  return dataUrl
+  return resultBlob
 }
 
 function copyRoi() {
@@ -316,20 +355,16 @@ function copyRoi() {
 }
 
 async function download() {
-  const dataUrl = await getImage()
-  if (!dataUrl) {
+  const blob = await getImage()
+  if (!blob) {
     return
   }
 
-  triggerDownload(dataUrl, 'result.png')
-
-  URL.revokeObjectURL(dataUrl)
+  triggerDownload(blob, 'result.png')
 }
 
 defineExpose({
-  setImage,
-  getImage,
-  loading
+  getImage
 })
 </script>
 
@@ -346,6 +381,8 @@ defineExpose({
       </span>
     </div>
     <div class="flex items-center gap-2">
+      <n-button @click="screencap" :disabled="!controller" :loading="loading"> screencap </n-button>
+      <n-button @click="uploadImage" :loading="loading"> upload </n-button>
       <n-button @click="() => viewport.reset()"> reset </n-button>
       <n-button @click="cropCeil"> ceil </n-button>
       <n-button @click="cropBound"> bound </n-button>

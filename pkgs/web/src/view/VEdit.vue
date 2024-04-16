@@ -23,7 +23,9 @@ import type { Task } from '@/types'
 import { triggerDownload, triggerUpload } from '@/utils/download'
 
 async function uploadZip() {
-  const file = await triggerUpload('.zip')
+  const file = await triggerUpload({
+    mimeTypes: ['application/zip']
+  })
   if (file) {
     const reader = new zip.BlobReader(file)
     taskPath.value = null
@@ -40,11 +42,7 @@ async function downloadZip() {
   await fs.makeZip(writer)
   await writer.close()
   const data = await blobWriter.getData()
-  const dataUrl = URL.createObjectURL(data)
-
-  triggerDownload(dataUrl, 'resource.zip')
-
-  URL.revokeObjectURL(dataUrl)
+  triggerDownload(data, 'resource.zip')
 }
 
 let watchStop: WatchStopHandle | null = null
@@ -113,54 +111,6 @@ function addTask() {
 }
 
 function renameTask() {}
-
-const controller = computed(() => {
-  if (!main.active) {
-    return null
-  }
-  return main.data[main.active].shallow.controller ?? null
-})
-
-const imageLoading = ref(false)
-const cropEl = ref<InstanceType<typeof MCrop> | null>(null)
-
-async function screencap() {
-  if (!cropEl.value) {
-    console.log('crop loss!')
-    return
-  }
-  imageLoading.value = true
-  await awaitUsing(async root => {
-    if (!controller.value) {
-      return
-    }
-    const imageHandle = new ImageHandle()
-    root.transfer(imageHandle)
-    await imageHandle.create()
-    const ctrl = controller.value.ref()
-    await (await ctrl.postScreencap()).wait()
-    await ctrl.image(imageHandle)
-    await ctrl.unref()
-
-    const buffer = await imageHandle.encoded(true)
-    const url = URL.createObjectURL(new Blob([buffer.buffer]))
-    if (!cropEl.value?.setImage(url)) {
-      URL.revokeObjectURL(url)
-    }
-  })
-  imageLoading.value = false
-}
-
-async function uploadImage() {
-  const file = await triggerUpload('.png')
-  if (!file) {
-    return
-  }
-  const url = URL.createObjectURL(file)
-  if (!cropEl.value?.setImage(url)) {
-    URL.revokeObjectURL(url)
-  }
-}
 </script>
 
 <template>
@@ -196,13 +146,6 @@ async function uploadImage() {
           <m-task v-if="task" :task="task"></m-task>
           <n-code v-if="task" :code="JSON.stringify(task, null, 2)" language="json"></n-code>
           <div class="flex flex-col flex-1 gap-2">
-            <div class="flex gap-2 items-center">
-              <n-button @click="screencap" :disabled="!controller" :loading="imageLoading">
-                screencap
-              </n-button>
-              <n-button @click="uploadImage" :loading="imageLoading"> upload </n-button>
-              <span v-if="!controller"> 暂无激活控制器，先去主界面连接 </span>
-            </div>
             <m-crop ref="cropEl"></m-crop>
           </div>
         </div>

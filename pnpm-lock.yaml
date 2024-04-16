@@ -122,6 +122,9 @@ importers:
       baklavajs:
         specifier: ^2.4.3
         version: 2.4.3
+      browser-fs-access:
+        specifier: ^0.35.0
+        version: 0.35.0
       buffer:
         specifier: ^6.0.3
         version: 6.0.3
@@ -2028,6 +2031,10 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       fill-range: 7.0.1
+    dev: true
+
+  /browser-fs-access@0.35.0:
+    resolution: {integrity: sha512-sLoadumpRfsjprP8XzVjpQc0jK8yqHBx0PtUTGYj2fftT+P/t+uyDAQdMgGAPKD011in/O+YYGh7fIs0oG/viw==}
     dev: true
 
   /browserslist@4.23.0:
