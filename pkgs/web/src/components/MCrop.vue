@@ -7,6 +7,14 @@ import { main } from '@/data/main'
 import { Box, DragHandler, Pos, Size, Viewport } from '@/utils/2d'
 import { triggerDownload, triggerUpload } from '@/utils/download'
 
+const props = defineProps<{
+  acceptRaise: boolean
+}>()
+
+const emits = defineEmits<{
+  raiseImage: [Blob]
+}>()
+
 const canvasW = ref(0)
 const canvasH = ref(0)
 
@@ -363,9 +371,13 @@ async function download() {
   triggerDownload(blob, 'result.png')
 }
 
-defineExpose({
-  getImage
-})
+async function raiseImage() {
+  const img = await getImage()
+  if (!img) {
+    return
+  }
+  emits('raiseImage', img)
+}
 </script>
 
 <template>
@@ -388,6 +400,7 @@ defineExpose({
       <n-button @click="cropBound"> bound </n-button>
       <n-button @click="copyRoi"> roi </n-button>
       <n-button @click="download"> download </n-button>
+      <n-button @click="raiseImage" :disabled="!acceptRaise"> raise </n-button>
       <span> 左键移动裁剪区域，中键移动视图，右键裁剪；ceil对齐像素，bound移除出界范围 </span>
     </div>
     <div ref="canvasSizeEl" class="relative flex-1">

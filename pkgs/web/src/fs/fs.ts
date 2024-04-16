@@ -40,8 +40,8 @@ export class BlobManager {
     markRaw(this.index)
   }
 
-  make(data: Uint8Array) {
-    const url = URL.createObjectURL(new Blob([data]))
+  make(data: Uint8Array | Blob) {
+    const url = URL.createObjectURL(data instanceof Blob ? data : new Blob([data]))
     this.index.add(url)
     return url
   }
@@ -259,7 +259,7 @@ export class MemFS {
     return true
   }
 
-  writeBlob(path: string, content: Uint8Array) {
+  writeBlob(path: string, content: Uint8Array | Blob) {
     const p = this.resolve(path)
     const dir = this.track(this.dirname(p))
     const file = this.basename(p)

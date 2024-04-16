@@ -157,6 +157,28 @@ async function duplicateTask() {
 function deleteTask() {
   performTaskRename(editor.currentTask!, null)
 }
+
+async function storeRaiseImage(img: Blob) {
+  if (!editor.currentPath || !editor.currentTask) {
+    return
+  }
+  const jsonPath = fs.resolve(editor.currentPath)
+
+  if (jsonPath[0] !== 'pipeline') {
+    return
+  }
+  jsonPath[0] = 'image'
+
+  const jsonName = jsonPath.pop()
+  if (!jsonName?.endsWith('.json')) {
+    return
+  }
+  jsonPath.push(jsonName.replace(/\.json$/, ''))
+  if (!fs.mkdir(fs.join(...jsonPath))) {
+    return
+  }
+  fs.writeBlob(fs.join(...jsonPath, editor.currentTask + '.png'), img)
+}
 </script>
 
 <template>
@@ -190,7 +212,7 @@ function deleteTask() {
           <m-task v-if="task" :task="task"></m-task>
           <n-code v-if="task" :code="JSON.stringify(task, null, 2)" language="json"></n-code>
           <div class="flex flex-col flex-1 gap-2">
-            <m-crop ref="cropEl"></m-crop>
+            <m-crop :accept-raise="!!task" @raise-image="storeRaiseImage"></m-crop>
           </div>
         </div>
       </template>
