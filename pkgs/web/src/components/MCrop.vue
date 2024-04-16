@@ -263,6 +263,7 @@ function draw(ctx: CanvasRenderingContext2D) {
   ctx.fillStyle = 'wheat'
   ctx.fillRect(0, 0, canvasW.value, canvasH.value)
   if (imageEl.value) {
+    ctx.imageSmoothingEnabled = false
     ctx.drawImage(
       imageEl.value,
       0,
