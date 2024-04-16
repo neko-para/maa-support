@@ -1,5 +1,16 @@
 import * as zip from '@zip.js/zip.js'
-import { markRaw, reactive } from 'vue'
+import {
+  type ComputedRef,
+  type Ref,
+  type UnwrapRef,
+  computed,
+  markRaw,
+  reactive,
+  ref,
+  watch
+} from 'vue'
+
+type RefLike<T> = { value: T }
 
 type FileEntry = {
   file: true
@@ -114,13 +125,46 @@ export class MemFS {
       res = this.resolve(res)
     }
     if (res) {
-      return res[res.length - 1]
+      return res[res.length - 1] ?? ''
     }
     return null
   }
 
+  stat(res: string) {
+    const file = this.basename(res)
+    const entry = this.track(this.dirname(res), false)
+    if (!entry || !file || !(file in entry.child)) {
+      return null
+    }
+    return entry.child[file].file ? 'file' : 'directory'
+  }
+
   mkdir(path: string) {
     return !!this.track(this.resolve(path))
+  }
+
+  rm(path: string) {
+    const dir = this.track(this.dirname(path), false)
+    const name = this.basename(path)
+    if (!dir || !name) {
+      return false
+    }
+    delete dir.child[name]
+    return true
+  }
+
+  rename(from: string, to: string) {
+    const fromDir = fs.track(this.dirname(from), false)
+    const fromName = this.basename(from)
+    const fromEntry = fs.track(this.resolve(from), false)
+    const toDir = fs.track(this.dirname(to), false)
+    const toName = this.basename(to)
+    if (!fromDir || !fromName || !fromEntry || !toDir || !toName) {
+      return false
+    }
+    toDir.child[toName] = fromEntry
+    delete fromDir.child[fromName]
+    return true
   }
 
   readdir(path: string, entry?: false): null | string[]
@@ -218,6 +262,53 @@ export class MemFS {
       uri: this.blob.make(content)
     }
     return true
+  }
+
+  computedText(path: RefLike<string | null>) {
+    const fs = this
+    return computed<string | null>({
+      get() {
+        console.log('read', path)
+        return path.value ? fs.readFile(path.value)?.content ?? null : null
+      },
+      set(v) {
+        console.log('write', path)
+        if (path.value) {
+          fs.writeText(path.value, v ?? '')
+        }
+      }
+    })
+  }
+
+  computedJson<T>(path: RefLike<string | null>) {
+    const text = this.computedText(path)
+    const object = ref<T>({} as T)
+    watch(
+      text,
+      v => {
+        try {
+          object.value = JSON.parse(v ?? '{}')
+        } catch (_) {
+          object.value = {} as UnwrapRef<T>
+        }
+      },
+      {
+        immediate: true
+      }
+    )
+    watch(
+      object,
+      v => {
+        const result = JSON.stringify(v, null, 2)
+        if (result !== text.value) {
+          text.value = result
+        }
+      },
+      {
+        deep: true
+      }
+    )
+    return object
   }
 
   async loadZip(reader: zip.ZipReader<unknown>) {
