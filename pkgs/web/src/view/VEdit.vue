@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { NButton, NCode, NSelect, NSplit } from 'naive-ui'
-import { computed } from 'vue'
+import { NButton, NCode, NSelect, NSplit, useDialog } from 'naive-ui'
+import { computed, nextTick } from 'vue'
 
 import MCrop from '@/components/MCrop.vue'
 import MExplorer from '@/components/MExplorer.vue'
@@ -9,6 +9,7 @@ import MTask from '@/components/MTask.vue'
 import { editor } from '@/data/editor'
 import { fs, taskInfo } from '@/fs'
 import type { Task } from '@/types'
+import { requestInput } from '@/utils/input'
 
 const taskData = fs.computedJson<Partial<Record<string, Task>>>(computed(() => editor.currentPath))
 const task = computed(() => {
@@ -38,7 +39,124 @@ function addTask() {
   taskData.value[name] = {}
 }
 
-function renameTask() {}
+async function performTaskRename(from: string, to: string | null) {
+  if (to) {
+    taskData.value[to] = taskData.value[from]
+  }
+  delete taskData.value[from]
+  editor.currentTask = to
+
+  nextTick(() => {
+    function rename(next: string): string | null
+    function rename(next: string[]): string[]
+    function rename(next: string | string[]): string | null | string[]
+    function rename(next: string | string[]) {
+      if (typeof next === 'string') {
+        return next === from ? to : next
+      } else {
+        return next.map(n => (n === from ? to : n)).filter(x => x)
+      }
+    }
+
+    fs.find(
+      '/pipeline',
+      (path, full, entry) => {
+        if (full.endsWith('.json') && fs.stat(full, true) === 'text') {
+          const data = JSON.parse(entry.content!) as Record<string, Task>
+          for (const name in data) {
+            const task = data[name]
+            for (const key of ['next', 'timeout_next', 'runout_next'] as const) {
+              if (task[key]) {
+                const res = rename(task[key])
+                if (res === null) {
+                  delete task[key]
+                } else {
+                  task[key] = res
+                }
+              }
+            }
+            if (task.action === 'Click' && typeof task.target === 'string') {
+              const res = rename(task.target)
+              if (res === null) {
+                delete task.target
+              } else {
+                task.target = res
+              }
+            }
+            if (task.action === 'Swipe') {
+              if (typeof task.begin === 'string') {
+                const res = rename(task.begin)
+                if (res === null) {
+                  delete task.begin
+                } else {
+                  task.begin = res
+                }
+              }
+              if (typeof task.end === 'string') {
+                const res = rename(task.end)
+                if (res === null) {
+                  delete task.end
+                } else {
+                  task.end = res
+                }
+              }
+            }
+            if (
+              typeof task.pre_wait_freezes === 'object' &&
+              typeof task.pre_wait_freezes.target === 'string'
+            ) {
+              const res = rename(task.pre_wait_freezes.target)
+              if (res === null) {
+                delete task.pre_wait_freezes.target
+              } else {
+                task.pre_wait_freezes.target = res
+              }
+            }
+            if (
+              typeof task.post_wait_freezes === 'object' &&
+              typeof task.post_wait_freezes.target === 'string'
+            ) {
+              const res = rename(task.post_wait_freezes.target)
+              if (res === null) {
+                delete task.post_wait_freezes.target
+              } else {
+                task.post_wait_freezes.target = res
+              }
+            }
+          }
+          fs.writeText(full, JSON.stringify(data, null, 2))
+        }
+      },
+      () => {}
+    )
+  })
+}
+const dialog = useDialog()
+
+async function renameTask() {
+  const to = await requestInput(dialog, 'rename task')
+  // from in taskData.value === true
+  if (!to || to in taskData.value) {
+    return
+  }
+
+  performTaskRename(editor.currentTask!, to)
+}
+
+async function duplicateTask() {
+  const to = await requestInput(dialog, 'duplicate task')
+  // from in taskData.value === true
+  if (!to || to in taskData.value) {
+    return
+  }
+
+  taskData.value[to] = JSON.parse(JSON.stringify(taskData.value[editor.currentTask!]))
+  editor.currentTask = to
+}
+
+function deleteTask() {
+  performTaskRename(editor.currentTask!, null)
+}
 </script>
 
 <template>
@@ -56,6 +174,12 @@ function renameTask() {}
             </n-button>
             <n-button @click="renameTask" text :disabled="!editor.currentTask">
               <m-icon> edit </m-icon>
+            </n-button>
+            <n-button @click="duplicateTask" text :disabled="!editor.currentTask">
+              <m-icon> content_copy </m-icon>
+            </n-button>
+            <n-button @click="deleteTask" text :disabled="!editor.currentTask">
+              <m-icon> close </m-icon>
             </n-button>
             <n-select
               v-model:value="editor.currentTask"

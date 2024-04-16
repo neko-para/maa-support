@@ -130,13 +130,23 @@ export class MemFS {
     return null
   }
 
-  stat(res: string) {
+  stat(res: string, distTextBlob?: false): 'file' | 'directory' | null
+  stat(res: string, distTextBlob: true): 'text' | 'binary' | 'directory' | null
+  stat(res: string, distTextBlob = false) {
     const file = this.basename(res)
     const entry = this.track(this.dirname(res), false)
     if (!entry || !file || !(file in entry.child)) {
       return null
     }
-    return entry.child[file].file ? 'file' : 'directory'
+    if (distTextBlob) {
+      return entry.child[file].file
+        ? 'content' in entry.child[file]
+          ? 'text'
+          : 'binary'
+        : 'directory'
+    } else {
+      return entry.child[file].file ? 'file' : 'directory'
+    }
   }
 
   mkdir(path: string) {
@@ -268,11 +278,9 @@ export class MemFS {
     const fs = this
     return computed<string | null>({
       get() {
-        console.log('read', path)
         return path.value ? fs.readFile(path.value)?.content ?? null : null
       },
       set(v) {
-        console.log('write', path)
         if (path.value) {
           fs.writeText(path.value, v ?? '')
         }
