@@ -50,6 +50,13 @@ const nodeProps: TreeNodeProps = ({ option }) => {
         }
         editor.switchFile(path)
         return
+      } else if (path.endsWith('.png') && path.startsWith('/image/')) {
+        const entry = fs.readFile(path)
+        if (!entry || entry.uri === undefined) {
+          return
+        }
+        editor.switchFile(path)
+        return
       }
     },
     onContextmenu(payload) {
