@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { type DropdownOption, NButton, NDropdown, NSelect, NTree, useDialog } from 'naive-ui'
-import type { TreeNodeProps } from 'naive-ui/es/tree/src/interface'
+import type { TreeDropInfo, TreeNodeProps } from 'naive-ui/es/tree/src/interface'
 import { nextTick, ref } from 'vue'
 
 import { editor } from '@/data/editor'
@@ -174,6 +174,27 @@ async function performSelect(key: string | number, option: DropdownOption) {
   }
 }
 
+function handleDrop({ node, dragNode, dropPosition }: TreeDropInfo) {
+  if (typeof dragNode.key !== 'string' || typeof node.key !== 'string') {
+    return
+  }
+  const fromStat = fs.stat(dragNode.key)
+  const toStat = fs.stat(node.key)
+  if (!fromStat || !toStat) {
+    return
+  }
+  let action = dropPosition === 'inside' ? 'inside' : 'beside'
+  if (toStat === 'file') {
+    action = 'beside'
+  }
+  const fromName = fs.basename(dragNode.key)
+  if (!fromName) {
+    return
+  }
+  const toDir = action === 'inside' ? fs.resolve(node.key) : fs.dirname(node.key)
+  fs.rename(dragNode.key, fs.join(...toDir, fromName))
+}
+
 const switchingFs = ref(false)
 
 async function createFs() {
@@ -222,7 +243,13 @@ async function switchFs(name: string) {
       :loading="switchingFs"
       :options="db.fsEntry.value.map(x => ({ label: x, value: x }))"
     ></n-select>
-    <n-tree :data="fsData" expand-on-click :node-props="nodeProps"></n-tree>
+    <n-tree
+      draggable
+      :data="fsData"
+      expand-on-click
+      :node-props="nodeProps"
+      @drop="handleDrop"
+    ></n-tree>
     <n-dropdown
       trigger="manual"
       placement="bottom-start"

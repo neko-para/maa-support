@@ -99,6 +99,26 @@ export class MemFS {
     return current
   }
 
+  trackEntry(items: string[]): FileEntry | DirEntry | null {
+    let current = this.root
+    for (const [idx, item] of items.entries()) {
+      if (current.child[item]) {
+        if (current.child[item].file) {
+          if (idx === items.length - 1) {
+            return current.child[item]
+          } else {
+            return null
+          }
+        } else {
+          current = current.child[item]
+        }
+      } else {
+        return null
+      }
+    }
+    return current
+  }
+
   reset() {
     this.root = {
       child: {}
@@ -131,19 +151,14 @@ export class MemFS {
   stat(res: string, distTextBlob?: false): 'file' | 'directory' | null
   stat(res: string, distTextBlob: true): 'text' | 'binary' | 'directory' | null
   stat(res: string, distTextBlob = false) {
-    const file = this.basename(res)
-    const entry = this.track(this.dirname(res), false)
-    if (!entry || !file || !(file in entry.child)) {
+    const entry = this.trackEntry(this.resolve(res))
+    if (!entry) {
       return null
     }
     if (distTextBlob) {
-      return entry.child[file].file
-        ? 'content' in entry.child[file]
-          ? 'text'
-          : 'binary'
-        : 'directory'
+      return entry.file ? ('content' in entry ? 'text' : 'binary') : 'directory'
     } else {
-      return entry.child[file].file ? 'file' : 'directory'
+      return entry.file ? 'file' : 'directory'
     }
   }
 
@@ -164,7 +179,7 @@ export class MemFS {
   rename(from: string, to: string) {
     const fromDir = fs.track(this.dirname(from), false)
     const fromName = this.basename(from)
-    const fromEntry = fs.track(this.resolve(from), false)
+    const fromEntry = fs.trackEntry(this.resolve(from))
     const toDir = fs.track(this.dirname(to), false)
     const toName = this.basename(to)
     if (!fromDir || !fromName || !fromEntry || !toDir || !toName) {
@@ -230,16 +245,11 @@ export class MemFS {
   }
 
   readFile(path: string) {
-    const p = this.resolve(path)
-    const dir = this.track(this.dirname(p))
-    const file = this.basename(p)
-    if (!dir || !file || !(file in dir.child)) {
+    const entry = this.trackEntry(this.resolve(path))
+    if (!entry?.file) {
       return null
     }
-    if (!dir.child[file].file) {
-      return null
-    }
-    return dir.child[file]
+    return entry
   }
 
   writeText(path: string, content: string) {
