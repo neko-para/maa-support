@@ -5,10 +5,8 @@
     "build": "vite build"
   },
   "devDependencies": {
-    "@baklavajs/renderer-vue": "^2.4.3",
-    "@baklavajs/themes": "^2.4.3",
     "@nekosu/maa": "workspace:*",
-    "@types/node": "18",
+    "@types/node": "^18.19.31",
     "@types/uuid": "^9.0.8",
     "@vitejs/plugin-vue": "^5.0.4",
     "@vitejs/plugin-vue-jsx": "^3.1.0",
@@ -16,22 +14,21 @@
     "@vueuse/core": "^10.9.0",
     "@zip.js/zip.js": "^2.7.41",
     "autoprefixer": "^10.4.19",
-    "baklavajs": "^2.4.3",
     "browser-fs-access": "^0.35.0",
     "buffer": "^6.0.3",
     "dexie": "^4.0.4",
-    "esbuild": "^0.20.0",
+    "esbuild": "^0.20.2",
     "highlight.js": "^11.9.0",
     "jimp": "^0.22.12",
     "jsonc-parser": "^3.2.1",
-    "material-symbols": "^0.17.1",
+    "material-symbols": "^0.17.2",
     "naive-ui": "^2.38.1",
     "postcss": "^8.4.38",
-    "tailwindcss": "^3.4.1",
+    "tailwindcss": "^3.4.3",
     "uuid": "^9.0.1",
     "vfonts": "^0.0.3",
-    "vite": "^5.2.4",
-    "vue": "^3.4.21",
-    "vue-router": "^4.3.0"
+    "vite": "^5.2.9",
+    "vue": "^3.4.23",
+    "vue-router": "^4.3.1"
   }
 }
