@@ -140,31 +140,36 @@ async function performSelect(key: string | number, option: DropdownOption) {
       break
     }
     case 'rename': {
-      let selfChange = editor.currentPath === menuTarget.value
-      let currentTask = editor.currentTask
-      if (selfChange) {
-        editor.currentPath = null
-        editor.currentTask = null
-      }
-      await waitNext()
       let name = await requestInput(dialog, 'rename')
       if (!name) {
         return
       }
+      const normCur = editor.currentPath ? fs.normalize(editor.currentPath) : null
+      const normTgt = fs.normalize(menuTarget.value)
+      let editorAffected = normCur?.startsWith(normTgt + '/') || normCur === normTgt
+      let currentTask = editor.currentTask
+      if (editorAffected) {
+        editor.currentPath = null
+        editor.currentTask = null
+      }
+      await waitNext()
       const dir = fs.dirname(menuTarget.value)
       const path = fs.join(...dir, name)
       if (fs.stat(path)) {
         return
       }
       fs.rename(menuTarget.value, path)
-      if (selfChange) {
-        editor.currentPath = path
+      if (editorAffected) {
+        editor.currentPath = normCur === normTgt ? path : normCur!.replace(normTgt, path + '/')
         editor.currentTask = currentTask
       }
       break
     }
     case 'del': {
-      if (editor.currentPath === menuTarget.value) {
+      const normCur = editor.currentPath ? fs.normalize(editor.currentPath) : null
+      const normTgt = fs.normalize(menuTarget.value)
+      let editorAffected = normCur?.startsWith(normTgt + '/') || normCur === normTgt
+      if (editorAffected) {
         editor.currentTask = null
         editor.currentPath = null
       }
@@ -193,6 +198,36 @@ function handleDrop({ node, dragNode, dropPosition }: TreeDropInfo) {
   }
   const toDir = action === 'inside' ? fs.resolve(node.key) : fs.dirname(node.key)
   fs.rename(dragNode.key, fs.join(...toDir, fromName))
+}
+
+async function handleDropFile(event: DragEvent) {
+  const putFile = async (file: File) => {
+    if (file.name.endsWith('.zip')) {
+      const dir = await requestInput(dialog, 'extract to directory (cancel to directly put)')
+      if (dir) {
+        await fs.extractZipData(file, dir)
+        return
+      }
+    }
+    await fs.writeFile(file.name, file)
+  }
+  if (event.dataTransfer?.items) {
+    for (const item of event.dataTransfer.items) {
+      if (item.kind === 'file') {
+        const file = item.getAsFile()
+        if (file) {
+          if (item.webkitGetAsEntry()?.isDirectory) {
+            continue
+          }
+          await putFile(file)
+        }
+      }
+    }
+  } else if (event.dataTransfer?.files) {
+    for (const file of event.dataTransfer.files) {
+      await putFile(file)
+    }
+  }
 }
 
 const switchingFs = ref(false)
@@ -228,7 +263,7 @@ async function switchFs(name: string) {
 </script>
 
 <template>
-  <div class="flex flex-col gap-2 p-2">
+  <div class="flex flex-col gap-2 p-2 h-full">
     <div class="flex gap-2">
       <n-button size="small" @click="uploadZip"> 上传 </n-button>
       <n-button size="small" @click="downloadZip"> 下载 </n-button>
@@ -250,6 +285,13 @@ async function switchFs(name: string) {
       :node-props="nodeProps"
       @drop="handleDrop"
     ></n-tree>
+    <div
+      class="flex items-center justify-center flex-1 min-h-8 bg-gray-100"
+      @drop.prevent="handleDropFile"
+      @dragover.prevent=""
+    >
+      drop file
+    </div>
     <n-dropdown
       trigger="manual"
       placement="bottom-start"

@@ -68,6 +68,10 @@ export class MemFS {
     return path.split('/').filter(x => x)
   }
 
+  normalize(path: string) {
+    return this.resolve(path).join('/')
+  }
+
   join(...segs: string[]) {
     return segs
       .map(p => this.resolve(p))
@@ -255,6 +259,19 @@ export class MemFS {
     return entry
   }
 
+  // auto detect blob or text
+  async writeFile(path: string, content: Blob | Uint8Array) {
+    const decoder = new TextDecoder('utf8', { fatal: true })
+    try {
+      const result = decoder.decode(
+        content instanceof Blob ? new Uint8Array(await content.arrayBuffer()) : content
+      )
+      return this.writeText(path, result)
+    } catch (e) {
+      return this.writeBlob(path, content)
+    }
+  }
+
   writeText(path: string, content: string) {
     const p = this.resolve(path)
     const dir = this.track(this.dirname(p))
@@ -330,13 +347,11 @@ export class MemFS {
     return object
   }
 
-  async loadZip(reader: zip.ZipReader<unknown>) {
-    this.reset()
-
-    const decoder = new TextDecoder('utf8', { fatal: true })
+  async extractZip(reader: zip.ZipReader<unknown>, prefix: string) {
     for (const entry of await reader.getEntries()) {
+      const name = this.join(prefix, ...this.resolve(entry.filename))
       if (entry.filename.endsWith('/')) {
-        this.mkdir(entry.filename)
+        this.mkdir(name)
       } else {
         const writer = new zip.Uint8ArrayWriter()
         const data = await entry.getData?.(writer)
@@ -344,14 +359,14 @@ export class MemFS {
           console.warn('read entry', entry, 'failed')
           continue
         }
-        try {
-          const result = decoder.decode(data)
-          this.writeText(entry.filename, result)
-        } catch (e) {
-          this.writeBlob(entry.filename, data)
-        }
+        await this.writeFile(name, data)
       }
     }
+  }
+
+  async loadZip(reader: zip.ZipReader<unknown>) {
+    this.reset()
+    await this.extractZip(reader, '')
   }
 
   async makeZip(writer: zip.ZipWriter<unknown>) {
@@ -369,6 +384,11 @@ export class MemFS {
       },
       async (path, full, entry) => {}
     )
+  }
+
+  async extractZipData(data: Blob, at: string) {
+    const reader = new zip.BlobReader(data)
+    await this.extractZip(new zip.ZipReader(reader), at)
   }
 
   async loadZipData(data: Blob) {
