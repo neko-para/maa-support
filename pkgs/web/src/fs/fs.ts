@@ -1,17 +1,8 @@
 import { watchDebounced } from '@vueuse/core'
 import * as zip from '@zip.js/zip.js'
-import {
-  type ComputedRef,
-  type Ref,
-  type UnwrapRef,
-  computed,
-  markRaw,
-  reactive,
-  ref,
-  watch
-} from 'vue'
+import { type UnwrapRef, type WatchStopHandle, computed, markRaw, reactive, ref, watch } from 'vue'
 
-import { db } from './db'
+import { db } from '@/utils/db'
 
 type RefLike<T> = { value: T }
 
@@ -61,6 +52,7 @@ export class MemFS {
   name: string
   root: DirEntry
   blob: BlobManager
+  watch: WatchStopHandle | null
 
   constructor(name: string = 'root') {
     this.name = name
@@ -68,6 +60,7 @@ export class MemFS {
       child: {}
     }
     this.blob = new BlobManager()
+    this.watch = null
     this.reset()
   }
 
@@ -384,7 +377,6 @@ export class MemFS {
       await this.loadZipData(data)
       return true
     } else {
-      alert('load failed!')
       return false
     }
   }
@@ -393,22 +385,40 @@ export class MemFS {
     const data = await this.makeZipData()
     await db.putFs(this.name, data)
   }
+
+  startAutoSaving() {
+    this.watch = watchDebounced(
+      fs,
+      () => {
+        fs.saveToDB()
+      },
+      {
+        debounce: 1000,
+        maxWait: 5000
+      }
+    )
+  }
+
+  stopAutoSaving() {
+    const w = this.watch
+    this.watch = null
+    w?.()
+  }
+
+  async switchFs(newName: string) {
+    this.stopAutoSaving()
+    await this.saveToDB()
+    this.reset()
+    this.name = newName
+    await this.loadFromDB()
+  }
 }
 
 export const fs = reactive(new MemFS())
 
 fs.loadFromDB()
 
-watchDebounced(
-  fs,
-  () => {
-    fs.saveToDB()
-  },
-  {
-    debounce: 1000,
-    maxWait: 5000
-  }
-)
+fs.startAutoSaving()
 
 // @ts-ignore
 window.fs = fs

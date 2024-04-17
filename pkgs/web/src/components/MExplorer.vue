@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { type DropdownOption, NButton, NDropdown, NTree, useDialog } from 'naive-ui'
+import { type DropdownOption, NButton, NDropdown, NSelect, NTree, useDialog } from 'naive-ui'
 import type { TreeNodeProps } from 'naive-ui/es/tree/src/interface'
-import { ref } from 'vue'
+import { nextTick, ref } from 'vue'
 
 import { editor } from '@/data/editor'
 import { fs, fsData } from '@/fs'
+import { db } from '@/utils/db'
 import { triggerDownload, triggerUpload } from '@/utils/download'
 import { requestInput } from '@/utils/input'
+import { waitNext } from '@/utils/misc'
 
 async function uploadZip() {
   const file = await triggerUpload({
@@ -138,6 +140,13 @@ async function performSelect(key: string | number, option: DropdownOption) {
       break
     }
     case 'rename': {
+      let selfChange = editor.currentPath === menuTarget.value
+      let currentTask = editor.currentTask
+      if (selfChange) {
+        editor.currentPath = null
+        editor.currentTask = null
+      }
+      await waitNext()
       let name = await requestInput(dialog, 'rename')
       if (!name) {
         return
@@ -148,22 +157,71 @@ async function performSelect(key: string | number, option: DropdownOption) {
         return
       }
       fs.rename(menuTarget.value, path)
+      if (selfChange) {
+        editor.currentPath = path
+        editor.currentTask = currentTask
+      }
       break
     }
     case 'del': {
+      if (editor.currentPath === menuTarget.value) {
+        editor.currentTask = null
+        editor.currentPath = null
+      }
       fs.rm(menuTarget.value)
       break
     }
   }
 }
+
+const switchingFs = ref(false)
+
+async function createFs() {
+  const name = await requestInput(dialog, 'fs name')
+  if (name) {
+    switchFs(name)
+  }
+}
+
+async function removeFs() {
+  editor.currentPath = null
+  editor.currentTask = null
+  await waitNext()
+  const cur = fs.name
+  const rest = db.fsEntry.value.filter(x => x !== cur)
+  if (!rest) {
+    return
+  }
+  await switchFs(rest[0])
+  await db.delFs(cur)
+}
+
+async function switchFs(name: string) {
+  editor.currentPath = null
+  editor.currentTask = null
+  await waitNext()
+  switchingFs.value = true
+  await fs.switchFs(name)
+  switchingFs.value = false
+}
 </script>
 
 <template>
-  <div class="flex flex-col gap-2">
-    <div class="flex gap-2 p-2">
-      <n-button @click="uploadZip"> 导入 </n-button>
-      <n-button @click="downloadZip"> 导出 </n-button>
+  <div class="flex flex-col gap-2 p-2">
+    <div class="flex gap-2">
+      <n-button size="small" @click="uploadZip"> 上传 </n-button>
+      <n-button size="small" @click="downloadZip"> 下载 </n-button>
+      <n-button size="small" @click="createFs"> 新建 </n-button>
+      <n-button size="small" @click="removeFs" :disabled="db.fsEntry.value.length <= 1">
+        删除
+      </n-button>
     </div>
+    <n-select
+      :value="fs.name"
+      @update:value="switchFs"
+      :loading="switchingFs"
+      :options="db.fsEntry.value.map(x => ({ label: x, value: x }))"
+    ></n-select>
     <n-tree :data="fsData" expand-on-click :node-props="nodeProps"></n-tree>
     <n-dropdown
       trigger="manual"
