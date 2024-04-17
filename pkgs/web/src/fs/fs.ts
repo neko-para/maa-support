@@ -177,6 +177,9 @@ export class MemFS {
   }
 
   rename(from: string, to: string) {
+    if (this.resolve(from).join('/') === this.resolve(to).join('/')) {
+      return true
+    }
     const fromDir = fs.track(this.dirname(from), false)
     const fromName = this.basename(from)
     const fromEntry = fs.trackEntry(this.resolve(from))
