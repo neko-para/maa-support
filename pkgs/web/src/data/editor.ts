@@ -3,6 +3,7 @@ import { reactive } from 'vue'
 class DataEditor {
   currentPath: string | null = null
   currentTask: string | null = null
+  hideUnset: boolean = false
 
   reset() {
     this.currentPath = null

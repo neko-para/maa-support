@@ -3,6 +3,8 @@ import { NInput, NInputNumber } from 'naive-ui'
 import type { Rect } from '@/types'
 
 import MImageChoice from './MImageChoice.vue'
+import MNumberSeq from './MNumberSeq.vue'
+import MStringSeq from './MStringSeq.vue'
 import MTaskChoice from './MTaskChoice.vue'
 
 type FixArray<T, L extends number, V extends T[] = []> = V['length'] extends L
@@ -13,30 +15,12 @@ function makeNumberSeqEdit<L extends number>(count: L, prefix: FixArray<string, 
   type List = FixArray<number, L>
   return (value: List, update: (v: List) => void, index: number) => {
     return (
-      <div class={'flex gap-2'}>
-        {Array.from({ length: count }).map((_, i) => {
-          return (
-            <NInputNumber
-              key={i}
-              showButton={false}
-              placeholder={''}
-              // @ts-ignore
-              value={value[i]}
-              onUpdateValue={v => {
-                // @ts-ignore
-                const res: List = [...value]
-                // @ts-ignore
-                res[i] = v ?? 0
-                update(res)
-              }}
-              v-slots={{
-                // @ts-ignore
-                prefix: () => <span>{`${prefix[i]}:`}</span>
-              }}
-            ></NInputNumber>
-          )
-        })}
-      </div>
+      <MNumberSeq
+        len={count}
+        prefix={prefix}
+        value={value}
+        onUpdate:value={v => update(v as List)}
+      ></MNumberSeq>
     )
   }
 }
@@ -45,29 +29,12 @@ function makeStringSeqEdit<L extends number>(count: L, prefix: FixArray<string, 
   type List = FixArray<string, L>
   return (value: List, update: (v: List) => void, index: number) => {
     return (
-      <div class={'flex gap-2'}>
-        {Array.from({ length: count }).map((_, i) => {
-          return (
-            <NInput
-              key={i}
-              placeholder={''}
-              // @ts-ignore
-              value={value[i]}
-              onUpdateValue={v => {
-                // @ts-ignore
-                const res: List = [...value]
-                // @ts-ignore
-                res[i] = v ?? 0
-                update(res)
-              }}
-              v-slots={{
-                // @ts-ignore
-                prefix: () => <span>{`${prefix[i]}:`}</span>
-              }}
-            ></NInput>
-          )
-        })}
-      </div>
+      <MStringSeq
+        len={count}
+        prefix={prefix}
+        value={value}
+        onUpdate:value={v => update(v as List)}
+      ></MStringSeq>
     )
   }
 }
@@ -81,6 +48,22 @@ export const MReplaceEdit = makeStringSeqEdit(2, ['From', 'To'])
 
 export function MStringEdit(value: string, update: (v: string) => void, index: number) {
   return <NInput value={value} onUpdateValue={update} placeholder={''}></NInput>
+}
+
+export function MCharEdit(value: number, update: (v: number) => void, index: number) {
+  return (
+    <NInputNumber
+      value={value}
+      onUpdateValue={v => update(v ?? 0)}
+      placeholder={''}
+      showButton={false}
+      min={0}
+      max={127}
+      v-slots={{
+        suffix: () => <span> {JSON.stringify(String.fromCharCode(value)).slice(1, -1)} </span>
+      }}
+    ></NInputNumber>
+  )
 }
 
 export function MNextEdit(value: string, update: (v: string) => void, index: number) {

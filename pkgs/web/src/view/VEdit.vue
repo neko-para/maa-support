@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { NButton, NCode, NSelect, NSplit, useDialog } from 'naive-ui'
+import { NButton, NCode, NSelect, NSplit, NSwitch, useDialog } from 'naive-ui'
 import { computed, nextTick } from 'vue'
 
 import MCrop from '@/components/MCrop.vue'
@@ -196,38 +196,44 @@ async function storeRaiseImage(img: Blob) {
       </template>
       <template #2>
         <div class="container mx-auto p-4 flex flex-col gap-4 h-full">
-          <template v-if="editor.currentPath?.endsWith('.json')">
-            <div class="flex items-center gap-2">
-              <span> {{ editor.currentPath }} </span>
-              <n-button @click="addTask" text>
-                <m-icon> add </m-icon>
-              </n-button>
-              <n-button @click="renameTask" text :disabled="!editor.currentTask">
-                <m-icon> edit </m-icon>
-              </n-button>
-              <n-button @click="duplicateTask" text :disabled="!editor.currentTask">
-                <m-icon> content_copy </m-icon>
-              </n-button>
-              <n-button @click="deleteTask" text :disabled="!editor.currentTask">
-                <m-icon> close </m-icon>
-              </n-button>
-              <n-select
-                v-model:value="editor.currentTask"
-                :options="taskListOpts"
-                placeholder=""
-              ></n-select>
+          <div class="flex flex-col gap-2 overflow-y-auto" style="max-height: 60%">
+            <template v-if="editor.currentPath?.endsWith('.json')">
+              <div class="flex items-center gap-2">
+                <span> {{ editor.currentPath }} </span>
+                <n-button @click="addTask" text>
+                  <m-icon> add </m-icon>
+                </n-button>
+                <n-button @click="renameTask" text :disabled="!editor.currentTask">
+                  <m-icon> edit </m-icon>
+                </n-button>
+                <n-button @click="duplicateTask" text :disabled="!editor.currentTask">
+                  <m-icon> content_copy </m-icon>
+                </n-button>
+                <n-button @click="deleteTask" text :disabled="!editor.currentTask">
+                  <m-icon> close </m-icon>
+                </n-button>
+                <n-select
+                  v-model:value="editor.currentTask"
+                  :options="taskListOpts"
+                  placeholder=""
+                ></n-select>
+              </div>
+              <div class="flex gap-2">
+                <n-switch v-model:value="editor.hideUnset"></n-switch>
+                <span> hide unset entry </span>
+              </div>
               <m-task v-if="task" :task="task"></m-task>
               <n-code v-if="task" :code="JSON.stringify(task, null, 2)" language="json"></n-code>
-            </div>
-          </template>
-          <template v-else-if="editor.currentPath?.endsWith('.png')">
-            <div class="flex items-center gap-2">
-              <span> {{ editor.currentPath }} </span>
-            </div>
-            <div>
-              <img v-if="previewImage" :src="previewImage" />
-            </div>
-          </template>
+            </template>
+            <template v-else-if="editor.currentPath?.endsWith('.png')">
+              <div class="flex items-center gap-2">
+                <span> {{ editor.currentPath }} </span>
+              </div>
+              <div>
+                <img v-if="previewImage" :src="previewImage" />
+              </div>
+            </template>
+          </div>
           <div class="flex flex-col flex-1 gap-2">
             <m-crop :accept-raise="!!task" @raise-image="storeRaiseImage"></m-crop>
           </div>

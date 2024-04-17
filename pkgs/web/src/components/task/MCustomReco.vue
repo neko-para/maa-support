@@ -2,6 +2,7 @@
 import { NButton, NInput } from 'naive-ui'
 import { ref } from 'vue'
 
+import { editor } from '@/data/editor'
 import type { RestrictWith, Task } from '@/types'
 import { makeProp } from '@/utils/property'
 
@@ -22,22 +23,26 @@ const cache = ref<string | null>(null)
 </script>
 
 <template>
-  <n-button @click="custom_recognition = null"> custom_recognition </n-button>
-  <n-input v-model:value="custom_recognition" placeholder=""></n-input>
-  <n-button @click="custom_recognition_param = null"> custom_recognition_param </n-button>
-  <n-input
-    :value="cache ?? JSON.stringify(custom_recognition_param, null, 2)"
-    @update:value="
-      v => {
-        try {
-          const o = JSON.parse(v)
-          cache = null
-          custom_recognition_param = o
-        } catch (_) {
-          cache = v
+  <template v-if="!editor.hideUnset || 'custom_recognition' in task">
+    <n-button @click="custom_recognition = null"> custom_recognition </n-button>
+    <n-input v-model:value="custom_recognition" placeholder=""></n-input>
+  </template>
+  <template v-if="!editor.hideUnset || 'custom_recognition_param' in task">
+    <n-button @click="custom_recognition_param = null"> custom_recognition_param </n-button>
+    <n-input
+      :value="cache ?? JSON.stringify(custom_recognition_param, null, 2)"
+      @update:value="
+        v => {
+          try {
+            const o = JSON.parse(v)
+            cache = null
+            custom_recognition_param = o
+          } catch (_) {
+            cache = v
+          }
         }
-      }
-    "
-    placeholder=""
-  ></n-input>
+      "
+      placeholder=""
+    ></n-input>
+  </template>
 </template>

@@ -39,7 +39,8 @@ export type Recognition =
   | {
       recognition: 'OCR'
       roi?: Rect | Rect[]
-      text: string
+      expected: string
+      text?: string
       replace?: [string, string] | [string, string][]
       order_by?: 'Horizontal' | 'Vertical' | 'Area' | 'Length' | 'Random'
       index?: number
@@ -88,14 +89,15 @@ export type Action =
       begin_offset?: Rect
       end?: Target
       end_offset?: Rect
+      duration?: number
     }
   | {
       action: 'Key'
       key: number | number[]
     }
   | {
-      action: 'Text'
-      // text
+      action: 'InputText'
+      input_text: string
     }
   | {
       action: 'StartApp'

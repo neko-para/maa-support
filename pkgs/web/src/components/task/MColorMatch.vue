@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { NButton, NInputNumber, NSelect, NSwitch } from 'naive-ui'
-import { computed, nextTick, watch } from 'vue'
+import { nextTick, watch } from 'vue'
 
+import { editor } from '@/data/editor'
 import type { RestrictWith, Task } from '@/types'
 import { makeProp } from '@/utils/property'
 
@@ -51,94 +52,111 @@ watch(
 </script>
 
 <template>
-  <n-button @click="roi = null"> roi </n-button>
-  <m-multi-edit
-    v-model:value="roi"
-    :test="v => v.length !== 4 || typeof v[0] !== 'number'"
-    :def="() => [0, 0, 0, 0]"
-    :render="MRectEdit"
-  ></m-multi-edit>
-  <n-button @click="method = null"> method </n-button>
-  <n-select v-model:value="method" :options="methodOptions" placeholder=""></n-select>
-  <n-button @click="lower = null"> lower </n-button>
-  <m-multi-edit
-    v-if="!method || method === 4"
-    :value="lower as [number, number, number][]"
-    @update:value="v => (lower = v)"
-    :test="v => v.length !== 3 || typeof v[0] !== 'number'"
-    :def="() => [0, 0, 0]"
-    :render="MRGBEdit"
-  ></m-multi-edit>
-  <m-multi-edit
-    v-else-if="method === 40"
-    :value="lower as [number, number, number][]"
-    @update:value="v => (lower = v)"
-    :test="v => v.length !== 3 || typeof v[0] !== 'number'"
-    :def="() => [0, 0, 0]"
-    :render="MHSVEdit"
-  ></m-multi-edit>
-  <m-multi-edit
-    v-else-if="method === 6"
-    :value="lower as [number][]"
-    @update:value="v => (lower = v)"
-    :test="v => v.length !== 1 || typeof v[0] !== 'number'"
-    :def="() => [0]"
-    :render="MGrayEdit"
-  ></m-multi-edit>
-  <span v-else> unknown method {{ method }} </span>
-  <n-button @click="upper = null"> upper </n-button>
-  <m-multi-edit
-    v-if="!method || method === 4"
-    :value="upper as [number, number, number][]"
-    @update:value="v => (upper = v)"
-    :test="v => v.length !== 3 || typeof v[0] !== 'number'"
-    :def="() => [0, 0, 0]"
-    :render="MRGBEdit"
-  ></m-multi-edit>
-  <m-multi-edit
-    v-else-if="method === 40"
-    :value="upper as [number, number, number][]"
-    @update:value="v => (upper = v)"
-    :test="v => v.length !== 3 || typeof v[0] !== 'number'"
-    :def="() => [0, 0, 0]"
-    :render="MHSVEdit"
-  ></m-multi-edit>
-  <m-multi-edit
-    v-else-if="method === 6"
-    :value="upper as [number][]"
-    @update:value="v => (upper = v)"
-    :test="v => v.length !== 1 || typeof v[0] !== 'number'"
-    :def="() => [0]"
-    :render="MGrayEdit"
-  ></m-multi-edit>
-  <span v-else> unknown method {{ method }} </span>
-  <n-button @click="count = null"> count </n-button>
-  <n-input-number
-    v-model:value="count"
-    placeholder=""
-    :min="0"
-    :parse="v => parseInt(v) ?? null"
-    :show-button="false"
-  ></n-input-number>
-  <n-button @click="orderBy = null"> orderBy </n-button>
-  <n-select v-model:value="orderBy" :options="orderByOptions" placeholder=""></n-select>
-  <n-button @click="index = null"> index </n-button>
-  <n-input-number
-    v-model:value="index"
-    placeholder=""
-    :min="0"
-    :parse="v => parseInt(v) ?? null"
-    :show-button="false"
-  ></n-input-number>
-  <n-button @click="connected = null"> connected </n-button>
-  <div>
-    <n-switch
-      :value="connected ?? false"
-      @update:value="
-        v => {
-          connected = !!v
-        }
-      "
-    ></n-switch>
-  </div>
+  <template v-if="!editor.hideUnset || 'roi' in task">
+    <n-button @click="roi = null"> roi </n-button>
+    <m-multi-edit
+      v-model:value="roi"
+      :test="v => v.length !== 4 || typeof v[0] !== 'number'"
+      :def="() => [0, 0, 0, 0]"
+      :render="MRectEdit"
+    ></m-multi-edit>
+  </template>
+  <template v-if="!editor.hideUnset || 'method' in task">
+    <n-button @click="method = null"> method </n-button>
+    <n-select v-model:value="method" :options="methodOptions" placeholder=""></n-select>
+  </template>
+  <template v-if="!editor.hideUnset || 'lower' in task">
+    <n-button @click="lower = null"> lower </n-button>
+    <m-multi-edit
+      v-if="!method || method === 4"
+      :value="lower as [number, number, number][]"
+      @update:value="v => (lower = v)"
+      :test="v => v.length !== 3 || typeof v[0] !== 'number'"
+      :def="() => [0, 0, 0]"
+      :render="MRGBEdit"
+    ></m-multi-edit>
+
+    <m-multi-edit
+      v-else-if="method === 40"
+      :value="lower as [number, number, number][]"
+      @update:value="v => (lower = v)"
+      :test="v => v.length !== 3 || typeof v[0] !== 'number'"
+      :def="() => [0, 0, 0]"
+      :render="MHSVEdit"
+    ></m-multi-edit>
+    <m-multi-edit
+      v-else-if="method === 6"
+      :value="lower as [number][]"
+      @update:value="v => (lower = v)"
+      :test="v => v.length !== 1 || typeof v[0] !== 'number'"
+      :def="() => [0]"
+      :render="MGrayEdit"
+    ></m-multi-edit>
+    <span v-else> unknown method {{ method }} </span>
+  </template>
+  <template v-if="!editor.hideUnset || 'upper' in task">
+    <n-button @click="upper = null"> upper </n-button>
+    <m-multi-edit
+      v-if="!method || method === 4"
+      :value="upper as [number, number, number][]"
+      @update:value="v => (upper = v)"
+      :test="v => v.length !== 3 || typeof v[0] !== 'number'"
+      :def="() => [0, 0, 0]"
+      :render="MRGBEdit"
+    ></m-multi-edit>
+    <m-multi-edit
+      v-else-if="method === 40"
+      :value="upper as [number, number, number][]"
+      @update:value="v => (upper = v)"
+      :test="v => v.length !== 3 || typeof v[0] !== 'number'"
+      :def="() => [0, 0, 0]"
+      :render="MHSVEdit"
+    ></m-multi-edit>
+    <m-multi-edit
+      v-else-if="method === 6"
+      :value="upper as [number][]"
+      @update:value="v => (upper = v)"
+      :test="v => v.length !== 1 || typeof v[0] !== 'number'"
+      :def="() => [0]"
+      :render="MGrayEdit"
+    ></m-multi-edit>
+    <span v-else> unknown method {{ method }} </span>
+  </template>
+  <template v-if="!editor.hideUnset || 'count' in task">
+    <n-button @click="count = null"> count </n-button>
+    <n-input-number
+      v-model:value="count"
+      placeholder=""
+      :min="0"
+      :parse="v => parseInt(v) ?? null"
+      :show-button="false"
+    ></n-input-number>
+  </template>
+  <template v-if="!editor.hideUnset || 'orderBy' in task">
+    <n-button @click="orderBy = null"> orderBy </n-button>
+    <n-select v-model:value="orderBy" :options="orderByOptions" placeholder=""></n-select>
+  </template>
+  <template v-if="!editor.hideUnset || 'index' in task">
+    <n-button @click="index = null"> index </n-button>
+    <n-input-number
+      v-model:value="index"
+      placeholder=""
+      :min="0"
+      :parse="v => parseInt(v) ?? null"
+      :show-button="false"
+    ></n-input-number>
+  </template>
+  <template v-if="!editor.hideUnset || 'connected' in task">
+    <n-button @click="connected = null"> connected </n-button>
+    <div>
+      <n-switch
+        :value="connected ?? false"
+        @update:value="
+          v => {
+            connected = !!v
+          }
+        "
+      ></n-switch>
+    </div>
+  </template>
 </template>
