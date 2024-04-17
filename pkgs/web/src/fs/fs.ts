@@ -1,3 +1,4 @@
+import { watchDebounced } from '@vueuse/core'
 import * as zip from '@zip.js/zip.js'
 import {
   type ComputedRef,
@@ -9,6 +10,8 @@ import {
   ref,
   watch
 } from 'vue'
+
+import { db } from './db'
 
 type RefLike<T> = { value: T }
 
@@ -55,10 +58,12 @@ export class BlobManager {
 }
 
 export class MemFS {
+  name: string
   root: DirEntry
   blob: BlobManager
 
-  constructor() {
+  constructor(name: string = 'root') {
+    this.name = name
     this.root = {
       child: {}
     }
@@ -320,6 +325,8 @@ export class MemFS {
   }
 
   async loadZip(reader: zip.ZipReader<unknown>) {
+    this.reset()
+
     const decoder = new TextDecoder('utf8', { fatal: true })
     for (const entry of await reader.getEntries()) {
       if (entry.filename.endsWith('/')) {
@@ -357,9 +364,51 @@ export class MemFS {
       async (path, full, entry) => {}
     )
   }
+
+  async loadZipData(data: Blob) {
+    const reader = new zip.BlobReader(data)
+    await this.loadZip(new zip.ZipReader(reader))
+  }
+
+  async makeZipData() {
+    const blobWriter = new zip.BlobWriter('application/zip')
+    const writer = new zip.ZipWriter(blobWriter, { bufferedWrite: true })
+    await this.makeZip(writer)
+    await writer.close()
+    return await blobWriter.getData()
+  }
+
+  async loadFromDB() {
+    const data = await db.getFs(this.name)
+    if (data) {
+      await this.loadZipData(data)
+      return true
+    } else {
+      alert('load failed!')
+      return false
+    }
+  }
+
+  async saveToDB() {
+    const data = await this.makeZipData()
+    await db.putFs(this.name, data)
+  }
 }
 
 export const fs = reactive(new MemFS())
+
+fs.loadFromDB()
+
+watchDebounced(
+  fs,
+  () => {
+    fs.saveToDB()
+  },
+  {
+    debounce: 1000,
+    maxWait: 5000
+  }
+)
 
 // @ts-ignore
 window.fs = fs

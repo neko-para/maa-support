@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import * as zip from '@zip.js/zip.js'
 import { type DropdownOption, NButton, NDropdown, NTree, useDialog } from 'naive-ui'
 import type { TreeNodeProps } from 'naive-ui/es/tree/src/interface'
 import { ref } from 'vue'
@@ -14,20 +13,12 @@ async function uploadZip() {
     mimeTypes: ['application/zip']
   })
   if (file) {
-    const reader = new zip.BlobReader(file)
-    editor.reset()
-    fs.reset()
-    await fs.loadZip(new zip.ZipReader(reader))
+    await fs.loadZipData(file)
   }
 }
 
 async function downloadZip() {
-  const blobWriter = new zip.BlobWriter('application/zip')
-  const writer = new zip.ZipWriter(blobWriter, { bufferedWrite: true })
-  await fs.makeZip(writer)
-  await writer.close()
-  const data = await blobWriter.getData()
-  triggerDownload(data, 'resource.zip')
+  triggerDownload(await fs.makeZipData(), 'resource.zip')
 }
 
 const menuShow = ref(false)
