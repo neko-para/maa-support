@@ -75,6 +75,10 @@ const nodeProps: TreeNodeProps = ({ option }) => {
             {
               label: 'delete',
               key: 'del'
+            },
+            {
+              label: 'download',
+              key: 'download'
             }
           ]
           break
@@ -87,6 +91,10 @@ const nodeProps: TreeNodeProps = ({ option }) => {
             {
               label: 'delete',
               key: 'del'
+            },
+            {
+              label: 'download',
+              key: 'download'
             }
           ]
           break
@@ -175,6 +183,31 @@ async function performSelect(key: string | number, option: DropdownOption) {
       }
       fs.rm(menuTarget.value)
       break
+    }
+    case 'download': {
+      switch (fs.stat(menuTarget.value)) {
+        case 'directory':
+          triggerDownload(
+            await fs.compressZipData(menuTarget.value),
+            (fs.basename(menuTarget.value) ?? 'directory') + '.zip'
+          )
+          break
+        case 'file': {
+          const file = fs.readFile(menuTarget.value)
+          if (file?.uri) {
+            triggerDownload(
+              await (await fetch(file.uri)).blob(),
+              fs.basename(menuTarget.value) ?? 'file'
+            )
+          } else if (file?.content) {
+            triggerDownload(
+              new Blob([file.content], { type: 'text/plain' }),
+              fs.basename(menuTarget.value) ?? 'file'
+            )
+          }
+          break
+        }
+      }
     }
   }
 }

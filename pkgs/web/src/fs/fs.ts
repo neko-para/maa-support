@@ -369,9 +369,9 @@ export class MemFS {
     await this.extractZip(reader, '')
   }
 
-  async makeZip(writer: zip.ZipWriter<unknown>) {
+  async compressZip(writer: zip.ZipWriter<unknown>, prefix: string) {
     await this.findAsync(
-      '',
+      prefix,
       async (path, full, entry) => {
         if ('content' in entry) {
           const reader = new zip.TextReader(entry.content!)
@@ -386,6 +386,10 @@ export class MemFS {
     )
   }
 
+  async makeZip(writer: zip.ZipWriter<unknown>) {
+    await this.compressZip(writer, '')
+  }
+
   async extractZipData(data: Blob, at: string) {
     const reader = new zip.BlobReader(data)
     await this.extractZip(new zip.ZipReader(reader), at)
@@ -394,6 +398,14 @@ export class MemFS {
   async loadZipData(data: Blob) {
     const reader = new zip.BlobReader(data)
     await this.loadZip(new zip.ZipReader(reader))
+  }
+
+  async compressZipData(at: string) {
+    const blobWriter = new zip.BlobWriter('application/zip')
+    const writer = new zip.ZipWriter(blobWriter, { bufferedWrite: true })
+    await this.compressZip(writer, at)
+    await writer.close()
+    return await blobWriter.getData()
   }
 
   async makeZipData() {
