@@ -1,9 +1,10 @@
-<script setup lang="ts">
+<script setup lang="tsx">
 import hljs from 'highlight.js/lib/core'
 import hljsJson from 'highlight.js/lib/languages/json'
 import { NButton, NConfigProvider, NDialogProvider } from 'naive-ui'
-import { type Component, computed, ref } from 'vue'
+import { type Component, h, ref } from 'vue'
 
+import MComp from './components/MComp.vue'
 import MIcon from './components/MIcon.vue'
 import VEdit from './view/VEdit.vue'
 import VMain from './view/VMain.vue'
@@ -39,9 +40,12 @@ const routes = [
   }
 ] satisfies RouteInfo[] as RouteInfo[]
 
-const getComp = computed(() => {
-  return routes.find(x => x.key === topLevelRoute.value)!.comp
-})
+const navComp = () => {
+  return routes.map(x => {
+    // 这玩意直接写<x.comp>会报错，虽然实际上能跑
+    return <MComp comp={x.comp} v-show={x.key === topLevelRoute.value} class="flex-1"></MComp>
+  })
+}
 </script>
 
 <template>
@@ -62,7 +66,7 @@ const getComp = computed(() => {
             </n-button>
           </div>
         </div>
-        <component class="flex-1" :is="getComp"></component>
+        <navComp></navComp>
       </div>
     </n-dialog-provider>
   </n-config-provider>
