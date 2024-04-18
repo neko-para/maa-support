@@ -35,15 +35,13 @@ const taskListOpts = computed(() => {
     }))
 })
 
-function addTask() {
-  let name: string
-  for (let i = 0; ; i++) {
-    name = `untitled_${i}`
-    if (!(name in taskInfo.value)) {
-      break
-    }
+async function addTask() {
+  const name = await requestInput(dialog, 'add task')
+  if (!name || name in taskInfo.value) {
+    return
   }
   taskData.value[name] = {}
+  editor.currentTask = name
 }
 
 async function performTaskRename(from: string, to: string | null) {

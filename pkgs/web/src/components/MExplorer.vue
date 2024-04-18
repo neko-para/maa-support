@@ -15,6 +15,9 @@ async function uploadZip() {
     mimeTypes: ['application/zip']
   })
   if (file) {
+    editor.currentPath = null
+    editor.currentTask = null
+    await waitNext()
     await fs.loadZipData(file)
   }
 }
@@ -236,7 +239,11 @@ function handleDrop({ node, dragNode, dropPosition }: TreeDropInfo) {
 async function handleDropFile(event: DragEvent) {
   const putFile = async (file: File) => {
     if (file.name.endsWith('.zip')) {
-      const dir = await requestInput(dialog, 'extract to directory (cancel to directly put)')
+      const dir = await requestInput(
+        dialog,
+        'drop zip',
+        'extract to directory (cancel to directly put)'
+      )
       if (dir) {
         await fs.extractZipData(file, dir)
         return

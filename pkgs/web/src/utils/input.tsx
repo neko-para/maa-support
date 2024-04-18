@@ -10,7 +10,7 @@ function flatPromise<T>() {
   return [res!, pro] as const
 }
 
-export function requestInput(dialog: DialogApiInjection, title: string) {
+export function requestInput(dialog: DialogApiInjection, title: string, content: string = '') {
   const [res, pro] = flatPromise<string | null>()
   const value = ref<string>('')
   const dlg = dialog.create({
@@ -23,13 +23,16 @@ export function requestInput(dialog: DialogApiInjection, title: string) {
     },
     content: () => {
       return (
-        <NInput
-          value={value.value}
-          onUpdateValue={v => {
-            value.value = v
-          }}
-          placeholder={''}
-        ></NInput>
+        <div class={'flex flex-col gap-2'}>
+          <span> {content} </span>
+          <NInput
+            value={value.value}
+            onUpdateValue={v => {
+              value.value = v
+            }}
+            placeholder={''}
+          ></NInput>
+        </div>
       )
     },
     action: () => {

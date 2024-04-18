@@ -1,5 +1,7 @@
 import { reactive } from 'vue'
 
+import { waitNext } from '@/utils/misc'
+
 class DataEditor {
   currentPath: string | null = null
   currentTask: string | null = null
@@ -10,9 +12,11 @@ class DataEditor {
     this.currentPath = null
   }
 
-  switchFile(path: string) {
-    this.currentPath = path
+  async switchFile(path: string) {
     this.currentTask = null
+    this.currentPath = null
+    await waitNext()
+    this.currentPath = path
   }
 }
 
