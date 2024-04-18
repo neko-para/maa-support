@@ -163,26 +163,34 @@ function deleteTask() {
   performTaskRename(editor.currentTask!, null)
 }
 
-async function storeRaiseImage(img: Blob) {
+async function storeRaiseImageAccordingTask(img: Blob) {
   if (!editor.currentPath || !editor.currentTask) {
-    return
+    return false
   }
   const jsonPath = fs.resolve(editor.currentPath)
 
   if (jsonPath[0] !== 'pipeline') {
-    return
+    return false
   }
   jsonPath[0] = 'image'
 
   const jsonName = jsonPath.pop()
   if (!jsonName?.endsWith('.json')) {
-    return
+    return false
   }
   jsonPath.push(jsonName.replace(/\.json$/, ''))
   if (!fs.mkdir(fs.join(...jsonPath))) {
-    return
+    return false
   }
   fs.writeBlob(fs.join(...jsonPath, editor.currentTask + '.png'), img)
+  return true
+}
+
+async function storeRaiseImage(img: Blob) {
+  if (await storeRaiseImageAccordingTask(img)) {
+    return
+  }
+  fs.writeBlob(fs.join('image', `${Date.now()}.png`), img)
 }
 </script>
 
@@ -233,7 +241,7 @@ async function storeRaiseImage(img: Blob) {
             </template>
           </div>
           <div class="flex flex-col flex-1 gap-2">
-            <m-crop :accept-raise="!!task" @raise-image="storeRaiseImage"></m-crop>
+            <m-crop :accept-raise="true" @raise-image="storeRaiseImage"></m-crop>
           </div>
         </div>
       </template>
