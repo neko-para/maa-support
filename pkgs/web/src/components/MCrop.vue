@@ -65,6 +65,7 @@ async function screencap() {
     if (!setImage(url)) {
       URL.revokeObjectURL(url)
     }
+    await resize()
   })
   loading.value = false
 }
