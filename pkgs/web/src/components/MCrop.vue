@@ -62,7 +62,7 @@ async function screencap() {
 
     const buffer = await imageHandle.encoded(true)
     const url = URL.createObjectURL(new Blob([buffer.buffer]))
-    if (!setImage(url)) {
+    if (!(await setImage(url))) {
       URL.revokeObjectURL(url)
     }
     await resize()
@@ -80,7 +80,7 @@ async function uploadImage() {
     return
   }
   const url = URL.createObjectURL(file)
-  if (!setImage(url)) {
+  if (!(await setImage(url))) {
     URL.revokeObjectURL(url)
   }
   loading.value = false
@@ -125,6 +125,13 @@ const cornerMoveDrag = ref<DragHandler>(new DragHandler())
 const cornerMoveTarget = ref<CornerType | EdgeType>('lt')
 const cropDrag = ref<DragHandler>(new DragHandler())
 const cropBox = ref<Box>(new Box())
+const cropBoxExpand = computed<Box>(() => {
+  return cropBox.value
+    .copy()
+    .setOrigin(cropBox.value.origin.sub(Size.from(50, 50)))
+    .setSize(cropBox.value.size.add(Size.from(50, 50)))
+    .intersect(Box.from(new Pos(), imageSize.value))
+})
 const current = ref<Pos>(new Pos())
 
 const cropBoxView = computed<Box>({
@@ -398,7 +405,7 @@ async function resize() {
   const result = await newImg.getBufferAsync('image/png')
   const resultBlob = new Blob([result.buffer])
   const url = URL.createObjectURL(resultBlob)
-  if (!setImage(url)) {
+  if (!(await setImage(url))) {
     URL.revokeObjectURL(url)
   }
   resizing.value = false
@@ -424,14 +431,22 @@ async function raiseImage() {
 
 <template>
   <div class="flex flex-col gap-2 flex-1">
-    <div class="flex gap-2">
-      <span> roi: {{ cropBox.flat() }} </span>
-      <span>
-        state:
-        {{ viewMoveDrag.state ? 'viewMoveDrag' : '' }}
-        {{ cropMoveDrag.state ? 'cropMoveDrag' : '' }}
-        {{ cornerMoveDrag.state ? 'cornerMoveDrag ' + cornerMoveTarget : '' }}
-        {{ cropDrag.state ? 'cropDrag' : '' }}
+    <div class="flex gap-2 flex-col">
+      <div class="flex gap-2">
+        <span> size: {{ imageSize.flat() }} </span>
+        <span>
+          state:
+          {{ viewMoveDrag.state ? 'viewMoveDrag' : '' }}
+          {{ cropMoveDrag.state ? 'cropMoveDrag' : '' }}
+          {{ cornerMoveDrag.state ? 'cornerMoveDrag ' + cornerMoveTarget : '' }}
+          {{ cropDrag.state ? 'cropDrag' : '' }}
+        </span>
+      </div>
+      <span class="select-none">
+        roi: <span class="select-all">{{ cropBox.flat() }}</span>
+      </span>
+      <span class="select-none">
+        suggest roi: <span class="select-all">{{ cropBoxExpand.flat() }}</span>
       </span>
     </div>
     <div class="flex items-center gap-2">
