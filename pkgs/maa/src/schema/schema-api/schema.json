@@ -1165,6 +1165,152 @@
       },
       "required": ["post"]
     },
+    "/api/MaaControllerPostStartApp": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {
+                      "type": "object",
+                      "properties": {
+                        "ctrl": {
+                          "description": "MaaControllerAPI",
+                          "type": "string"
+                        },
+                        "intent": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["ctrl", "intent"]
+                    }
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "object",
+                              "properties": {
+                                "return": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": ["return"]
+                            },
+                            "success": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": ["success"]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
+    "/api/MaaControllerPostStopApp": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {
+                      "type": "object",
+                      "properties": {
+                        "ctrl": {
+                          "description": "MaaControllerAPI",
+                          "type": "string"
+                        },
+                        "intent": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["ctrl", "intent"]
+                    }
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "object",
+                              "properties": {
+                                "return": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": ["return"]
+                            },
+                            "success": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": ["success"]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
     "/api/MaaControllerPostSwipe": {
       "type": "object",
       "properties": {
@@ -3256,6 +3402,158 @@
       },
       "required": ["post"]
     },
+    "/api/MaaPostAction": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {
+                      "type": "object",
+                      "properties": {
+                        "entry": {
+                          "type": "string"
+                        },
+                        "inst": {
+                          "description": "MaaInstanceAPI",
+                          "type": "string"
+                        },
+                        "param": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["entry", "inst", "param"]
+                    }
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "object",
+                              "properties": {
+                                "return": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": ["return"]
+                            },
+                            "success": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": ["success"]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
+    "/api/MaaPostRecognition": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {
+                      "type": "object",
+                      "properties": {
+                        "entry": {
+                          "type": "string"
+                        },
+                        "inst": {
+                          "description": "MaaInstanceAPI",
+                          "type": "string"
+                        },
+                        "param": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["entry", "inst", "param"]
+                    }
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "object",
+                              "properties": {
+                                "return": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": ["return"]
+                            },
+                            "success": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": ["success"]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
     "/api/MaaPostStop": {
       "type": "object",
       "properties": {
@@ -3402,6 +3700,81 @@
       },
       "required": ["post"]
     },
+    "/api/MaaQueryNodeDetail": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {
+                      "type": "object",
+                      "properties": {
+                        "node_id": {
+                          "type": "number"
+                        }
+                      },
+                      "required": ["node_id"]
+                    }
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "object",
+                              "properties": {
+                                "reco_id": {
+                                  "type": "number"
+                                },
+                                "return": {
+                                  "type": "number"
+                                },
+                                "run_completed": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": ["reco_id", "return", "run_completed"]
+                            },
+                            "success": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": ["success"]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
     "/api/MaaQueryRecognitionDetail": {
       "type": "object",
       "properties": {
@@ -3448,6 +3821,9 @@
                             "data": {
                               "type": "object",
                               "properties": {
+                                "detail_json": {
+                                  "type": "string"
+                                },
                                 "hit": {
                                   "type": "boolean"
                                 },
@@ -3469,14 +3845,11 @@
                                   },
                                   "required": ["height", "width", "x", "y"]
                                 },
-                                "hit_detail": {
-                                  "type": "string"
-                                },
                                 "return": {
                                   "type": "number"
                                 }
                               },
-                              "required": ["hit", "hit_box", "hit_detail", "return"]
+                              "required": ["detail_json", "hit", "hit_box", "return"]
                             },
                             "success": {
                               "type": "boolean"
@@ -3499,7 +3872,7 @@
       },
       "required": ["post"]
     },
-    "/api/MaaQueryRunningDetail": {
+    "/api/MaaQueryTaskDetail": {
       "type": "object",
       "properties": {
         "post": {
@@ -3514,11 +3887,11 @@
                     "application/json": {
                       "type": "object",
                       "properties": {
-                        "run_id": {
+                        "task_id": {
                           "type": "number"
                         }
                       },
-                      "required": ["run_id"]
+                      "required": ["task_id"]
                     }
                   },
                   "required": ["application/json"]
@@ -3541,17 +3914,17 @@
                             "data": {
                               "type": "object",
                               "properties": {
-                                "reco_id": {
-                                  "type": "number"
+                                "node_id_list": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "number"
+                                  }
                                 },
                                 "return": {
                                   "type": "number"
-                                },
-                                "successful": {
-                                  "type": "boolean"
                                 }
                               },
-                              "required": ["reco_id", "return", "successful"]
+                              "required": ["node_id_list", "return"]
                             },
                             "success": {
                               "type": "boolean"
@@ -4809,6 +5182,80 @@
       },
       "required": ["post"]
     },
+    "/api/MaaSyncContextCachedImage": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {
+                      "type": "object",
+                      "properties": {
+                        "out_image": {
+                          "description": "MaaImageBuffer",
+                          "type": "string"
+                        },
+                        "sync_context": {
+                          "description": "MaaSyncContextAPI",
+                          "type": "string"
+                        }
+                      },
+                      "required": ["out_image", "sync_context"]
+                    }
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "object",
+                              "properties": {
+                                "return": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": ["return"]
+                            },
+                            "success": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": ["success"]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
     "/api/MaaSyncContextClick": {
       "type": "object",
       "properties": {
@@ -5134,7 +5581,7 @@
       },
       "required": ["post"]
     },
-    "/api/MaaSyncContextRunRecognizer": {
+    "/api/MaaSyncContextRunRecognition": {
       "type": "object",
       "properties": {
         "post": {
@@ -5837,6 +6284,146 @@
                                 "return": {
                                   "description": "MaaControllerAPI",
                                   "type": "string"
+                                }
+                              },
+                              "required": ["return"]
+                            },
+                            "success": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": ["success"]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
+    "/api/MaaToolkitClearCustomActionExecutor": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {
+                      "type": "object",
+                      "properties": {
+                        "handle": {
+                          "description": "MaaInstanceAPI",
+                          "type": "string"
+                        }
+                      },
+                      "required": ["handle"]
+                    }
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "object",
+                              "properties": {
+                                "return": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": ["return"]
+                            },
+                            "success": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": ["success"]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
+    "/api/MaaToolkitClearCustomRecognizerExecutor": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {
+                      "type": "object",
+                      "properties": {
+                        "handle": {
+                          "description": "MaaInstanceAPI",
+                          "type": "string"
+                        }
+                      },
+                      "required": ["handle"]
+                    }
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "object",
+                              "properties": {
+                                "return": {
+                                  "type": "number"
                                 }
                               },
                               "required": ["return"]
@@ -6600,6 +7187,150 @@
       },
       "required": ["post"]
     },
+    "/api/MaaToolkitGetWindowClassName": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {
+                      "type": "object",
+                      "properties": {
+                        "hwnd": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["hwnd"]
+                    }
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "object",
+                              "properties": {
+                                "buffer": {
+                                  "type": "string"
+                                },
+                                "return": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": ["buffer", "return"]
+                            },
+                            "success": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": ["success"]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
+    "/api/MaaToolkitGetWindowWindowName": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {
+                      "type": "object",
+                      "properties": {
+                        "hwnd": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["hwnd"]
+                    }
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "object",
+                              "properties": {
+                                "buffer": {
+                                  "type": "string"
+                                },
+                                "return": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": ["buffer", "return"]
+                            },
+                            "success": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": ["success"]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
     "/api/MaaToolkitInitOptionConfig": {
       "type": "object",
       "properties": {
@@ -6673,6 +7404,69 @@
       "required": ["post"]
     },
     "/api/MaaToolkitIsFindDeviceCompleted": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "object",
+          "properties": {
+            "requestBody": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "application/json": {
+                      "$ref": "#/definitions/Record<string,never>"
+                    }
+                  },
+                  "required": ["application/json"]
+                }
+              },
+              "required": ["content"]
+            },
+            "responses": {
+              "type": "object",
+              "properties": {
+                "200": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "application/json": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "object",
+                              "properties": {
+                                "return": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": ["return"]
+                            },
+                            "success": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": ["success"]
+                        }
+                      },
+                      "required": ["application/json"]
+                    }
+                  },
+                  "required": ["content"]
+                }
+              },
+              "required": ["200"]
+            }
+          },
+          "required": ["responses"]
+        }
+      },
+      "required": ["post"]
+    },
+    "/api/MaaToolkitListWindows": {
       "type": "object",
       "properties": {
         "post": {
@@ -6882,13 +7676,16 @@
                     "application/json": {
                       "type": "object",
                       "properties": {
-                        "action_exec_param_json": {
-                          "type": "string"
-                        },
-                        "action_exec_path": {
-                          "type": "string"
-                        },
                         "action_name": {
+                          "type": "string"
+                        },
+                        "exec_params": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "exec_path": {
                           "type": "string"
                         },
                         "handle": {
@@ -6896,12 +7693,7 @@
                           "type": "string"
                         }
                       },
-                      "required": [
-                        "action_exec_param_json",
-                        "action_exec_path",
-                        "action_name",
-                        "handle"
-                      ]
+                      "required": ["action_name", "exec_params", "exec_path", "handle"]
                     }
                   },
                   "required": ["application/json"]
@@ -6966,26 +7758,24 @@
                     "application/json": {
                       "type": "object",
                       "properties": {
+                        "exec_params": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "exec_path": {
+                          "type": "string"
+                        },
                         "handle": {
                           "description": "MaaInstanceAPI",
-                          "type": "string"
-                        },
-                        "recognizer_exec_param_json": {
-                          "type": "string"
-                        },
-                        "recognizer_exec_path": {
                           "type": "string"
                         },
                         "recognizer_name": {
                           "type": "string"
                         }
                       },
-                      "required": [
-                        "handle",
-                        "recognizer_exec_param_json",
-                        "recognizer_exec_path",
-                        "recognizer_name"
-                      ]
+                      "required": ["exec_params", "exec_path", "handle", "recognizer_name"]
                     }
                   },
                   "required": ["application/json"]
@@ -10054,6 +10844,8 @@
     "/api/MaaControllerPostInputText",
     "/api/MaaControllerPostPressKey",
     "/api/MaaControllerPostScreencap",
+    "/api/MaaControllerPostStartApp",
+    "/api/MaaControllerPostStopApp",
     "/api/MaaControllerPostSwipe",
     "/api/MaaControllerPostTouchDown",
     "/api/MaaControllerPostTouchMove",
@@ -10083,10 +10875,13 @@
     "/api/MaaInited",
     "/api/MaaIsImageEmpty",
     "/api/MaaIsImageListEmpty",
+    "/api/MaaPostAction",
+    "/api/MaaPostRecognition",
     "/api/MaaPostStop",
     "/api/MaaPostTask",
+    "/api/MaaQueryNodeDetail",
     "/api/MaaQueryRecognitionDetail",
-    "/api/MaaQueryRunningDetail",
+    "/api/MaaQueryTaskDetail",
     "/api/MaaRegisterCustomAction",
     "/api/MaaRegisterCustomRecognizer",
     "/api/MaaResourceClear",
@@ -10104,11 +10899,12 @@
     "/api/MaaSetGlobalOptionString",
     "/api/MaaSetImageEncoded",
     "/api/MaaSetTaskParam",
+    "/api/MaaSyncContextCachedImage",
     "/api/MaaSyncContextClick",
     "/api/MaaSyncContextInputText",
     "/api/MaaSyncContextPressKey",
     "/api/MaaSyncContextRunAction",
-    "/api/MaaSyncContextRunRecognizer",
+    "/api/MaaSyncContextRunRecognition",
     "/api/MaaSyncContextRunTask",
     "/api/MaaSyncContextScreencap",
     "/api/MaaSyncContextSwipe",
@@ -10117,6 +10913,8 @@
     "/api/MaaSyncContextTouchUp",
     "/api/MaaTaskStatus",
     "/api/MaaThriftControllerCreate",
+    "/api/MaaToolkitClearCustomActionExecutor",
+    "/api/MaaToolkitClearCustomRecognizerExecutor",
     "/api/MaaToolkitFindWindow",
     "/api/MaaToolkitGetCursorWindow",
     "/api/MaaToolkitGetDesktopWindow",
@@ -10128,8 +10926,11 @@
     "/api/MaaToolkitGetDeviceName",
     "/api/MaaToolkitGetForegroundWindow",
     "/api/MaaToolkitGetWindow",
+    "/api/MaaToolkitGetWindowClassName",
+    "/api/MaaToolkitGetWindowWindowName",
     "/api/MaaToolkitInitOptionConfig",
     "/api/MaaToolkitIsFindDeviceCompleted",
+    "/api/MaaToolkitListWindows",
     "/api/MaaToolkitPostFindDevice",
     "/api/MaaToolkitPostFindDeviceWithAdb",
     "/api/MaaToolkitRegisterCustomActionExecutor",

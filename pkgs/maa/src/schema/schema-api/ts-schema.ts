@@ -52,6 +52,12 @@ export interface paths {
   '/api/MaaControllerPostScreencap': {
     post: operations['_api_MaaControllerPostScreencap']
   }
+  '/api/MaaControllerPostStartApp': {
+    post: operations['_api_MaaControllerPostStartApp']
+  }
+  '/api/MaaControllerPostStopApp': {
+    post: operations['_api_MaaControllerPostStopApp']
+  }
   '/api/MaaControllerPostSwipe': {
     post: operations['_api_MaaControllerPostSwipe']
   }
@@ -139,17 +145,26 @@ export interface paths {
   '/api/MaaIsImageListEmpty': {
     post: operations['_api_MaaIsImageListEmpty']
   }
+  '/api/MaaPostAction': {
+    post: operations['_api_MaaPostAction']
+  }
+  '/api/MaaPostRecognition': {
+    post: operations['_api_MaaPostRecognition']
+  }
   '/api/MaaPostStop': {
     post: operations['_api_MaaPostStop']
   }
   '/api/MaaPostTask': {
     post: operations['_api_MaaPostTask']
   }
+  '/api/MaaQueryNodeDetail': {
+    post: operations['_api_MaaQueryNodeDetail']
+  }
   '/api/MaaQueryRecognitionDetail': {
     post: operations['_api_MaaQueryRecognitionDetail']
   }
-  '/api/MaaQueryRunningDetail': {
-    post: operations['_api_MaaQueryRunningDetail']
+  '/api/MaaQueryTaskDetail': {
+    post: operations['_api_MaaQueryTaskDetail']
   }
   '/api/MaaRegisterCustomAction': {
     post: operations['_api_MaaRegisterCustomAction']
@@ -202,6 +217,9 @@ export interface paths {
   '/api/MaaSetTaskParam': {
     post: operations['_api_MaaSetTaskParam']
   }
+  '/api/MaaSyncContextCachedImage': {
+    post: operations['_api_MaaSyncContextCachedImage']
+  }
   '/api/MaaSyncContextClick': {
     post: operations['_api_MaaSyncContextClick']
   }
@@ -214,8 +232,8 @@ export interface paths {
   '/api/MaaSyncContextRunAction': {
     post: operations['_api_MaaSyncContextRunAction']
   }
-  '/api/MaaSyncContextRunRecognizer': {
-    post: operations['_api_MaaSyncContextRunRecognizer']
+  '/api/MaaSyncContextRunRecognition': {
+    post: operations['_api_MaaSyncContextRunRecognition']
   }
   '/api/MaaSyncContextRunTask': {
     post: operations['_api_MaaSyncContextRunTask']
@@ -240,6 +258,12 @@ export interface paths {
   }
   '/api/MaaThriftControllerCreate': {
     post: operations['_api_MaaThriftControllerCreate']
+  }
+  '/api/MaaToolkitClearCustomActionExecutor': {
+    post: operations['_api_MaaToolkitClearCustomActionExecutor']
+  }
+  '/api/MaaToolkitClearCustomRecognizerExecutor': {
+    post: operations['_api_MaaToolkitClearCustomRecognizerExecutor']
   }
   '/api/MaaToolkitFindWindow': {
     post: operations['_api_MaaToolkitFindWindow']
@@ -274,11 +298,20 @@ export interface paths {
   '/api/MaaToolkitGetWindow': {
     post: operations['_api_MaaToolkitGetWindow']
   }
+  '/api/MaaToolkitGetWindowClassName': {
+    post: operations['_api_MaaToolkitGetWindowClassName']
+  }
+  '/api/MaaToolkitGetWindowWindowName': {
+    post: operations['_api_MaaToolkitGetWindowWindowName']
+  }
   '/api/MaaToolkitInitOptionConfig': {
     post: operations['_api_MaaToolkitInitOptionConfig']
   }
   '/api/MaaToolkitIsFindDeviceCompleted': {
     post: operations['_api_MaaToolkitIsFindDeviceCompleted']
+  }
+  '/api/MaaToolkitListWindows': {
+    post: operations['_api_MaaToolkitListWindows']
   }
   '/api/MaaToolkitPostFindDevice': {
     post: operations['_api_MaaToolkitPostFindDevice']
@@ -791,6 +824,52 @@ export interface operations {
         'application/json': {
           /** MaaControllerAPI */
           ctrl: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaControllerPostStartApp: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaControllerAPI */
+          ctrl: string
+          intent: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaControllerPostStopApp: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaControllerAPI */
+          ctrl: string
+          intent: string
         }
       }
     }
@@ -1468,6 +1547,54 @@ export interface operations {
       }
     }
   }
+  _api_MaaPostAction: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          entry: string
+          /** MaaInstanceAPI */
+          inst: string
+          param: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaPostRecognition: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          entry: string
+          /** MaaInstanceAPI */
+          inst: string
+          param: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
   _api_MaaPostStop: {
     requestBody?: {
       content: {
@@ -1514,6 +1641,29 @@ export interface operations {
       }
     }
   }
+  _api_MaaQueryNodeDetail: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          node_id: number
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              reco_id: number
+              return: number
+              run_completed: boolean
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
   _api_MaaQueryRecognitionDetail: {
     requestBody?: {
       content: {
@@ -1529,6 +1679,7 @@ export interface operations {
         content: {
           'application/json': {
             data?: {
+              detail_json: string
               hit: boolean
               hit_box: {
                 height: number
@@ -1536,7 +1687,6 @@ export interface operations {
                 x: number
                 y: number
               }
-              hit_detail: string
               return: number
             }
             success: boolean
@@ -1545,11 +1695,11 @@ export interface operations {
       }
     }
   }
-  _api_MaaQueryRunningDetail: {
+  _api_MaaQueryTaskDetail: {
     requestBody?: {
       content: {
         'application/json': {
-          run_id: number
+          task_id: number
         }
       }
     }
@@ -1558,9 +1708,8 @@ export interface operations {
         content: {
           'application/json': {
             data?: {
-              reco_id: number
+              node_id_list: number[]
               return: number
-              successful: boolean
             }
             success: boolean
           }
@@ -1955,6 +2104,30 @@ export interface operations {
       }
     }
   }
+  _api_MaaSyncContextCachedImage: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaImageBuffer */
+          out_image: string
+          /** MaaSyncContextAPI */
+          sync_context: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
   _api_MaaSyncContextClick: {
     requestBody?: {
       content: {
@@ -2056,7 +2229,7 @@ export interface operations {
       }
     }
   }
-  _api_MaaSyncContextRunRecognizer: {
+  _api_MaaSyncContextRunRecognition: {
     requestBody?: {
       content: {
         'application/json': {
@@ -2288,6 +2461,50 @@ export interface operations {
       }
     }
   }
+  _api_MaaToolkitClearCustomActionExecutor: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaInstanceAPI */
+          handle: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaToolkitClearCustomRecognizerExecutor: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          /** MaaInstanceAPI */
+          handle: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
   _api_MaaToolkitFindWindow: {
     requestBody?: {
       content: {
@@ -2512,6 +2729,50 @@ export interface operations {
       }
     }
   }
+  _api_MaaToolkitGetWindowClassName: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          hwnd: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              buffer: string
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaToolkitGetWindowWindowName: {
+    requestBody?: {
+      content: {
+        'application/json': {
+          hwnd: string
+        }
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              buffer: string
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
   _api_MaaToolkitInitOptionConfig: {
     requestBody?: {
       content: {
@@ -2535,6 +2796,25 @@ export interface operations {
     }
   }
   _api_MaaToolkitIsFindDeviceCompleted: {
+    requestBody?: {
+      content: {
+        'application/json': Record<string, never>
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            data?: {
+              return: number
+            }
+            success: boolean
+          }
+        }
+      }
+    }
+  }
+  _api_MaaToolkitListWindows: {
     requestBody?: {
       content: {
         'application/json': Record<string, never>
@@ -2597,9 +2877,9 @@ export interface operations {
     requestBody?: {
       content: {
         'application/json': {
-          action_exec_param_json: string
-          action_exec_path: string
           action_name: string
+          exec_params: string[]
+          exec_path: string
           /** MaaInstanceAPI */
           handle: string
         }
@@ -2622,10 +2902,10 @@ export interface operations {
     requestBody?: {
       content: {
         'application/json': {
+          exec_params: string[]
+          exec_path: string
           /** MaaInstanceAPI */
           handle: string
-          recognizer_exec_param_json: string
-          recognizer_exec_path: string
           recognizer_name: string
         }
       }
