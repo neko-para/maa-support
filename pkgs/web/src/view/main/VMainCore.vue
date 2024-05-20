@@ -6,6 +6,7 @@ import {
   ControllerOption,
   type DeviceInfo,
   type HwndId,
+  ImageListHandle,
   Instance,
   Message,
   Resource,
@@ -13,7 +14,8 @@ import {
   TrivialCallback,
   Win32Controller,
   awaitUsing,
-  findDevice
+  findDevice,
+  queryRecoDetail
 } from '@nekosu/maa'
 import {
   NButton,
@@ -32,6 +34,7 @@ import MAdbConfig from '@/components/MAdbConfig.vue'
 import MIcon from '@/components/MIcon.vue'
 import MWin32Config from '@/components/MWin32Config.vue'
 import MWin32Find from '@/components/MWin32Find.vue'
+import { TaskList } from '@/data/core/taskList'
 import { TaskMap } from '@/data/core/taskMap'
 import { main } from '@/data/main'
 import { setting } from '@/data/setting'
@@ -70,15 +73,8 @@ async function prepareCallback() {
     if (
       await cb.prepareCallback(async (msg, detail) => {
         log.value.push([msg, detail])
-        if (msg === Message.Task_Debug_ReadyToRun) {
-          const res = JSON.parse(detail) as {
-            name: string
-            is_sub: boolean
-          }
-          data.value.runtime.taskMap?.push(res.name, res.is_sub)
-        } else if (msg === Message.Task_Debug_EndSub) {
-          data.value.runtime.taskMap?.done()
-        }
+        // console.log(msg, JSON.parse(detail))
+        data.value.runtime.taskList?.push(msg as Message, JSON.parse(detail))
       })
     ) {
       return cb.ref()
@@ -295,7 +291,7 @@ async function startRunImpl() {
     console.log('failed for no task')
     return false
   }
-  data.value.runtime.taskMap = reactive(new TaskMap())
+  data.value.runtime.taskList = reactive(new TaskList())
   return (
     (await (
       await data.value.shallow.instance?.postTask(
@@ -315,6 +311,33 @@ async function startRun() {
 
 async function postStop() {
   await data.value.shallow.instance?.postStop()
+}
+
+const recoImages = ref<string[]>([])
+
+async function showRecoResult(reco_id?: number) {
+  if (typeof reco_id === 'undefined') {
+    return
+  }
+  const imgs = await awaitUsing(async root => {
+    const img_list = root.defer(new ImageListHandle())
+    if (!(await img_list.create())) {
+      return
+    }
+    if (!(await queryRecoDetail(reco_id, img_list)).return) {
+      return
+    }
+    const imgs: string[] = []
+    const size = await img_list.size()
+    for (let i = 0; i < size; i++) {
+      const img = await img_list.at(i)
+      imgs.push(await img.encoded(false))
+    }
+    return imgs
+  })
+  if (imgs) {
+    recoImages.value = imgs
+  }
 }
 </script>
 
@@ -548,7 +571,37 @@ async function postStop() {
                   stop
                 </n-button>
               </div>
-              <div>{{ data.runtime.taskMap?.dump?.() }}</div>
+              <div v-if="data.runtime.taskList" class="flex flex-wrap gap-2 mt-2">
+                <div
+                  v-for="(node, idx) in data.runtime.taskList.node"
+                  :key="idx"
+                  class="flex flex-col"
+                >
+                  <div class="flex flex-col gap-2 border p-2">
+                    <span class="font-bold self-center"> {{ node.pre_hit_task }} </span>
+                    <template v-for="(reco, ridx) in node.reco_list" :key="ridx">
+                      <n-button @click="showRecoResult(reco.reco_id)">
+                        <span v-if="reco.status === 'pending'" class="text-slate-500">
+                          {{ reco.task }} {{ reco.reco_id ?? '' }}
+                        </span>
+                        <span v-else-if="reco.status === 'success'" class="text-green-500">
+                          {{ reco.task }} {{ reco.reco_id ?? '' }}
+                        </span>
+                        <span v-else-if="reco.status === 'failed'" class="text-red-500">
+                          {{ reco.task }} {{ reco.reco_id ?? '' }}
+                        </span>
+                      </n-button>
+                    </template>
+                  </div>
+                </div>
+              </div>
+              <div v-if="recoImages" class="flex flex-col gap-2 mt-2">
+                <img
+                  v-for="(img, idx) in recoImages"
+                  :key="idx"
+                  :src="`data:image/png;base64,${img}`"
+                />
+              </div>
             </n-card>
           </div>
         </div>

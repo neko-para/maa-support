@@ -27,7 +27,7 @@ export class SyncContext {
     }
     const img = (await api.MaaCreateImageBuffer()).return
     await api.MaaSetImageEncoded({ handle: img, data: image.toString('base64') })
-    const ret = await api.MaaSyncContextRunRecognizer({
+    const ret = await api.MaaSyncContextRunRecognition({
       sync_context: this._id,
       image: img,
       task_name: task,
