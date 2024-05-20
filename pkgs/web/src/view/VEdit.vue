@@ -8,7 +8,7 @@ import MIcon from '@/components/MIcon.vue'
 import MTask from '@/components/MTask.vue'
 import { editor } from '@/data/editor'
 import { fs, taskInfo } from '@/fs'
-import type { Task } from '@/types'
+import type { RoiInfo, Task } from '@/types'
 import { requestInput } from '@/utils/input'
 
 const taskData = fs.computedJson<Partial<Record<string, Task>>>(computed(() => editor.currentPath))
@@ -24,6 +24,13 @@ const previewImage = computed<string | null>(() => {
   }
   const entry = fs.readFile(editor.currentPath)
   return entry?.uri ?? null
+})
+const previewImageRoi = computed<RoiInfo | null>(() => {
+  if (previewImage.value && fs.stat(editor.currentPath + '.roi', true) === 'text') {
+    return JSON.parse(fs.readFile(editor.currentPath + '.roi')!.content!)
+  } else {
+    return null
+  }
 })
 
 const taskListOpts = computed(() => {
@@ -163,34 +170,32 @@ function deleteTask() {
   performTaskRename(editor.currentTask!, null)
 }
 
-async function storeRaiseImageAccordingTask(img: Blob) {
+async function getImagePathAccordingTask(img: Blob) {
   if (!editor.currentPath || !editor.currentTask) {
-    return false
+    return null
   }
   const jsonPath = fs.resolve(editor.currentPath)
 
   if (jsonPath[0] !== 'pipeline') {
-    return false
+    return null
   }
   jsonPath[0] = 'image'
 
   const jsonName = jsonPath.pop()
   if (!jsonName?.endsWith('.json')) {
-    return false
+    return null
   }
   jsonPath.push(jsonName.replace(/\.json$/, ''))
   if (!fs.mkdir(fs.join(...jsonPath))) {
-    return false
+    return null
   }
-  fs.writeBlob(fs.join(...jsonPath, editor.currentTask + '.png'), img)
-  return true
+  return fs.join(...jsonPath, editor.currentTask + '.png')
 }
 
-async function storeRaiseImage(img: Blob) {
-  if (await storeRaiseImageAccordingTask(img)) {
-    return
-  }
-  fs.writeBlob(fs.join('image', `${Date.now()}.png`), img)
+async function storeRaiseImage(img: Blob, roi: RoiInfo) {
+  const path = (await getImagePathAccordingTask(img)) ?? fs.join('image', `${Date.now()}.png`)
+  fs.writeBlob(path, img)
+  fs.writeText(path + '.roi', JSON.stringify(roi))
 }
 </script>
 
@@ -236,6 +241,15 @@ async function storeRaiseImage(img: Blob) {
                 <span> {{ editor.currentPath }} </span>
               </div>
               <div>
+                <div v-if="previewImageRoi" class="flex gap-2 mb-2">
+                  <span class="select-none">
+                    roi: <span class="select-all">{{ JSON.stringify(previewImageRoi.raw) }}</span>
+                  </span>
+                  <span class="select-none">
+                    suggest roi:
+                    <span class="select-all">{{ JSON.stringify(previewImageRoi.suggest) }}</span>
+                  </span>
+                </div>
                 <img v-if="previewImage" :src="previewImage" />
               </div>
             </template>

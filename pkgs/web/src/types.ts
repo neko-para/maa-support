@@ -1,5 +1,10 @@
 export type Rect = [number, number, number, number]
 
+export type RoiInfo = {
+  raw: Rect
+  suggest: Rect
+}
+
 export type Recognition =
   | {
       recognition?: 'DirectHit'

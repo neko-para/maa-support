@@ -4,6 +4,7 @@ import { NButton } from 'naive-ui'
 import { computed, onBeforeUnmount, onMounted, onUnmounted, ref, shallowRef, watch } from 'vue'
 
 import { main } from '@/data/main'
+import type { RoiInfo } from '@/types'
 import { Box, DragHandler, Pos, Size, Viewport } from '@/utils/2d'
 import { triggerDownload, triggerUpload } from '@/utils/download'
 
@@ -12,7 +13,7 @@ const props = defineProps<{
 }>()
 
 const emits = defineEmits<{
-  raiseImage: [Blob]
+  raiseImage: [Blob, RoiInfo]
 }>()
 
 const canvasW = ref(0)
@@ -129,7 +130,7 @@ const cropBoxExpand = computed<Box>(() => {
   return cropBox.value
     .copy()
     .setOrigin(cropBox.value.origin.sub(Size.from(50, 50)))
-    .setSize(cropBox.value.size.add(Size.from(50, 50)))
+    .setSize(cropBox.value.size.add(Size.from(100, 100)))
     .intersect(Box.from(new Pos(), imageSize.value))
 })
 const current = ref<Pos>(new Pos())
@@ -425,7 +426,7 @@ async function raiseImage() {
   if (!img) {
     return
   }
-  emits('raiseImage', img)
+  emits('raiseImage', img, { raw: cropBox.value.flat(), suggest: cropBoxExpand.value.flat() })
 }
 </script>
 
