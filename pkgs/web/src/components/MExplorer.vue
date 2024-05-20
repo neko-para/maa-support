@@ -7,7 +7,7 @@ import { editor } from '@/data/editor'
 import { fs, fsData } from '@/fs'
 import { db } from '@/utils/db'
 import { triggerDownload, triggerUpload } from '@/utils/download'
-import { requestInput } from '@/utils/input'
+import { requestInput, requestInputPath } from '@/utils/input'
 import { waitNext } from '@/utils/misc'
 
 async function uploadZip() {
@@ -139,7 +139,7 @@ async function performSelect(key: string | number, option: DropdownOption) {
       break
     }
     case 'add.json': {
-      let name = await requestInput(dialog, 'add json')
+      let name = await requestInputPath(dialog, 'add json', '', '.json')
       if (!name) {
         return
       }
@@ -151,7 +151,7 @@ async function performSelect(key: string | number, option: DropdownOption) {
       break
     }
     case 'rename': {
-      let name = await requestInput(dialog, 'rename')
+      let name = await requestInputPath(dialog, 'rename', '', fs.basename(menuTarget.value)!)
       if (!name) {
         return
       }
