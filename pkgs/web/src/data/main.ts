@@ -9,7 +9,6 @@ import { v4 } from 'uuid'
 import { reactive, shallowReactive, watch } from 'vue'
 
 import type { TaskList } from './core/taskList'
-import type { TaskMap } from './core/taskMap'
 
 type DataMain = {
   name: string

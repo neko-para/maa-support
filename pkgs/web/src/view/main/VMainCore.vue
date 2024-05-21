@@ -17,25 +17,13 @@ import {
   findDevice,
   queryRecoDetail
 } from '@nekosu/maa'
-import {
-  NButton,
-  NCard,
-  NCollapse,
-  NCollapseItem,
-  NDivider,
-  NInput,
-  NSplit,
-  NTabPane,
-  NTabs
-} from 'naive-ui'
+import { NButton, NCard, NDivider, NInput, NSplit } from 'naive-ui'
 import { computed, reactive, ref } from 'vue'
 
-import MAdbConfig from '@/components/MAdbConfig.vue'
-import MIcon from '@/components/MIcon.vue'
-import MWin32Config from '@/components/MWin32Config.vue'
-import MWin32Find from '@/components/MWin32Find.vue'
+import MController from '@/components/maa/MController.vue'
+import MInstance from '@/components/maa/MInstance.vue'
+import MResource from '@/components/maa/MResource.vue'
 import { TaskList } from '@/data/core/taskList'
-import { TaskMap } from '@/data/core/taskMap'
 import { main } from '@/data/main'
 import { setting } from '@/data/setting'
 
@@ -47,241 +35,22 @@ const data = computed(() => {
   return main.data[props.id]
 })
 
-const win32FindEl = ref<InstanceType<typeof MWin32Find> | null>(null)
-
-const scanning = ref(false)
-const adbScanResult = ref<DeviceInfo[] | null>(null)
-const win32ScanResult = ref<HwndId[] | null>(null)
-
-async function performScanAdb() {
-  scanning.value = true
-  adbScanResult.value = await findDevice()
-  scanning.value = false
-}
-
-async function performScanWin32() {
-  scanning.value = true
-  win32ScanResult.value = (await win32FindEl.value?.performScan()) ?? null
-  scanning.value = false
-}
-
 const log = ref<[msg: string, detail: string][]>([])
 
-async function prepareCallback() {
-  return awaitUsing(async root => {
-    const cb = root.defer(new TrivialCallback())
-    if (
-      await cb.prepareCallback(async (msg, detail) => {
-        log.value.push([msg, detail])
-        // console.log(msg, JSON.parse(detail))
-        data.value.runtime.taskList?.push(msg as Message, JSON.parse(detail))
-      })
-    ) {
-      return cb.ref()
-    }
-    return null
-  })
+const controllerEl = ref<InstanceType<typeof MController> | null>(null)
+const resourceEl = ref<InstanceType<typeof MResource> | null>(null)
+const instanceEl = ref<InstanceType<typeof MInstance> | null>(null)
+
+const instanceLoading = computed(() => {
+  return instanceEl.value?.instanceLoading ?? false
+})
+
+const loadController = async () => {
+  return !!(await controllerEl.value?.createController())
 }
 
-const controllerLoading = ref(false)
-
-function checkAdbConfig(cfg?: Partial<AdbConfig>): cfg is AdbConfig {
-  return !!(cfg && cfg.address && cfg.adb_path && cfg.type && cfg.config)
-}
-
-async function createControllerImpl() {
-  return awaitUsing(async root => {
-    const cb = root.defer(await prepareCallback())
-    if (!cb) {
-      console.log('check callback failed')
-      return false
-    }
-    let outCtrl: Controller
-    if (!data.value.config.controller.ctype || data.value.config.controller.ctype === 'adb') {
-      if (!checkAdbConfig(data.value.config.controller.adb_cfg) || !setting.agentPath) {
-        console.log('check config or agentPath failed')
-        return false
-      }
-      const adbCtrl = root.defer(new AdbController())
-      if (!(await adbCtrl.create(data.value.config.controller.adb_cfg, setting.agentPath!, cb))) {
-        console.log('create failed')
-        return false
-      }
-      outCtrl = adbCtrl.ref()
-    } else if (data.value.config.controller.ctype === 'win32') {
-      if (
-        !data.value.config.controller.win_cfg?.type ||
-        !data.value.config.controller.win_cfg?.hwnd
-      ) {
-        console.log('check type or hwnd failed')
-        return false
-      }
-      const winCtrl = root.defer(new Win32Controller())
-      if (
-        !(await winCtrl.create(
-          data.value.config.controller.win_cfg?.hwnd,
-          data.value.config.controller.win_cfg?.type,
-          cb
-        ))
-      ) {
-        console.log('create failed')
-        return false
-      }
-      outCtrl = winCtrl.ref()
-    } else {
-      return false
-    }
-    const ctrl = root.defer(outCtrl)
-    if (
-      data.value.config.controller.startEntry &&
-      !(await ctrl.setOption(
-        ControllerOption.DefaultAppPackageEntry,
-        data.value.config.controller.startEntry
-      ))
-    ) {
-      console.log('set option failed')
-      return false
-    }
-    if (
-      data.value.config.controller.stopEntry &&
-      !(await ctrl.setOption(
-        ControllerOption.DefaultAppPackage,
-        data.value.config.controller.stopEntry
-      ))
-    ) {
-      console.log('set option failed')
-      return false
-    }
-    if ((await (await ctrl.postConnection()).wait()) !== Status.Success) {
-      console.log('connect failed')
-      return false
-    }
-    data.value.shallow.controller = ctrl.ref()
-    return true
-  })
-}
-
-async function createController() {
-  controllerLoading.value = true
-  const ret = await createControllerImpl()
-  controllerLoading.value = false
-  return ret
-}
-
-async function disposeControllerImpl() {
-  await data.value.shallow.controller?.unref()
-  delete data.value.shallow.controller
-}
-
-async function disposeController() {
-  controllerLoading.value = true
-  const ret = await disposeControllerImpl()
-  controllerLoading.value = false
-  return ret
-}
-
-const resourceLoading = ref(false)
-
-async function createResourceImpl() {
-  return awaitUsing(async root => {
-    const cb = root.defer(await prepareCallback())
-    if (!cb) {
-      console.log('check callback failed')
-      return false
-    }
-    if (!data.value.config.resource.path) {
-      console.log('check path failed')
-      return false
-    }
-    const res = root.defer(new Resource())
-    if (!(await res.create(cb))) {
-      console.log('create failed')
-      return false
-    }
-    if ((await (await res.postPath(data.value.config.resource.path)).wait()) === Status.Success) {
-      data.value.shallow.resource = res.ref()
-      return true
-    } else {
-      await res.dispose()
-      return false
-    }
-  })
-}
-
-async function createResource() {
-  resourceLoading.value = true
-  const ret = await createResourceImpl()
-  resourceLoading.value = false
-  return ret
-}
-
-async function disposeResourceImpl() {
-  await data.value.shallow.resource?.unref()
-  delete data.value.shallow.resource
-}
-
-async function disposeResource() {
-  resourceLoading.value = true
-  const ret = await disposeResourceImpl()
-  resourceLoading.value = false
-  return ret
-}
-
-const instanceLoading = ref(false)
-
-async function createInstanceImpl() {
-  return awaitUsing(async root => {
-    const cb = root.defer(await prepareCallback())
-    if (!cb) {
-      console.log('check callback failed')
-      return false
-    }
-    const inst = root.defer(new Instance())
-    if (!(await inst.create(cb))) {
-      console.log('create failed')
-      return false
-    }
-    if (!data.value.shallow.controller && !(await createController())) {
-      console.log('failed for controller')
-      return false
-    }
-    if (!data.value.shallow.resource && !(await createResource())) {
-      console.log('failed for resource')
-      return false
-    }
-    if (
-      !(await inst.bindCtrl(data.value.shallow.controller!)) ||
-      !(await inst.bindRes(data.value.shallow.resource!))
-    ) {
-      console.log('failed for bind')
-      return false
-    }
-    if (await inst.inited()) {
-      data.value.shallow.instance = inst.ref()
-      return true
-    } else {
-      return false
-    }
-  })
-}
-
-async function createInstance() {
-  instanceLoading.value = true
-  const ret = await createInstanceImpl()
-  instanceLoading.value = false
-  return ret
-}
-
-async function disposeInstanceImpl() {
-  await data.value.shallow.instance?.unref()
-  delete data.value.shallow.instance
-}
-
-async function disposeInstance() {
-  instanceLoading.value = true
-  const ret = await disposeInstanceImpl()
-  instanceLoading.value = false
-  return ret
+const loadResource = async () => {
+  return !!(await resourceEl.value?.createResource())
 }
 
 const running = ref(false)
@@ -350,206 +119,35 @@ async function showRecoResult(reco_id?: number) {
             <div class="flex">
               <n-input v-model:value="data.name" class="min-w-32" placeholder="" autosize></n-input>
             </div>
-            <n-card title="controller">
-              <template #header>
-                <div class="flex items-center gap-2">
-                  <n-button
-                    v-if="!data.shallow.controller"
-                    @click="createController"
-                    :loading="controllerLoading"
-                  >
-                    connect
-                  </n-button>
-                  <n-button
-                    v-else
-                    @click="disposeController"
-                    :loading="controllerLoading"
-                    :disabled="instanceLoading || !!data.shallow.instance"
-                  >
-                    disconnect
-                  </n-button>
-                  <span> controller </span>
-                </div>
-              </template>
-              <div class="maa-form mb-4">
-                <span> start entry </span>
-                <n-input
-                  :value="data.config.controller.startEntry ?? null"
-                  @update:value="v => (data.config.controller.startEntry = v)"
-                  :disabled="controllerLoading || !!data.shallow.controller"
-                  placeholder=""
-                >
-                  <template #suffix>
-                    <n-button
-                      v-if="data.config.controller.startEntry"
-                      @click="data.config.controller.startEntry = undefined"
-                      :disabled="controllerLoading || !!data.shallow.controller"
-                      text
-                    >
-                      <m-icon> close </m-icon>
-                    </n-button>
-                  </template>
-                </n-input>
-                <span> stop entry </span>
-                <n-input
-                  :value="data.config.controller.stopEntry ?? null"
-                  @update:value="v => (data.config.controller.stopEntry = v)"
-                  :disabled="controllerLoading || !!data.shallow.controller"
-                  placeholder=""
-                >
-                  <template #suffix>
-                    <n-button
-                      v-if="data.config.controller.stopEntry"
-                      @click="data.config.controller.stopEntry = undefined"
-                      :disabled="controllerLoading || !!data.shallow.controller"
-                      text
-                    >
-                      <m-icon> close </m-icon>
-                    </n-button>
-                  </template>
-                </n-input>
-              </div>
-              <n-tabs
-                :value="data.config.controller.ctype ?? 'adb'"
-                @update:value="v => (data.config.controller.ctype = v)"
-                animated
-              >
-                <n-tab-pane name="adb" tab="Android">
-                  <div class="flex flex-col">
-                    <m-adb-config
-                      v-model:value="data.config.controller.adb_cfg"
-                      :disabled="controllerLoading || !!data.shallow.controller"
-                    ></m-adb-config>
-                    <n-divider></n-divider>
-
-                    <div class="flex flex-col gap-2">
-                      <div class="flex">
-                        <n-button @click="performScanAdb" :loading="scanning"> scan </n-button>
-                      </div>
-                      <n-collapse>
-                        <n-collapse-item v-for="(res, idx) of adbScanResult ?? []" :key="idx">
-                          <template #header>
-                            <div class="flex items-center gap-2">
-                              <n-button
-                                @click.stop="
-                                  () => {
-                                    data.config.controller.adb_cfg =
-                                      data.config.controller.adb_cfg ?? {}
-                                    Object.assign(data.config.controller.adb_cfg, res)
-                                  }
-                                "
-                                :disabled="controllerLoading || !!data.shallow.controller"
-                              >
-                                copy
-                              </n-button>
-                              <span>
-                                {{ res.name }}
-                              </span>
-                            </div>
-                          </template>
-                          <m-adb-config :value="res" disabled></m-adb-config>
-                        </n-collapse-item>
-                      </n-collapse>
-                    </div>
-                  </div>
-                </n-tab-pane>
-                <n-tab-pane name="win32" tab="Windows">
-                  <div class="flex flex-col">
-                    <m-win32-config
-                      v-model:value="data.config.controller.win_cfg"
-                      :disabled="controllerLoading || !!data.shallow.controller"
-                    ></m-win32-config>
-
-                    <n-divider></n-divider>
-
-                    <div class="flex flex-col gap-2">
-                      <m-win32-find
-                        ref="win32FindEl"
-                        v-model:class-name="data.config.controllerCache.className"
-                        v-model:window-name="data.config.controllerCache.windowName"
-                        v-model:exact-match="data.config.controllerCache.exactMatch"
-                      ></m-win32-find>
-                      <div class="flex">
-                        <n-button @click="performScanWin32" :loading="scanning"> scan </n-button>
-                      </div>
-                      <n-collapse>
-                        <n-collapse-item v-for="(res, idx) of win32ScanResult ?? []" :key="idx">
-                          <template #header>
-                            <div class="flex items-center gap-2">
-                              <n-button
-                                @click.stop="
-                                  () => {
-                                    data.config.controller.win_cfg =
-                                      data.config.controller.win_cfg ?? {}
-                                    data.config.controller.win_cfg.hwnd = res
-                                  }
-                                "
-                                :disabled="controllerLoading || !!data.shallow.controller"
-                              >
-                                copy
-                              </n-button>
-                              <span>
-                                {{ res }}
-                              </span>
-                            </div>
-                          </template>
-                          <!-- <m-adb-config :value="res" disabled></m-adb-config> -->
-                        </n-collapse-item>
-                      </n-collapse>
-                    </div>
-                  </div>
-                </n-tab-pane>
-              </n-tabs>
-            </n-card>
+            <m-controller
+              ref="controllerEl"
+              :id="id"
+              :instance-loading="instanceLoading"
+              @log="(msg, detail) => log.push([msg, detail])"
+            ></m-controller>
+            <m-resource
+              ref="resourceEl"
+              :id="id"
+              :instance-loading="instanceLoading"
+              @log="(msg, detail) => log.push([msg, detail])"
+            ></m-resource>
+            <m-instance
+              ref="instanceEl"
+              :id="id"
+              :load-controller="loadController"
+              :load-resource="loadResource"
+              :running="running"
+              @log="
+                (msg, detail) => {
+                  log.push([msg, detail])
+                  data.runtime.taskList?.push(msg as Message, JSON.parse(detail))
+                }
+              "
+            ></m-instance>
             <n-card>
               <template #header>
                 <div class="flex items-center gap-2">
-                  <n-button
-                    v-if="!data.shallow.resource"
-                    @click="createResource"
-                    :loading="resourceLoading"
-                  >
-                    connect
-                  </n-button>
-                  <n-button
-                    v-else
-                    @click="disposeResource"
-                    :loading="resourceLoading"
-                    :disabled="instanceLoading || !!data.shallow.instance"
-                  >
-                    disconnect
-                  </n-button>
-                  <span> resource </span>
-                </div>
-              </template>
-              <div class="maa-form">
-                <span> path </span>
-                <n-input
-                  v-model:value="data.config.resource.path"
-                  placeholder=""
-                  :disabled="resourceLoading || !!data.shallow.resource"
-                ></n-input>
-              </div>
-            </n-card>
-            <n-card>
-              <template #header>
-                <div class="flex items-center gap-2">
-                  <n-button
-                    v-if="!data.shallow.instance"
-                    @click="createInstance"
-                    :loading="instanceLoading"
-                  >
-                    connect
-                  </n-button>
-                  <n-button
-                    v-else
-                    @click="disposeInstance"
-                    :loading="instanceLoading"
-                    :disabled="running"
-                  >
-                    disconnect
-                  </n-button>
-                  <span> instance </span>
+                  <span> launch </span>
                 </div>
               </template>
               <div class="maa-form">
