@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { NButton, NCard, NInput, NInputNumber, NSwitch } from 'naive-ui'
+import { NButton, NCard, NInput, NInputNumber, NModal, NSwitch } from 'naive-ui'
 import { ref } from 'vue'
 
 import { maa } from '@/data/maa'
@@ -18,10 +18,20 @@ async function tryDeinit() {
   await maa.deinit()
   loading.value = false
 }
+
+const showModal = ref(true)
+
+function updateShow(v: boolean) {
+  showModal.value = v
+  setTimeout(() => {
+    showModal.value = true
+  }, 1000)
+}
 </script>
 
 <template>
   <div class="flex-1 flex flex-col items-center">
+    <n-modal :show="showModal" @update:show="updateShow"> 123123 </n-modal>
     <div class="container flex flex-col gap-4 p-4">
       <n-card title="Maa Http">
         <div class="maa-form">

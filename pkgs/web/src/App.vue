@@ -14,7 +14,7 @@ hljs.registerLanguage('json', hljsJson)
 
 type TopLevelRoute = 'main' | 'edit' | 'setting'
 
-const topLevelRoute = ref<TopLevelRoute>('edit')
+const topLevelRoute = ref<TopLevelRoute>('setting')
 
 type RouteInfo = {
   key: TopLevelRoute
