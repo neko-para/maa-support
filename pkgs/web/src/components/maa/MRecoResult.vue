@@ -70,7 +70,7 @@ defineExpose({
           <span> Box </span>
           <span> {{ recoBox }} </span>
           <span> Detail </span>
-          <n-code :code="recoDetail"></n-code>
+          <n-code :code="recoDetail" language="json"></n-code>
           <span> Images </span>
           <div class="flex flex-col gap-2">
             <img

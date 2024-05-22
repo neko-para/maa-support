@@ -166,7 +166,7 @@ function addLog(msg: string, detail: string) {
           <div class="flex flex-col gap-1 px-1">
             <template v-for="(msg, idx) in log" :key="idx">
               <span> {{ msg[0] }} </span>
-              <n-code :code="msg[1]" word-wrap> </n-code>
+              <n-code :code="msg[1]" language="json" word-wrap> </n-code>
             </template>
           </div>
         </div>
