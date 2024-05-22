@@ -33,8 +33,9 @@ async function showRecoResult(reco_id?: number) {
       detail.hit_box.height
     ]
     try {
-      recoDetail.value = JSON.stringify(JSON.parse(detail.detail_json))
-    } catch (_) {
+      recoDetail.value = JSON.stringify(JSON.parse(detail.detail_json), null, 2)
+    } catch (err) {
+      console.log(detail.detail_json, err)
       recoDetail.value = detail.detail_json
     }
     const imgs: string[] = []

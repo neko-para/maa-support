@@ -73,4 +73,5 @@ export async function deinit(masterPort: number) {
 
 export function initDirect(slavePort: number) {
   port = slavePort
+  setBaseURL(localhost(port))
 }
