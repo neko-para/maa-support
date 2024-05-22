@@ -22,7 +22,7 @@ const data = computed(() => {
 
 async function prepareCallback() {
   return awaitUsing(async root => {
-    const cb = root.defer(new TrivialCallback())
+    const cb = root.transfer(new TrivialCallback())
     if (
       await cb.prepareCallback(async (msg, detail) => {
         emits('log', msg, detail)
@@ -38,12 +38,12 @@ const instanceLoading = ref(false)
 
 async function createInstanceImpl() {
   return awaitUsing(async root => {
-    const cb = root.defer(await prepareCallback())
+    const cb = root.transfer(await prepareCallback())
     if (!cb) {
       console.log('check callback failed')
       return false
     }
-    const inst = root.defer(new Instance())
+    const inst = root.transfer(new Instance())
     if (!(await inst.create(cb))) {
       console.log('create failed')
       return false

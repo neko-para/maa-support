@@ -20,7 +20,7 @@ const data = computed(() => {
 
 async function prepareCallback() {
   return awaitUsing(async root => {
-    const cb = root.defer(new TrivialCallback())
+    const cb = root.transfer(new TrivialCallback())
     if (
       await cb.prepareCallback(async (msg, detail) => {
         emits('log', msg, detail)
@@ -36,7 +36,7 @@ const resourceLoading = ref(false)
 
 async function createResourceImpl() {
   return awaitUsing(async root => {
-    const cb = root.defer(await prepareCallback())
+    const cb = root.transfer(await prepareCallback())
     if (!cb) {
       console.log('check callback failed')
       return false
@@ -45,7 +45,7 @@ async function createResourceImpl() {
       console.log('check path failed')
       return false
     }
-    const res = root.defer(new Resource())
+    const res = root.transfer(new Resource())
     if (!(await res.create(cb))) {
       console.log('create failed')
       return false

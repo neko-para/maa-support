@@ -1,5 +1,9 @@
-const guard = new FinalizationRegistry((type: string) => {
-  console.log(`${type} object reclaimed with ref over 0`)
+const guard = new FinalizationRegistry((info_json: string) => {
+  const info = JSON.parse(info_json) as {
+    name: string
+    ref: number
+  }
+  console.log(`${info.name} object reclaimed with ref ${info.ref}`)
 })
 
 // ts 5.2 provides Disposable, but stack is not available yet.
@@ -9,7 +13,14 @@ export class __Disposable {
   __deferObject: __Disposable[] = []
 
   constructor() {
-    guard.register(this, this.constructor.name, this)
+    guard.register(
+      this,
+      JSON.stringify({
+        name: this.constructor.name,
+        ref: this.__ref
+      }),
+      this
+    )
   }
 
   defer<T extends __Disposable | null | undefined>(target: T): T
@@ -26,6 +37,8 @@ export class __Disposable {
     return target
   }
 
+  transfer<T>(target: T): T
+  transfer<T>(target?: T): T | undefined
   transfer(target?: __Disposable) {
     if (!target) {
       return target

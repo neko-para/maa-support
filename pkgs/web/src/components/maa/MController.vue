@@ -64,7 +64,7 @@ async function performScanWin32() {
 
 async function prepareCallback() {
   return awaitUsing(async root => {
-    const cb = root.defer(new TrivialCallback())
+    const cb = root.transfer(new TrivialCallback())
     if (
       await cb.prepareCallback(async (msg, detail) => {
         emits('log', msg, detail)
@@ -84,7 +84,7 @@ function checkAdbConfig(cfg?: Partial<AdbConfig>): cfg is AdbConfig {
 
 async function createControllerImpl() {
   return awaitUsing(async root => {
-    const cb = root.defer(await prepareCallback())
+    const cb = root.transfer(await prepareCallback())
     if (!cb) {
       console.log('check callback failed')
       return false
@@ -95,7 +95,7 @@ async function createControllerImpl() {
         console.log('check config or agentPath failed')
         return false
       }
-      const adbCtrl = root.defer(new AdbController())
+      const adbCtrl = root.transfer(new AdbController())
       if (!(await adbCtrl.create(data.value.config.controller.adb_cfg, setting.agentPath!, cb))) {
         console.log('create failed')
         return false
@@ -109,7 +109,7 @@ async function createControllerImpl() {
         console.log('check type or hwnd failed')
         return false
       }
-      const winCtrl = root.defer(new Win32Controller())
+      const winCtrl = root.transfer(new Win32Controller())
       if (
         !(await winCtrl.create(
           data.value.config.controller.win_cfg?.hwnd,
@@ -124,7 +124,7 @@ async function createControllerImpl() {
     } else {
       return false
     }
-    const ctrl = root.defer(outCtrl)
+    const ctrl = root.transfer(outCtrl)
     if (
       data.value.config.controller.startEntry &&
       !(await ctrl.setOption(

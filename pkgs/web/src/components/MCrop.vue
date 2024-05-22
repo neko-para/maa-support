@@ -53,8 +53,7 @@ async function screencap() {
     if (!controller.value) {
       return
     }
-    const imageHandle = new ImageHandle()
-    root.transfer(imageHandle)
+    const imageHandle = root.transfer(new ImageHandle())
     await imageHandle.create()
     const ctrl = controller.value.ref()
     await (await ctrl.postScreencap()).wait()
