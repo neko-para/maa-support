@@ -102,7 +102,7 @@ export class GeneralPipelineCompletionProvider implements vscode.CompletionItemP
           if (existsSync(scanFullDir) && statSync(scanFullDir).isDirectory()) {
             for (const sub of await fs.readdir(scanFullDir, { recursive: true })) {
               const subfile = path.join(scanFullDir, sub)
-              if (!statSync(subfile).isFile()) {
+              if (!statSync(subfile).isFile() || sub.endsWith('.roi')) {
                 continue
               }
               const escaped = JSON.stringify(path.join(scanDir, sub).replaceAll('\\', '/'))
