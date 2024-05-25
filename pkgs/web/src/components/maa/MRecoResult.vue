@@ -59,29 +59,23 @@ defineExpose({
 </script>
 
 <template>
-  <div>
-    <n-modal v-model:show="showModal">
-      <n-card
-        style="max-width: 70vw; margin-top: 10vh; max-height: 80vh; overflow-y: auto"
-        role="dialog"
-      >
-        <div class="maa-form">
-          <span> Hit </span>
-          <span> {{ recoHit }} </span>
-          <span> Box </span>
-          <span> {{ recoBox }} </span>
-          <span> Detail </span>
-          <n-code :code="recoDetail" language="json"></n-code>
-          <span> Images </span>
-          <div class="flex flex-col gap-2">
-            <img
-              v-for="(img, idx) in recoImages"
-              :key="idx"
-              :src="`data:image/png;base64,${img}`"
-            />
-          </div>
+  <n-modal v-model:show="showModal">
+    <n-card
+      style="max-width: 90vw; margin-top: 5vh; max-height: 90vh; overflow-y: auto"
+      role="dialog"
+    >
+      <div class="maa-form">
+        <span> Hit </span>
+        <span> {{ recoHit }} </span>
+        <span> Box </span>
+        <span> {{ recoBox }} </span>
+        <span> Detail </span>
+        <n-code :code="recoDetail" language="json"></n-code>
+        <span> Images </span>
+        <div class="flex flex-col gap-2">
+          <img v-for="(img, idx) in recoImages" :key="idx" :src="`data:image/png;base64,${img}`" />
         </div>
-      </n-card>
-    </n-modal>
-  </div>
+      </div>
+    </n-card>
+  </n-modal>
 </template>

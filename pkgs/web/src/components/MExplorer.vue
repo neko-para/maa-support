@@ -3,6 +3,7 @@ import { type DropdownOption, NButton, NDropdown, NSelect, NTree, useDialog } fr
 import type { TreeDropInfo, TreeNodeProps } from 'naive-ui/es/tree/src/interface'
 import { nextTick, ref } from 'vue'
 
+import MTaskMap from '@/components/MTaskMap.vue'
 import { editor } from '@/data/editor'
 import { fs, fsData } from '@/fs'
 import { db } from '@/utils/db'
@@ -303,9 +304,17 @@ async function switchFs(name: string) {
   await fs.switchFs(name)
   switchingFs.value = false
 }
+
+const taskMapEl = ref<InstanceType<typeof MTaskMap> | null>(null)
+
+function popupGraph() {
+  taskMapEl.value?.showTaskMap()
+}
 </script>
 
 <template>
+  <m-task-map ref="taskMapEl"></m-task-map>
+
   <div class="flex flex-col gap-2 p-2 h-full">
     <div class="flex gap-2">
       <n-button size="small" @click="uploadZip"> 上传 </n-button>
@@ -314,6 +323,7 @@ async function switchFs(name: string) {
       <n-button size="small" @click="removeFs" :disabled="db.fsEntry.value.length <= 1">
         删除
       </n-button>
+      <n-button size="small" @click="popupGraph"> 可视化 </n-button>
     </div>
     <n-select
       :value="fs.name"

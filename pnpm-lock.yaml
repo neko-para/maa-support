@@ -101,6 +101,9 @@ importers:
       '@vitejs/plugin-vue-jsx':
         specifier: ^3.1.0
         version: 3.1.0(vite@5.2.9(@types/node@18.19.31))(vue@3.4.23(typescript@5.3.3))
+      '@viz-js/viz':
+        specifier: ^3.6.0
+        version: 3.6.0
       '@vue/tsconfig':
         specifier: ^0.5.1
         version: 0.5.1
@@ -1024,6 +1027,9 @@ packages:
     peerDependencies:
       vite: ^5.0.0
       vue: ^3.2.25
+
+  '@viz-js/viz@3.6.0':
+    resolution: {integrity: sha512-DvDvP5lcrZrBMZ39OJxOfpM1gO1h6+bsT0ES29XmRyvYgqG4QvDQGP9aaFOytIwp9BWl5okUzjAmvUs/80tBTg==}
 
   '@vscode/debugadapter@1.64.0':
     resolution: {integrity: sha512-XygE985qmNCzJExDnam4bErK6FG9Ck8S5TRPDNESwkt7i3OXqw5a3vYb7Dteyhz9YMEf7hwhFoT46Mjc45nJUg==}
@@ -3141,6 +3147,8 @@ snapshots:
     dependencies:
       vite: 5.2.9(@types/node@18.19.31)
       vue: 3.4.23(typescript@5.3.3)
+
+  '@viz-js/viz@3.6.0': {}
 
   '@vscode/debugadapter@1.64.0':
     dependencies:

@@ -7,6 +7,7 @@ import { fs } from './fs'
 type TaskInfo = {
   path: string
   full: string
+  task: Task
 }
 
 type ImageInfo = {
@@ -31,7 +32,8 @@ export const taskInfo = computed(() => {
           }
           result[task] = {
             path,
-            full
+            full,
+            task: res[task]
           }
         }
       } catch (_) {}
