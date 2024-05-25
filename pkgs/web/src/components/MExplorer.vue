@@ -170,6 +170,9 @@ async function performSelect(key: string | number, option: DropdownOption) {
         return
       }
       fs.rename(menuTarget.value, path)
+      if (name.endsWith('.png')) {
+        fs.rename(menuTarget.value + '.roi', path + '.roi')
+      }
       if (editorAffected) {
         editor.currentPath = normCur === normTgt ? path : normCur!.replace(normTgt, path + '/')
         editor.currentTask = currentTask
