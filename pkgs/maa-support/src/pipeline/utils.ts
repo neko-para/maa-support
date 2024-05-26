@@ -8,7 +8,7 @@ export function locatePipelineToken(
   position: vscode.Position,
   spec: PipelineSpec
 ): {
-  type: 'task' | 'image' | 'entry'
+  type: 'task' | 'image' | 'entry' | 'roi'
   value: string
   range: vscode.Range
 } | null {
@@ -44,6 +44,12 @@ export function locatePipelineToken(
         }
       } else {
         return null
+      }
+    } else if (result.info.type === 'roi') {
+      return {
+        type: 'roi',
+        value: '',
+        range: result.range
       }
     } else {
       return null

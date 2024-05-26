@@ -1,6 +1,11 @@
 import type { JSONPath } from 'jsonc-parser'
 import * as vscode from 'vscode'
 
+export interface ROI {
+  raw: number[]
+  suggest: number[]
+}
+
 export interface PipelineTaskInfo {
   locations: vscode.LocationLink[]
   references: vscode.Location[]

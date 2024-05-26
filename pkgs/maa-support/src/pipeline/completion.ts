@@ -1,10 +1,13 @@
-import { existsSync, statSync } from 'fs'
-import * as fs from 'fs/promises'
-import * as path from 'path'
-import * as vscode from 'vscode'
+import { existsSync, readFileSync, statSync } from 'fs';
+import * as fs from 'fs/promises';
+import * as path from 'path';
+import * as vscode from 'vscode';
 
-import { PipelineSpec, PipelineTaskCompletionData } from './types'
-import { locatePipelineToken } from './utils'
+
+
+import { PipelineSpec, PipelineTaskCompletionData, ROI } from './types';
+import { locatePipelineToken } from './utils';
+
 
 interface CompletionWithData extends vscode.CompletionItem {
   data?: {
@@ -111,6 +114,60 @@ export class GeneralPipelineCompletionProvider implements vscode.CompletionItemP
               item.sortText = ' ' + '~'.repeat(fallbackCount) + escaped
               item.documentation = new vscode.MarkdownString(`![](${vscode.Uri.file(subfile)})`)
               res.push(item)
+            }
+          }
+        }
+        root = this.spec.fallbackRoot(root)
+        fallbackCount += 1
+      }
+      if (res) {
+        return res
+      } else {
+        return null
+      }
+    } else if (result.type === 'roi') {
+      let root = this.spec.getRoot(document)
+      let fallbackCount = 0
+      const res: vscode.CompletionItem[] = []
+      while (root) {
+        const imageRoot = this.spec.getImageRoot(root)
+        if (imageRoot) {
+          let scanDir = '.'
+          if (result.value.endsWith('/')) {
+            scanDir = result.value
+          }
+          const scanFullDir = path.normalize(path.join(imageRoot, scanDir))
+          if (existsSync(scanFullDir) && statSync(scanFullDir).isDirectory()) {
+            for (const sub of await fs.readdir(scanFullDir, { recursive: true })) {
+              const subfile = path.join(scanFullDir, sub)
+              if (!statSync(subfile).isFile() || !sub.endsWith('.roi')) {
+                continue
+              }
+
+              const data = JSON.parse(readFileSync(subfile).toString()) as ROI
+
+              const escaped = JSON.stringify(path.join(scanDir, sub).replaceAll('\\', '/'))
+              const itemRaw = new vscode.CompletionItem(
+                escaped + '.raw',
+                vscode.CompletionItemKind.Value
+              )
+              itemRaw.insertText = data.raw.toString()
+              itemRaw.range = result.range
+              itemRaw.sortText = ' ' + '~'.repeat(fallbackCount) + escaped
+              itemRaw.documentation = new vscode.MarkdownString('```json\n' + data.raw + '\n```')
+              res.push(itemRaw)
+
+              const itemSuggest = new vscode.CompletionItem(
+                escaped + '.suggest',
+                vscode.CompletionItemKind.Value
+              )
+              itemSuggest.insertText = data.suggest.toString()
+              itemSuggest.range = result.range
+              itemSuggest.sortText = ' ' + '~'.repeat(fallbackCount) + escaped
+              itemSuggest.documentation = new vscode.MarkdownString(
+                '```json\n' + data.suggest + '\n```'
+              )
+              res.push(itemSuggest)
             }
           }
         }

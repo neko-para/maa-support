@@ -1,4 +1,4 @@
-import { JSONPath, visit } from 'jsonc-parser'
+import { JSONPath, getLocation, visit } from 'jsonc-parser'
 import * as vscode from 'vscode'
 
 type TokenInfo =
@@ -10,6 +10,7 @@ type TokenInfo =
       type: 'property'
       value: string
     }
+  | { type: 'roi' }
 
 export class FindTokenInfo {
   info: TokenInfo
@@ -24,6 +25,10 @@ export class FindTokenInfo {
 }
 
 export function locateToken(document: vscode.TextDocument, position: vscode.Position) {
+  let arrStart: vscode.Position
+  let arrPath: JSONPath
+  let isROI = false
+
   visit(document.getText(), {
     onLiteralValue(value, offset, length, startLine, startCharacter, pathSupplier) {
       const startPos = document.positionAt(offset)
@@ -44,6 +49,8 @@ export function locateToken(document: vscode.TextDocument, position: vscode.Posi
       }
     },
     onObjectProperty(property, offset, length, startLine, startCharacter, pathSupplier) {
+      isROI = property === 'roi'
+
       const startPos = new vscode.Position(startLine, startCharacter)
       const endPos = document.positionAt(offset + length)
       if (position.isAfterOrEqual(startPos) && position.isBeforeOrEqual(endPos)) {
@@ -54,6 +61,27 @@ export function locateToken(document: vscode.TextDocument, position: vscode.Posi
           },
           new vscode.Range(startPos, endPos),
           pathSupplier()
+        )
+      }
+    },
+    onArrayBegin(offset, length, startLine, startCharacter, pathSupplier) {
+      if (isROI) {
+        arrStart = new vscode.Position(startLine, startCharacter)
+        arrPath = pathSupplier()
+      }
+    },
+    onArrayEnd(offset, length, startLine, startCharacter) {
+      const startPos = new vscode.Position(startLine, startCharacter)
+      const endPos = document.positionAt(offset + length)
+      if (position.isAfterOrEqual(startPos) && position.isBeforeOrEqual(endPos) && isROI) {
+        // console.log('onROI', arrStart, endPos)
+        throw new FindTokenInfo(
+          {
+            // TODO
+            type: 'roi'
+          },
+          new vscode.Range(arrStart, endPos),
+          arrPath
         )
       }
     }
