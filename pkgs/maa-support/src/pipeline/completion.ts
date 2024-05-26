@@ -163,7 +163,7 @@ export class GeneralPipelineCompletionProvider implements vscode.CompletionItemP
               itemSuggest.documentation = new vscode.MarkdownString(
                 '```json\n' + data.suggest + '\n```'
               )
-              itemRaw.detail = 'suggest roi'
+              itemSuggest.detail = 'suggest roi'
               res.push(itemSuggest)
             }
           }
