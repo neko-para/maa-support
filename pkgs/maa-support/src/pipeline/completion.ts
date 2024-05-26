@@ -1,13 +1,10 @@
-import { existsSync, readFileSync, statSync } from 'fs';
-import * as fs from 'fs/promises';
-import * as path from 'path';
-import * as vscode from 'vscode';
+import { existsSync, statSync } from 'fs'
+import * as fs from 'fs/promises'
+import * as path from 'path'
+import * as vscode from 'vscode'
 
-
-
-import { PipelineSpec, PipelineTaskCompletionData, ROI } from './types';
-import { locatePipelineToken } from './utils';
-
+import { PipelineSpec, PipelineTaskCompletionData, ROI } from './types'
+import { locatePipelineToken } from './utils'
 
 interface CompletionWithData extends vscode.CompletionItem {
   data?: {
@@ -144,7 +141,7 @@ export class GeneralPipelineCompletionProvider implements vscode.CompletionItemP
                 continue
               }
 
-              const data = JSON.parse(readFileSync(subfile).toString()) as ROI
+              const data = JSON.parse(await fs.readFile(subfile, 'utf-8')) as ROI
 
               const escaped = JSON.stringify(path.join(scanDir, sub).replaceAll('\\', '/'))
               const itemRaw = new vscode.CompletionItem(
