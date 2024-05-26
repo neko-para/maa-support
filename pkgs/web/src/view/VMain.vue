@@ -39,9 +39,9 @@ function tryDel(id: string) {
               @click="
                 () => {
                   currentId = null
-                  main.active = id
                   $nextTick(() => {
                     currentId = id
+                    main.active = id
                   })
                 }
               "
