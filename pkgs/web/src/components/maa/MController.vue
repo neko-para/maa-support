@@ -19,6 +19,8 @@ import {
   NCollapseItem,
   NDivider,
   NInput,
+  NInputNumber,
+  NSwitch,
   NTabPane,
   NTabs
 } from 'naive-ui'
@@ -127,20 +129,28 @@ async function createControllerImpl() {
     const ctrl = root.transfer(outCtrl)
     if (
       data.value.config.controller.startEntry &&
-      !(await ctrl.setOption(
-        ControllerOption.DefaultAppPackageEntry,
-        data.value.config.controller.startEntry
-      ))
+      !(await ctrl.setDefaultStartApp(data.value.config.controller.startEntry))
     ) {
       console.log('set option failed')
       return false
     }
     if (
       data.value.config.controller.stopEntry &&
-      !(await ctrl.setOption(
-        ControllerOption.DefaultAppPackage,
-        data.value.config.controller.stopEntry
-      ))
+      !(await ctrl.setDefaultStopApp(data.value.config.controller.stopEntry))
+    ) {
+      console.log('set option failed')
+      return false
+    }
+    if (
+      !data.value.config.controller.useLongSide &&
+      !(await ctrl.setShortSide(data.value.config.controller.shortSide ?? 720))
+    ) {
+      console.log('set option failed')
+      return false
+    }
+    if (
+      data.value.config.controller.useLongSide &&
+      !(await ctrl.setLongSide(data.value.config.controller.longSide ?? 1080))
     ) {
       console.log('set option failed')
       return false
@@ -237,6 +247,24 @@ defineExpose({
           </n-button>
         </template>
       </n-input>
+      <span> use long side </span>
+      <div class="flex items-center">
+        <n-switch v-model:value="data.config.controller.useLongSide"></n-switch>
+      </div>
+      <span> short side </span>
+      <n-input-number
+        v-model:value="data.config.controller.shortSide"
+        :show-button="false"
+        :disabled="controllerLoading || !!data.shallow.controller"
+        placeholder="720"
+      ></n-input-number>
+      <span> short side </span>
+      <n-input-number
+        v-model:value="data.config.controller.longSide"
+        :show-button="false"
+        :disabled="controllerLoading || !!data.shallow.controller"
+        placeholder="1080"
+      ></n-input-number>
     </div>
     <n-tabs
       :value="data.config.controller.ctype ?? 'adb'"

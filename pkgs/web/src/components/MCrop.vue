@@ -65,7 +65,8 @@ async function screencap() {
     if (!(await setImage(url))) {
       URL.revokeObjectURL(url)
     }
-    await resize()
+    // FW already resized
+    // await resize()
   })
   loading.value = false
 }

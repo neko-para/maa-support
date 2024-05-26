@@ -19,6 +19,9 @@ type DataMain = {
       win_cfg?: Partial<Win32Config>
       startEntry?: string
       stopEntry?: string
+      useLongSide?: boolean
+      shortSide?: number
+      longSide?: number
     }
     controllerCache: {
       className?: string
