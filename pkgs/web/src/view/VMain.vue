@@ -38,8 +38,11 @@ function tryDel(id: string) {
             <n-button
               @click="
                 () => {
-                  currentId = id
-                  main.active = currentId
+                  currentId = null
+                  main.active = id
+                  $nextTick(() => {
+                    currentId = id
+                  })
                 }
               "
               class="flex-1"
