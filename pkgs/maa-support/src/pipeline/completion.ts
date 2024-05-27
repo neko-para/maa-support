@@ -144,24 +144,26 @@ export class GeneralPipelineCompletionProvider implements vscode.CompletionItemP
               const data = JSON.parse(await fs.readFile(subfile, 'utf-8')) as ROI
 
               const rawData = JSON.stringify(data.raw)
-              const itemRaw = new vscode.CompletionItem(rawData, vscode.CompletionItemKind.Value)
+              const itemRaw = new vscode.CompletionItem(`[${sub}]`, vscode.CompletionItemKind.Value)
               itemRaw.insertText = rawData
               itemRaw.range = result.range
-              itemRaw.sortText = ' ' + '~'.repeat(fallbackCount) + '.raw'
-              itemRaw.documentation = new vscode.MarkdownString('```json\n' + data.raw + '\n```')
+              itemRaw.sortText = ' ' + '~'.repeat(fallbackCount) + sub + '.raw'
+              itemRaw.documentation = new vscode.MarkdownString(
+                '```json\n' + rawData + '\n```\n\n' + sub
+              )
               itemRaw.detail = 'raw roi'
               res.push(itemRaw)
 
               const suggestData = JSON.stringify(data.suggest)
               const itemSuggest = new vscode.CompletionItem(
-                suggestData,
+                `[${sub}]`,
                 vscode.CompletionItemKind.Value
               )
-              itemSuggest.insertText = JSON.stringify(data.suggest)
+              itemSuggest.insertText = suggestData
               itemSuggest.range = result.range
-              itemSuggest.sortText = ' ' + '~'.repeat(fallbackCount) + '.suggest'
+              itemSuggest.sortText = ' ' + '~'.repeat(fallbackCount) + sub + '.suggest'
               itemSuggest.documentation = new vscode.MarkdownString(
-                '```json\n' + data.suggest + '\n```'
+                '```json\n' + suggestData + '\n```\n\n' + sub
               )
               itemSuggest.detail = 'suggest roi'
               res.push(itemSuggest)
