@@ -41,7 +41,7 @@ export function activate(context: vscode.ExtensionContext) {
   ]
 
   context.subscriptions.push(
-    ...fwPipelineLSP.apply(fwPipelineSelector, ['"', '/']),
+    ...fwPipelineLSP.apply(fwPipelineSelector, ['"', '/', '[']),
     ...wpfPipelineLSP.apply(wpfPipelineSelector, ['"', '/', '@', '#'])
   )
 

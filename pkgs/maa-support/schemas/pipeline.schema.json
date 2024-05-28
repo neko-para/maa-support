@@ -104,12 +104,7 @@
                 "roi": {
                     "description": "识别区域坐标。可选，默认 [0, 0, 0, 0]，即全屏。",
                     "$ref": "#/definitions/rectlist",
-                    "default": [
-                        0,
-                        0,
-                        0,
-                        0
-                    ]
+                    "default": []
                 },
                 "order_by": {
                     "description": "识别结果排序方式。可选，默认 `Horizontal`",
