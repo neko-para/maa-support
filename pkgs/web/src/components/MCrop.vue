@@ -126,6 +126,7 @@ const cornerMoveDrag = ref<DragHandler>(new DragHandler())
 const cornerMoveTarget = ref<CornerType | EdgeType>('lt')
 const cropDrag = ref<DragHandler>(new DragHandler())
 const cropBox = ref<Box>(new Box())
+const samBox = ref<Box>(new Box())
 const cropBoxExpand = computed<Box>(() => {
   return cropBox.value
     .copy()
@@ -143,6 +144,19 @@ const cropBoxView = computed<Box>({
     cropBox.value = viewport.value.fromView(b)
   }
 })
+
+const samBoxView = computed<Box>({
+  get() {
+    return viewport.value.toView(samBox.value)
+  },
+  set(b: Box) {
+    samBox.value = viewport.value.fromView(b)
+  }
+})
+
+const samLoading = ref(false)
+const samEnabled = ref(false)
+const samQuerying = ref(false)
 
 function onScroll(ev: WheelEvent) {
   viewport.value.zoom(ev.deltaY > 0, Pos.fromEvent(ev))
@@ -283,6 +297,11 @@ function draw(ctx: CanvasRenderingContext2D) {
   }
   ctx.fillStyle = 'rgba(255, 255, 255, 0.3)'
   ctx.fillRect(...cropBoxView.value.flat())
+
+  if (samEnabled.value) {
+    ctx.fillStyle = 'rgba(127, 255, 127, 0.3)'
+    ctx.fillRect(...samBoxView.value.flat())
+  }
 
   // ctx.save()
   // ctx.globalCompositeOperation = 'difference'
@@ -428,6 +447,59 @@ async function raiseImage() {
   }
   emits('raiseImage', img, { raw: cropBox.value.flat(), suggest: cropBoxExpand.value.flat() })
 }
+
+async function testSam() {
+  if (!image.value) {
+    return
+  }
+  if (samEnabled.value) {
+    samEnabled.value = false
+    return
+  }
+  samLoading.value = true
+  try {
+    const imageData = await (await fetch(image.value)).blob()
+    await fetch('http://localhost:13127/file', {
+      method: 'POST',
+      headers: {
+        'content-type': 'image/png'
+      },
+      body: imageData
+    })
+    samEnabled.value = true
+  } finally {
+    samLoading.value = false
+  }
+}
+
+watch(current, async new_pos => {
+  if (samEnabled.value) {
+    const pos = viewport.value.fromView(new_pos)
+    if (pos.x < 0 || pos.y < 0 || pos.x > imageSize.value.w || pos.y > imageSize.value.h) {
+      return
+    }
+    if (samQuerying.value) {
+      return
+    }
+    samQuerying.value = true
+    try {
+      const res = (await (
+        await fetch('http://localhost:13127/query', {
+          method: 'POST',
+          headers: {
+            'content-type': 'application/json'
+          },
+          body: JSON.stringify({
+            pts: [[pos.x, pos.y]]
+          })
+        })
+      ).json()) as [number, number, number, number]
+      samBox.value = Box.from(Pos.from(res[0], res[1]), Size.from(res[2] - res[0], res[3] - res[1]))
+    } finally {
+      samQuerying.value = false
+    }
+  }
+})
 </script>
 
 <template>
@@ -460,6 +532,9 @@ async function raiseImage() {
       <n-button @click="resize" :loading="resizing"> resize </n-button>
       <n-button @click="download"> download </n-button>
       <n-button @click="raiseImage" :disabled="!acceptRaise"> raise </n-button>
+      <n-button @click="testSam" :loading="samLoading">
+        sam {{ samEnabled ? 'enabled' : 'disabled' }}
+      </n-button>
       <span> 左键移动裁剪区域，中键移动视图，右键裁剪；ceil对齐像素，bound移除出界范围 </span>
     </div>
     <div ref="canvasSizeEl" class="relative flex-1">
