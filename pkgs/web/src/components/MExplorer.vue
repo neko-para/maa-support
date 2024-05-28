@@ -337,9 +337,10 @@ function popupGraph() {
       expand-on-click
       :node-props="nodeProps"
       @drop="handleDrop"
+      virtual-scroll
     ></n-tree>
     <div
-      class="flex items-center justify-center flex-1 min-h-8 bg-gray-100"
+      class="flex items-center justify-center flex-1 min-h-32 bg-gray-100"
       @drop.prevent="handleDropFile"
       @dragover.prevent=""
     >
