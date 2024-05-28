@@ -258,7 +258,7 @@ defineExpose({
         :disabled="controllerLoading || !!data.shallow.controller"
         placeholder="720"
       ></n-input-number>
-      <span> short side </span>
+      <span> long side </span>
       <n-input-number
         v-model:value="data.config.controller.longSide"
         :show-button="false"
