@@ -41,8 +41,7 @@ export function wrapCallback<Id extends string, Req, Res>(
     },
 
     async setup(
-      func: (req: Awaited<Req>) => Promise<ConvertRecordNever<Res>>,
-      wait = 500
+      func: (req: Awaited<Req>) => Promise<ConvertRecordNever<Res>>
     ): Promise<[Id | null, () => Promise<void>]> {
       const id = await this.add()
       if (!id) {
@@ -68,7 +67,7 @@ export function wrapCallback<Id extends string, Req, Res>(
             return
           }
 
-          setTimeout(puller, wait)
+          setTimeout(puller, 0)
         } catch (_) {}
       }
       setTimeout(puller, 0)
