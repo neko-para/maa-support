@@ -1,6 +1,6 @@
 import { api } from '../schema'
 import { GlobalOption, StdoutLevel } from '../types'
-import type { ImageListHandle } from './image'
+import type { ImageHandle, ImageListHandle } from './image'
 
 export async function version() {
   return (await api.MaaVersion()).return
@@ -73,9 +73,10 @@ export const globalOption = {
   }
 }
 
-export async function queryRecoDetail(reco_id: number, draws: ImageListHandle) {
+export async function queryRecoDetail(reco_id: number, raw: ImageHandle, draws: ImageListHandle) {
   return await api.MaaQueryRecognitionDetail({
     reco_id,
+    raw: raw._img!,
     draws: draws._img!
   })
 }

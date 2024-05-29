@@ -3742,6 +3742,9 @@
                             "data": {
                               "type": "object",
                               "properties": {
+                                "name": {
+                                  "type": "string"
+                                },
                                 "reco_id": {
                                   "type": "number"
                                 },
@@ -3752,7 +3755,7 @@
                                   "type": "boolean"
                                 }
                               },
-                              "required": ["reco_id", "return", "run_completed"]
+                              "required": ["name", "reco_id", "return", "run_completed"]
                             },
                             "success": {
                               "type": "boolean"
@@ -3794,11 +3797,15 @@
                           "description": "MaaImageListBuffer",
                           "type": "string"
                         },
+                        "raw": {
+                          "description": "MaaImageBuffer",
+                          "type": "string"
+                        },
                         "reco_id": {
                           "type": "number"
                         }
                       },
-                      "required": ["draws", "reco_id"]
+                      "required": ["draws", "raw", "reco_id"]
                     }
                   },
                   "required": ["application/json"]
@@ -3845,11 +3852,14 @@
                                   },
                                   "required": ["height", "width", "x", "y"]
                                 },
+                                "name": {
+                                  "type": "string"
+                                },
                                 "return": {
                                   "type": "number"
                                 }
                               },
-                              "required": ["detail_json", "hit", "hit_box", "return"]
+                              "required": ["detail_json", "hit", "hit_box", "name", "return"]
                             },
                             "success": {
                               "type": "boolean"
@@ -3914,6 +3924,9 @@
                             "data": {
                               "type": "object",
                               "properties": {
+                                "entry": {
+                                  "type": "string"
+                                },
                                 "node_id_list": {
                                   "type": "array",
                                   "items": {
@@ -3924,7 +3937,7 @@
                                   "type": "number"
                                 }
                               },
-                              "required": ["node_id_list", "return"]
+                              "required": ["entry", "node_id_list", "return"]
                             },
                             "success": {
                               "type": "boolean"

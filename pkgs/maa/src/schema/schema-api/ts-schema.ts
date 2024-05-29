@@ -1654,6 +1654,7 @@ export interface operations {
         content: {
           'application/json': {
             data?: {
+              name: string
               reco_id: number
               return: number
               run_completed: boolean
@@ -1670,6 +1671,8 @@ export interface operations {
         'application/json': {
           /** MaaImageListBuffer */
           draws: string
+          /** MaaImageBuffer */
+          raw: string
           reco_id: number
         }
       }
@@ -1687,6 +1690,7 @@ export interface operations {
                 x: number
                 y: number
               }
+              name: string
               return: number
             }
             success: boolean
@@ -1708,6 +1712,7 @@ export interface operations {
         content: {
           'application/json': {
             data?: {
+              entry: string
               node_id_list: number[]
               return: number
             }

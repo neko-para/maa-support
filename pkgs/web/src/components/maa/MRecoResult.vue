@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ImageListHandle, awaitUsing, queryRecoDetail } from '@nekosu/maa'
+import { ImageHandle, ImageListHandle, awaitUsing, queryRecoDetail } from '@nekosu/maa'
 import { NCard, NCode, NModal } from 'naive-ui'
 import { ref } from 'vue'
 
@@ -17,11 +17,12 @@ async function showRecoResult(reco_id?: number) {
     return
   }
   const imgs = await awaitUsing(async root => {
+    const img_raw = root.transfer(new ImageHandle())
     const img_list = root.transfer(new ImageListHandle())
-    if (!(await img_list.create())) {
+    if (!(await img_list.create()) || !(await img_raw.create())) {
       return
     }
-    const detail = await queryRecoDetail(reco_id, img_list)
+    const detail = await queryRecoDetail(reco_id, img_raw, img_list)
     if (!detail.return) {
       return
     }
