@@ -1,7 +1,7 @@
 import { api } from '../schema'
 import { type AdbConfig, ControllerOption, Status, Win32Type } from '../types'
 import { __Disposable } from '../utils/dispose'
-import type { TrivialCallback } from './callback'
+import { TrivialCallback, type TrivialCallbackFunc } from './callback'
 import type { HwndId } from './device'
 import { ImageHandle } from './image'
 
@@ -28,13 +28,7 @@ class ControllerActionHolder {
 
 export class Controller extends __Disposable {
   _ctrl: ControllerId | null = null
-
-  async dispose() {
-    if (this._ctrl) {
-      await api.MaaControllerDestroy({ ctrl: this._ctrl })
-      this._ctrl = null
-    }
-  }
+  _callback: TrivialCallback | null = null
 
   async setOption(
     key: ControllerOption.ScreenshotTargetLongSide | ControllerOption.ScreenshotTargetShortSide,
@@ -129,47 +123,64 @@ export class Controller extends __Disposable {
   }
 
   async image(img?: ImageHandle) {
-    let free = false
     if (!img) {
-      free = true
       img = new ImageHandle()
       await img.create()
     }
     if ((await api.MaaControllerGetImage({ ctrl: this._ctrl!, buffer: img._img! })).return > 0) {
       return img
     } else {
-      if (free) {
-        await img.unref()
-      }
       return null
     }
   }
 }
 
 export class AdbController extends Controller {
-  async create(cfg: AdbConfig, agent_path: string, callback: TrivialCallback) {
-    this.defer(callback)
+  async create(cfg: AdbConfig, agent_path: string, callback: TrivialCallbackFunc) {
+    this._callback = new TrivialCallback()
+    if (!(await this._callback.prepareCallback(callback))) {
+      this._callback = null
+      return false
+    }
     this._ctrl = (
       await api.MaaAdbControllerCreateV2({
         ...cfg,
         agent_path,
-        callback: callback._cb!
+        callback: this._callback._cb!
       })
     ).return as ControllerId
+    if (this._ctrl) {
+      const handle = this._ctrl
+      const clear = () => {
+        api.MaaControllerDestroy({ ctrl: handle })
+      }
+      this.__defer(clear)
+    }
     return !!this._ctrl
   }
 }
 
 export class Win32Controller extends Controller {
-  async create(hWnd: HwndId, type: Win32Type, callback: TrivialCallback) {
-    this.defer(callback)
+  async create(hWnd: HwndId, type: Win32Type, callback: TrivialCallbackFunc) {
+    this._callback = new TrivialCallback()
+    if (!(await this._callback.prepareCallback(callback))) {
+      this._callback = null
+      return false
+    }
     this._ctrl = (
       await api.MaaWin32ControllerCreate({
         hWnd,
         type,
-        callback: callback._cb!
+        callback: this._callback._cb!
       })
     ).return as ControllerId
+    if (this._ctrl) {
+      const handle = this._ctrl
+      const clear = () => {
+        api.MaaControllerDestroy({ ctrl: handle })
+      }
+      this.__defer(clear)
+    }
     return !!this._ctrl
   }
 }

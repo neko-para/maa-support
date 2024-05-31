@@ -24,7 +24,6 @@ export type TrivialCallbackFunc = (msg: string, details_json: string) => Promise
 export class TrivialCallback extends __Disposable {
   _func: TrivialCallbackFunc | null = null
   _cb: TrivialId | null = null
-  _cbClear: (() => Promise<void>) | null = null
 
   async prepareCallback(callback: TrivialCallbackFunc) {
     const [cb, clear] = await $callback.Trivial.setup(req => callback(req.msg, req.details_json))
@@ -32,16 +31,8 @@ export class TrivialCallback extends __Disposable {
       return false
     }
     this._cb = cb
-    this._cbClear = clear
+    this.__defer(clear)
     return true
-  }
-
-  async dispose() {
-    if (this._cbClear) {
-      await this._cbClear()
-      this._cb = null
-      this._cbClear = null
-    }
   }
 }
 
@@ -75,16 +66,8 @@ export class CustomRecognizerAnalyzeCallback extends __Disposable {
       return false
     }
     this._cb = cb
-    this._cbClear = clear
+    this.__defer(clear)
     return true
-  }
-
-  async dispose() {
-    if (this._cbClear) {
-      await this._cbClear()
-      this._cb = null
-      this._cbClear = null
-    }
   }
 }
 export type CustomActionRunCallbackFunc = (
@@ -116,16 +99,8 @@ export class CustomActionRunCallback extends __Disposable {
       return false
     }
     this._cb = cb
-    this._cbClear = clear
+    this.__defer(clear)
     return true
-  }
-
-  async dispose() {
-    if (this._cbClear) {
-      await this._cbClear()
-      this._cb = null
-      this._cbClear = null
-    }
   }
 }
 
@@ -144,15 +119,7 @@ export class CustomActionStopCallback extends __Disposable {
       return false
     }
     this._cb = cb
-    this._cbClear = clear
+    this.__defer(clear)
     return true
-  }
-
-  async dispose() {
-    if (this._cbClear) {
-      await this._cbClear()
-      this._cb = null
-      this._cbClear = null
-    }
   }
 }

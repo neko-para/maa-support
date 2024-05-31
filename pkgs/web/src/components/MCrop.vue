@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ImageHandle, awaitUsing } from '@nekosu/maa'
+import { ImageHandle } from '@nekosu/maa'
 import { NButton } from 'naive-ui'
 import { computed, onBeforeUnmount, onMounted, onUnmounted, ref, shallowRef, watch } from 'vue'
 
@@ -49,25 +49,24 @@ const controller = computed(() => {
 
 async function screencap() {
   loading.value = true
-  await awaitUsing(async root => {
-    if (!controller.value) {
-      return
-    }
-    const imageHandle = root.transfer(new ImageHandle())
-    await imageHandle.create()
-    const ctrl = controller.value.ref()
-    await (await ctrl.postScreencap()).wait()
-    await ctrl.image(imageHandle)
-    await ctrl.unref()
 
-    const buffer = await imageHandle.encoded(true)
-    const url = URL.createObjectURL(new Blob([buffer.buffer]))
-    if (!(await setImage(url))) {
-      URL.revokeObjectURL(url)
-    }
-    // FW already resized
-    // await resize()
-  })
+  if (!controller.value) {
+    return
+  }
+  const imageHandle = new ImageHandle()
+  await imageHandle.create()
+  const ctrl = controller.value
+  await (await ctrl.postScreencap()).wait()
+  await ctrl.image(imageHandle)
+
+  const buffer = await imageHandle.encoded(true)
+  const url = URL.createObjectURL(new Blob([buffer.buffer]))
+  if (!(await setImage(url))) {
+    URL.revokeObjectURL(url)
+  }
+  // FW already resized
+  // await resize()
+
   loading.value = false
 }
 

@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import { ImageListHandle, awaitUsing, queryRecoDetail } from '@nekosu/maa'
 import { instance } from '@viz-js/viz'
-import { NCard, NCode, NModal } from 'naive-ui'
+import { NModal } from 'naive-ui'
 import { ref } from 'vue'
 
 import { taskInfo } from '@/fs'
-import type { Rect } from '@/types'
 
 const showModal = ref(false)
 

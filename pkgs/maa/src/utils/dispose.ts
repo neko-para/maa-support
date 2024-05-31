@@ -1,105 +1,45 @@
-const guard = new FinalizationRegistry((info_json: string) => {
-  const info = JSON.parse(info_json) as {
-    name: string
-    ref: number
-  }
-  console.log(`${info.name} object reclaimed with ref ${info.ref}`)
+const finalizer = new FinalizationRegistry((func: () => void) => {
+  func()
 })
 
-// ts 5.2 provides Disposable, but stack is not available yet.
 export class __Disposable {
-  __ref: number = 1
-  __defer: (() => Promise<void>)[] = []
-  __deferObject: __Disposable[] = []
+  __dispose_action: (() => void)[] = []
 
   constructor() {
-    guard.register(
+    const actions = this.__dispose_action
+    finalizer.register(
       this,
-      JSON.stringify({
-        name: this.constructor.name,
-        ref: this.__ref
-      }),
+      () => {
+        for (const act of actions) {
+          act()
+        }
+        console.log('disposed!')
+      },
       this
     )
   }
 
-  defer<T extends __Disposable | null | undefined>(target: T): T
-  defer<T extends (() => Promise<void>) | null | undefined>(target: T): T
-  defer(target?: __Disposable | (() => Promise<void>) | null | undefined) {
-    if (!target) {
-      return target
-    } else if (target instanceof __Disposable) {
-      target.ref()
-      this.__deferObject.push(target)
-    } else {
-      this.__defer.push(target)
-    }
-    return target
-  }
-
-  transfer<T>(target: T): T
-  transfer<T>(target?: T): T | undefined
-  transfer(target?: __Disposable) {
-    if (!target) {
-      return target
-    } else {
-      this.__deferObject.push(target)
-    }
-    return target
-  }
-
-  takeDefered(pred: (target: __Disposable) => boolean, dispose?: true): Promise<void>
-  takeDefered(pred: (target: __Disposable) => boolean, dispose: false): __Disposable[]
-  takeDefered(
-    pred: (target: __Disposable) => boolean,
-    dispose = true
-  ): __Disposable[] | Promise<void> {
-    const result: __Disposable[] = []
-    this.__deferObject = this.__deferObject.filter(target => {
-      if (pred(target)) {
-        result.push(target)
-        return false
-      } else {
-        return true
-      }
-    })
-    if (dispose) {
-      return Promise.all(result.map(target => target.unref())).then(() => void 0)
-    } else {
-      return result
-    }
-  }
-
-  ref(): this {
-    this.__ref = this.__ref + 1
-    return this
-  }
-
-  async unref() {
-    if (this.__ref === 0) {
-      throw 'unref object which __ref is 0'
-    }
-    this.__ref = this.__ref - 1
-    if (this.__ref === 0) {
-      await this.launchDispose()
-      guard.unregister(this)
-    }
-  }
-
-  async launchDispose() {
-    await this.dispose()
-    await Promise.all(this.__defer.map(x => x()))
-    await Promise.all(this.__deferObject.map(x => x.unref()))
-  }
-
-  async dispose() {}
-}
-
-export async function awaitUsing<T>(func: (root: __Disposable) => Promise<T>): Promise<T> {
-  const root = new __Disposable()
-  try {
-    return await func(root)
-  } finally {
-    await root.unref()
+  __defer(action: () => void) {
+    this.__dispose_action.push(action)
   }
 }
+
+/*
+function main() {
+  class A extends __Disposable {
+    constructor() {
+      super()
+      this.__defer(() => {
+        console.log('disposed!')
+      })
+    }
+  }
+
+  const a = new A()
+  globalThis.gc?.()
+
+  setTimeout(() => {}, 10000)
+}
+
+main()
+*/

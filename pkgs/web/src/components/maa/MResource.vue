@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Resource, Status, TrivialCallback, awaitUsing } from '@nekosu/maa'
+import { Resource, Status, type TrivialCallbackFunc } from '@nekosu/maa'
 import { NButton, NCard, NInput } from 'naive-ui'
 import { computed, ref } from 'vue'
 
@@ -18,46 +18,27 @@ const data = computed(() => {
   return main.data[props.id]
 })
 
-async function prepareCallback() {
-  return awaitUsing(async root => {
-    const cb = root.transfer(new TrivialCallback())
-    if (
-      await cb.prepareCallback(async (msg, detail) => {
-        emits('log', msg, detail)
-      })
-    ) {
-      return cb.ref()
-    }
-    return null
-  })
-}
-
 const resourceLoading = ref(false)
 
 async function createResourceImpl() {
-  return awaitUsing(async root => {
-    const cb = root.transfer(await prepareCallback())
-    if (!cb) {
-      console.log('check callback failed')
-      return false
-    }
-    if (!data.value.config.resource.path) {
-      console.log('check path failed')
-      return false
-    }
-    const res = root.transfer(new Resource())
-    if (!(await res.create(cb))) {
-      console.log('create failed')
-      return false
-    }
-    if ((await (await res.postPath(data.value.config.resource.path)).wait()) === Status.Success) {
-      data.value.shallow.resource = res.ref()
-      return true
-    } else {
-      await res.dispose()
-      return false
-    }
-  })
+  const cb: TrivialCallbackFunc = async (msg, detail) => {
+    emits('log', msg, detail)
+  }
+  if (!data.value.config.resource.path) {
+    console.log('check path failed')
+    return false
+  }
+  const res = new Resource()
+  if (!(await res.create(cb))) {
+    console.log('create failed')
+    return false
+  }
+  if ((await (await res.postPath(data.value.config.resource.path)).wait()) === Status.Success) {
+    data.value.shallow.resource = res
+    return true
+  } else {
+    return false
+  }
 }
 
 async function createResource() {
@@ -68,7 +49,6 @@ async function createResource() {
 }
 
 async function disposeResourceImpl() {
-  await data.value.shallow.resource?.unref()
   delete data.value.shallow.resource
 }
 

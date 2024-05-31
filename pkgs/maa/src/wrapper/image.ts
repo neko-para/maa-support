@@ -10,17 +10,25 @@ export class ImageHandle extends __Disposable {
 
   async create() {
     this._img = (await api.MaaCreateImageBuffer()).return as ImageId
+    if (this._img) {
+      const handle = this._img
+      const clear = () => {
+        api.MaaDestroyImageBuffer({ handle })
+      }
+      this.__defer(clear)
+    }
     return !!this._img
   }
 
   async bind(img: ImageId, own = false) {
     this._img = img
     this._own = own
-  }
-
-  async dispose() {
     if (this._img && this._own) {
-      await api.MaaDestroyImageBuffer({ handle: this._img })
+      const handle = this._img
+      const clear = () => {
+        api.MaaDestroyImageBuffer({ handle })
+      }
+      this.__defer(clear)
     }
   }
 
@@ -68,13 +76,14 @@ export class ImageListHandle extends __Disposable {
 
   async create() {
     this._img = (await api.MaaCreateImageListBuffer()).return as ImageListId
-    return !!this._img
-  }
-
-  async dispose() {
     if (this._img) {
-      await api.MaaDestroyImageListBuffer({ handle: this._img })
+      const handle = this._img
+      const clear = () => {
+        api.MaaDestroyImageListBuffer({ handle })
+      }
+      this.__defer(clear)
     }
+    return !!this._img
   }
 
   async at(index: number) {

@@ -1,7 +1,7 @@
 import { api } from '../schema'
 import type { Status } from '../types'
 import { __Disposable } from '../utils/dispose'
-import type { TrivialCallback } from './callback'
+import { TrivialCallback, type TrivialCallbackFunc } from './callback'
 
 export type ResourceId = string & { __kind: 'MaaResourceAPI' }
 export type ResourceActionId = number & { __kind: 'MaaResourceActionId' }
@@ -26,18 +26,24 @@ class ResourceActionHolder {
 
 export class Resource extends __Disposable {
   _res: ResourceId | null = null
+  _callback: TrivialCallback | null = null
 
-  async create(callback: TrivialCallback) {
-    this.defer(callback)
-    this._res = (await api.MaaResourceCreate({ callback: callback._cb! })).return as ResourceId
-    return !!this._res
-  }
-
-  async dispose() {
-    if (this._res) {
-      await api.MaaResourceDestroy({ res: this._res })
-      this._res = null
+  async create(callback: TrivialCallbackFunc) {
+    this._callback = new TrivialCallback()
+    if (!(await this._callback.prepareCallback(callback))) {
+      this._callback = null
+      return false
     }
+    this._res = (await api.MaaResourceCreate({ callback: this._callback._cb! }))
+      .return as ResourceId
+    if (this._res) {
+      const handle = this._res
+      const clear = () => {
+        api.MaaResourceDestroy({ res: handle })
+      }
+      this.__defer(clear)
+    }
+    return !!this._res
   }
 
   async postPath(path: string) {

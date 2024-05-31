@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ImageHandle, ImageListHandle, awaitUsing, queryRecoDetail } from '@nekosu/maa'
+import { ImageHandle, ImageListHandle, queryRecoDetail } from '@nekosu/maa'
 import { NCard, NCode, NModal } from 'naive-ui'
 import { ref } from 'vue'
 
@@ -16,41 +16,30 @@ async function showRecoResult(reco_id?: number) {
   if (typeof reco_id === 'undefined') {
     return
   }
-  const imgs = await awaitUsing(async root => {
-    const img_raw = root.transfer(new ImageHandle())
-    const img_list = root.transfer(new ImageListHandle())
-    if (!(await img_list.create()) || !(await img_raw.create())) {
-      return
-    }
-    const detail = await queryRecoDetail(reco_id, img_raw, img_list)
-    if (!detail.return) {
-      return
-    }
-    recoHit.value = detail.hit
-    recoBox.value = [
-      detail.hit_box.x,
-      detail.hit_box.y,
-      detail.hit_box.width,
-      detail.hit_box.height
-    ]
-    try {
-      recoDetail.value = JSON.stringify(JSON.parse(detail.detail_json), null, 2)
-    } catch (err) {
-      console.log(detail.detail_json, err)
-      recoDetail.value = detail.detail_json
-    }
-    const imgs: string[] = []
-    const size = await img_list.size()
-    for (let i = 0; i < size; i++) {
-      const img = await img_list.at(i)
-      imgs.push(await img.encoded(false))
-      img.unref()
-    }
-    return imgs
-  })
-  if (imgs) {
-    recoImages.value = imgs
+  const img_raw = new ImageHandle()
+  const img_list = new ImageListHandle()
+  if (!(await img_list.create()) || !(await img_raw.create())) {
+    return
   }
+  const detail = await queryRecoDetail(reco_id, img_raw, img_list)
+  if (!detail.return) {
+    return
+  }
+  recoHit.value = detail.hit
+  recoBox.value = [detail.hit_box.x, detail.hit_box.y, detail.hit_box.width, detail.hit_box.height]
+  try {
+    recoDetail.value = JSON.stringify(JSON.parse(detail.detail_json), null, 2)
+  } catch (err) {
+    console.log(detail.detail_json, err)
+    recoDetail.value = detail.detail_json
+  }
+  const imgs: string[] = []
+  const size = await img_list.size()
+  for (let i = 0; i < size; i++) {
+    const img = await img_list.at(i)
+    imgs.push(await img.encoded(false))
+  }
+  recoImages.value = imgs
   showModal.value = true
 }
 

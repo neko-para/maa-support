@@ -153,9 +153,7 @@ export class SyncContext {
   }
 
   async screencap(img?: ImageHandle) {
-    let free = false
     if (!img) {
-      free = true
       img = new ImageHandle()
       await img.create()
     }
@@ -165,9 +163,21 @@ export class SyncContext {
     ) {
       return img
     } else {
-      if (free) {
-        await img.unref()
-      }
+      return null
+    }
+  }
+
+  async cachedImage(img?: ImageHandle) {
+    if (!img) {
+      img = new ImageHandle()
+      await img.create()
+    }
+    if (
+      (await api.MaaSyncContextCachedImage({ sync_context: this._id!, out_image: img._img! }))
+        .return > 0
+    ) {
+      return img
+    } else {
       return null
     }
   }

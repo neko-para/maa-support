@@ -1,7 +1,14 @@
 import { api } from '../schema'
 import type { Status } from '../types'
 import { __Disposable } from '../utils/dispose'
-import type { CustomActionRunCallback, CustomActionStopCallback, TrivialCallback } from './callback'
+import {
+  CustomActionRunCallback,
+  type CustomActionRunCallbackFunc,
+  CustomActionStopCallback,
+  type CustomActionStopCallbackFunc,
+  TrivialCallback,
+  type TrivialCallbackFunc
+} from './callback'
 import type { Controller } from './controller'
 import type { Resource } from './resource'
 
@@ -37,35 +44,32 @@ export class Instance extends __Disposable {
   _inst: InstanceId | null = null
   _ctrl: Controller | null = null
   _res: Resource | null = null
+  _callback: TrivialCallback | null = null
   _custom: Record<string, __Disposable[]> = {}
 
-  async create(callback: TrivialCallback) {
-    this.defer(callback)
-    this._inst = (await api.MaaCreate({ callback: callback._cb! })).return as InstanceId
+  async create(callback: TrivialCallbackFunc) {
+    this._callback = new TrivialCallback()
+    if (!(await this._callback.prepareCallback(callback))) {
+      this._callback = null
+      return false
+    }
+    this._inst = (await api.MaaCreate({ callback: this._callback._cb! })).return as InstanceId
+    if (this._inst) {
+      const handle = this._inst
+      const clear = () => {
+        api.MaaDestroy({ inst: handle })
+      }
+      this.__defer(clear)
+    }
     return !!this._inst
   }
 
-  async dispose() {
-    if (this._inst) {
-      await api.MaaDestroy({ inst: this._inst })
-      this._inst = null
-    }
-  }
-
   async bindCtrl(ctrl: Controller) {
-    if (this._ctrl) {
-      await this.takeDefered(obj => obj === this._ctrl)
-    }
-    this.defer(ctrl)
     this._ctrl = ctrl
     return (await api.MaaBindController({ inst: this._inst!, ctrl: ctrl._ctrl! })).return > 0
   }
 
   async bindRes(res: Resource) {
-    if (this._res) {
-      await this.takeDefered(obj => obj === this._res)
-    }
-    this.defer(res)
     this._res = res
     return (await api.MaaBindResource({ inst: this._inst!, res: res._res! })).return > 0
   }
@@ -84,22 +88,25 @@ export class Instance extends __Disposable {
 
   async registerCustomAction(
     name: string,
-    run: CustomActionRunCallback,
-    stop: CustomActionStopCallback
+    run: CustomActionRunCallbackFunc,
+    stop: CustomActionStopCallbackFunc
   ) {
+    const run_cb = new CustomActionRunCallback()
+    const stop_cb = new CustomActionStopCallback()
+    if (!(await run_cb.prepareCallback(run)) || !(await stop_cb.prepareCallback(stop))) {
+      return false
+    }
     const key = `Action#${name}`
     this._custom[key] = this._custom[key] ?? []
-    this._custom[key].push(run, stop)
-    this.defer(run)
-    this.defer(stop)
+    this._custom[key].push(run_cb, stop_cb)
     return (
       (
         await api.MaaRegisterCustomAction({
           inst: this._inst!,
           name,
           action: {
-            run: run._cb!,
-            stop: stop._cb!
+            run: run_cb._cb!,
+            stop: stop_cb._cb!
           }
         })
       ).return > 0
@@ -109,21 +116,19 @@ export class Instance extends __Disposable {
   async unregisterCustomAction(name: string) {
     const ret = (await api.MaaUnregisterCustomAction({ inst: this._inst!, name })).return > 0
     const key = `Action#${name}`
-    await this.takeDefered(obj => this._custom[key].includes(obj))
     delete this._custom[key]
     return ret
   }
 
   async clearCustomAction() {
     const ret = (await api.MaaClearCustomAction({ inst: this._inst! })).return > 0
-    await Promise.all(
-      Object.keys(this._custom)
-        .filter(k => k.startsWith('Action#'))
-        .map(async key => {
-          await this.takeDefered(obj => this._custom[key].includes(obj))
-          delete this._custom[key]
-        })
-    )
+
+    Object.keys(this._custom)
+      .filter(k => k.startsWith('Action#'))
+      .forEach(key => {
+        delete this._custom[key]
+      })
+
     return ret
   }
 

@@ -3,13 +3,11 @@ import {
   type AdbConfig,
   AdbController,
   Controller,
-  ControllerOption,
   type DeviceInfo,
   type HwndId,
   Status,
-  TrivialCallback,
+  type TrivialCallbackFunc,
   Win32Controller,
-  awaitUsing,
   findDevice
 } from '@nekosu/maa'
 import {
@@ -64,20 +62,6 @@ async function performScanWin32() {
   scanning.value = false
 }
 
-async function prepareCallback() {
-  return awaitUsing(async root => {
-    const cb = root.transfer(new TrivialCallback())
-    if (
-      await cb.prepareCallback(async (msg, detail) => {
-        emits('log', msg, detail)
-      })
-    ) {
-      return cb.ref()
-    }
-    return null
-  })
-}
-
 const controllerLoading = ref(false)
 
 function checkAdbConfig(cfg?: Partial<AdbConfig>): cfg is AdbConfig {
@@ -85,83 +69,79 @@ function checkAdbConfig(cfg?: Partial<AdbConfig>): cfg is AdbConfig {
 }
 
 async function createControllerImpl() {
-  return awaitUsing(async root => {
-    const cb = root.transfer(await prepareCallback())
-    if (!cb) {
-      console.log('check callback failed')
+  const cb: TrivialCallbackFunc = async (msg, detail) => {
+    emits('log', msg, detail)
+  }
+  let outCtrl: Controller
+  if (!data.value.config.controller.ctype || data.value.config.controller.ctype === 'adb') {
+    if (!checkAdbConfig(data.value.config.controller.adb_cfg) || !setting.agentPath) {
+      console.log('check config or agentPath failed')
       return false
     }
-    let outCtrl: Controller
-    if (!data.value.config.controller.ctype || data.value.config.controller.ctype === 'adb') {
-      if (!checkAdbConfig(data.value.config.controller.adb_cfg) || !setting.agentPath) {
-        console.log('check config or agentPath failed')
-        return false
-      }
-      const adbCtrl = root.transfer(new AdbController())
-      if (!(await adbCtrl.create(data.value.config.controller.adb_cfg, setting.agentPath!, cb))) {
-        console.log('create failed')
-        return false
-      }
-      outCtrl = adbCtrl.ref()
-    } else if (data.value.config.controller.ctype === 'win32') {
-      if (
-        !data.value.config.controller.win_cfg?.type ||
-        !data.value.config.controller.win_cfg?.hwnd
-      ) {
-        console.log('check type or hwnd failed')
-        return false
-      }
-      const winCtrl = root.transfer(new Win32Controller())
-      if (
-        !(await winCtrl.create(
-          data.value.config.controller.win_cfg?.hwnd,
-          data.value.config.controller.win_cfg?.type,
-          cb
-        ))
-      ) {
-        console.log('create failed')
-        return false
-      }
-      outCtrl = winCtrl.ref()
-    } else {
+    const adbCtrl = new AdbController()
+    if (!(await adbCtrl.create(data.value.config.controller.adb_cfg, setting.agentPath!, cb))) {
+      console.log('create failed')
       return false
     }
-    const ctrl = root.transfer(outCtrl)
+    outCtrl = adbCtrl
+  } else if (data.value.config.controller.ctype === 'win32') {
     if (
-      data.value.config.controller.startEntry &&
-      !(await ctrl.setDefaultStartApp(data.value.config.controller.startEntry))
+      !data.value.config.controller.win_cfg?.type ||
+      !data.value.config.controller.win_cfg?.hwnd
     ) {
-      console.log('set option failed')
+      console.log('check type or hwnd failed')
       return false
     }
+    const winCtrl = new Win32Controller()
     if (
-      data.value.config.controller.stopEntry &&
-      !(await ctrl.setDefaultStopApp(data.value.config.controller.stopEntry))
+      !(await winCtrl.create(
+        data.value.config.controller.win_cfg?.hwnd,
+        data.value.config.controller.win_cfg?.type,
+        cb
+      ))
     ) {
-      console.log('set option failed')
+      console.log('create failed')
       return false
     }
-    if (
-      !data.value.config.controller.useLongSide &&
-      !(await ctrl.setShortSide(data.value.config.controller.shortSide ?? 720))
-    ) {
-      console.log('set option failed')
-      return false
-    }
-    if (
-      data.value.config.controller.useLongSide &&
-      !(await ctrl.setLongSide(data.value.config.controller.longSide ?? 1080))
-    ) {
-      console.log('set option failed')
-      return false
-    }
-    if ((await (await ctrl.postConnection()).wait()) !== Status.Success) {
-      console.log('connect failed')
-      return false
-    }
-    data.value.shallow.controller = ctrl.ref()
-    return true
-  })
+    outCtrl = winCtrl
+  } else {
+    return false
+  }
+  const ctrl = outCtrl
+  if (
+    data.value.config.controller.startEntry &&
+    !(await ctrl.setDefaultStartApp(data.value.config.controller.startEntry))
+  ) {
+    console.log('set option failed')
+    return false
+  }
+  if (
+    data.value.config.controller.stopEntry &&
+    !(await ctrl.setDefaultStopApp(data.value.config.controller.stopEntry))
+  ) {
+    console.log('set option failed')
+    return false
+  }
+  if (
+    !data.value.config.controller.useLongSide &&
+    !(await ctrl.setShortSide(data.value.config.controller.shortSide ?? 720))
+  ) {
+    console.log('set option failed')
+    return false
+  }
+  if (
+    data.value.config.controller.useLongSide &&
+    !(await ctrl.setLongSide(data.value.config.controller.longSide ?? 1080))
+  ) {
+    console.log('set option failed')
+    return false
+  }
+  if ((await (await ctrl.postConnection()).wait()) !== Status.Success) {
+    console.log('connect failed')
+    return false
+  }
+  data.value.shallow.controller = ctrl
+  return true
 }
 
 async function createController() {
@@ -172,7 +152,6 @@ async function createController() {
 }
 
 async function disposeControllerImpl() {
-  await data.value.shallow.controller?.unref()
   delete data.value.shallow.controller
 }
 

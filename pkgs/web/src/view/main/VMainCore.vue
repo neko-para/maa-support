@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ImageListHandle, Message, Status, awaitUsing, queryRecoDetail } from '@nekosu/maa'
+import { Message, Status } from '@nekosu/maa'
 import { NButton, NCard, NCode, NDivider, NInput, NSplit } from 'naive-ui'
 import { computed, reactive, ref } from 'vue'
 
@@ -9,7 +9,6 @@ import MRecoResult from '@/components/maa/MRecoResult.vue'
 import MResource from '@/components/maa/MResource.vue'
 import { TaskList } from '@/data/core/taskList'
 import { main } from '@/data/main'
-import { setting } from '@/data/setting'
 
 const props = defineProps<{
   id: string
