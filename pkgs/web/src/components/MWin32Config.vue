@@ -21,12 +21,12 @@ const emits = defineEmits<{
   'update:value': [Partial<Win32Config> | undefined]
 }>()
 
-const touchOpts = ['send message'].map(x => ({
+const touchOpts = ['send message', 'seize'].map(x => ({
   label: x,
   value: x
 }))
 
-const keyOpts = ['send message'].map(x => ({
+const keyOpts = ['send message', 'seize'].map(x => ({
   label: x,
   value: x
 }))

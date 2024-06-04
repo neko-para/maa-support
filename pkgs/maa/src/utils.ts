@@ -143,8 +143,8 @@ export function fromAdbType(type: AdbType) {
   return ret
 }
 
-export type Win32TypeTouch = 'send message'
-export type Win32TypeKey = 'send message'
+export type Win32TypeTouch = 'send message' | 'seize'
+export type Win32TypeKey = 'send message' | 'seize'
 export type Win32TypeScreencap =
   | 'gdi'
   | 'dxgi desktop dup'
@@ -168,11 +168,17 @@ export function toWin32Type(
     case 'send message':
       type |= Win32Type.Touch_SendMessage
       break
+    case 'seize':
+      type |= Win32Type.Touch_Seize
+      break
   }
 
   switch (key) {
     case 'send message':
       type |= Win32Type.Key_SendMessage
+      break
+    case 'seize':
+      type |= Win32Type.Key_Seize
       break
   }
 
@@ -198,11 +204,17 @@ export function fromWin32Type(type: Win32Type) {
     case Win32Type.Touch_SendMessage:
       ret.touch = 'send message'
       break
+    case Win32Type.Touch_Seize:
+      ret.touch = 'seize'
+      break
   }
 
   switch (type & Win32Type.Key_Mask) {
     case Win32Type.Key_SendMessage:
       ret.key = 'send message'
+      break
+    case Win32Type.Key_Seize:
+      ret.key = 'seize'
       break
   }
 

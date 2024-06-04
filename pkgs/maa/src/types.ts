@@ -121,9 +121,11 @@ export const enum Win32Type {
   Invalid = 0,
 
   Touch_SendMessage = 1,
+  Touch_Seize = 2,
   Touch_Mask = 0xff,
 
   Key_SendMessage = 1 << 8,
+  Key_Seize = 2 << 8,
   Key_Mask = 0xff00,
 
   Screencap_GDI = 1 << 16,
